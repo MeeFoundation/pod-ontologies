@@ -1,0 +1,240 @@
+@prefix : <http://mee.foundation/ontologies/sources/shapes#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sources: <http://mee.foundation/ontologies/sources#> .
+@prefix persona: <http://mee.foundation/ontologies/persona#> .
+@prefix service: <http://mee.foundation/ontologies/service#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+<http://mee.foundation/ontologies/sources/shapes> rdf:type owl:Ontology ;
+    owl:imports <http://mee.foundation/ontologies/sources> ;
+    owl:versionIRI <http://mee.foundation/ontologies/sources/shapes/1.0.0> ;
+    dc:date "2026-10-01"^^xsd:date ;
+    rdfs:label "Sources SHACL Shapes"@en ;
+    rdfs:comment """SHACL shapes for validating the source items and extractions defined in
+                    other/sources.ttl, the ontology it validates.
+
+                    None of these is a form shape. A source item describes a file or a pasted
+                    text, not a form a person fills in, and an extraction is provenance, not
+                    content; neither is ever a graph's own pod:shape value or a template's
+                    pod:formShape. They are companion shapes instead, to be applied in addition to
+                    a graph's own form shape whenever that graph also carries sources:
+                    individuals — the way shacl/persona-shacl.ttl is applied alongside
+                    other/shacl/identity-documents-shacl.ttl. For that reason none of them is
+                    registered in helpers/validate.py's SHAPE_TO_FILE, and none appears in
+                    README.md's generated Form Shapes table.
+
+                    :SourceItemShape carries the constraints common to every kind and targets all
+                    four concrete classes by name, rather than sources:SourceItem, so that it
+                    fires on a graph file that does not also carry other/sources.ttl's own
+                    rdfs:subClassOf triples. :ImageShape, :TextBlobShape and :VideoShape add only
+                    what their kind narrows; sources:Document narrows nothing and has no shape of
+                    its own."""@en .
+
+
+#################################################################
+#  SourceItem Shape
+#  Targets sources:Image, sources:Document, sources:TextBlob and
+#  sources:Video individuals — every concrete kind of source item.
+#  Required: mediaType (1..1), addedAt (1..1)
+#  Optional: fileName (0..1), byteSize (0..1), contentHash (0..1),
+#            extractedText (0..1, never empty)
+#################################################################
+
+:SourceItemShape
+    a sh:NodeShape ;
+    sh:targetClass sources:Image , sources:Document , sources:TextBlob , sources:Video ;
+    sh:message "A source item must have exactly one media type and exactly one addedAt timestamp."@en ;
+
+    sh:property [
+        sh:path sources:mediaType ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:pattern "^[a-z0-9][a-z0-9!#$&^_.+-]*/[a-z0-9][a-z0-9!#$&^_.+-]*$" ;
+        sh:message "A source item must have exactly one sources:mediaType, a lowercase IANA type/subtype with no parameters (e.g. 'application/pdf')."@en
+    ] ;
+
+    sh:property [
+        sh:path sources:addedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "A source item must have exactly one sources:addedAt, an xsd:dateTime."@en
+    ] ;
+
+    # ── Optional fields ──────────────────────────────────────────────────────
+    sh:property [
+        sh:path sources:fileName ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:message "A source item may have at most one sources:fileName, which must not be empty."@en
+    ] ;
+
+    sh:property [
+        sh:path sources:byteSize ;
+        sh:datatype xsd:nonNegativeInteger ;
+        sh:maxCount 1 ;
+        sh:message "A source item may have at most one sources:byteSize, an xsd:nonNegativeInteger."@en
+    ] ;
+
+    # BLAKE3's default 256-bit output, as the PDN's blob store addresses it.
+    sh:property [
+        sh:path sources:contentHash ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:pattern "^[0-9a-f]{64}$" ;
+        sh:message "A source item may have at most one sources:contentHash: a BLAKE3 hash as 64 lowercase hexadecimal digits."@en
+    ] ;
+
+    # Absent means unread; the empty string is refused so that the two can
+    # never be confused (pdn-agent's remaining-mee-tools design, D2).
+    sh:property [
+        sh:path sources:extractedText ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:minLength 1 ;
+        sh:message "A source item may have at most one sources:extractedText, which must not be empty — leave it absent when no text was extracted."@en
+    ] .
+
+
+#################################################################
+#  Image Shape
+#  Targets sources:Image individuals, in addition to :SourceItemShape.
+#  Narrows: mediaType to image/*
+#################################################################
+
+:ImageShape
+    a sh:NodeShape ;
+    sh:targetClass sources:Image ;
+    sh:message "An Image's media type must be an image/* type."@en ;
+
+    sh:property [
+        sh:path sources:mediaType ;
+        sh:pattern "^image/" ;
+        sh:message "An Image's sources:mediaType must be an image/* type (e.g. 'image/jpeg')."@en
+    ] .
+
+
+#################################################################
+#  TextBlob Shape
+#  Targets sources:TextBlob individuals, in addition to :SourceItemShape.
+#  Narrows: mediaType to text/*; extractedText required (1..1)
+#################################################################
+
+:TextBlobShape
+    a sh:NodeShape ;
+    sh:targetClass sources:TextBlob ;
+    sh:message "A TextBlob must carry its text as sources:extractedText, with a text/* media type."@en ;
+
+    sh:property [
+        sh:path sources:mediaType ;
+        sh:pattern "^text/" ;
+        sh:message "A TextBlob's sources:mediaType must be a text/* type (e.g. 'text/plain')."@en
+    ] ;
+
+    sh:property [
+        sh:path sources:extractedText ;
+        sh:minCount 1 ;
+        sh:message "A TextBlob must have its text as sources:extractedText — its text is its content."@en
+    ] .
+
+
+#################################################################
+#  Video Shape
+#  Targets sources:Video individuals, in addition to :SourceItemShape.
+#  Narrows: mediaType to video/*
+#################################################################
+
+:VideoShape
+    a sh:NodeShape ;
+    sh:targetClass sources:Video ;
+    sh:message "A Video's media type must be a video/* type."@en ;
+
+    sh:property [
+        sh:path sources:mediaType ;
+        sh:pattern "^video/" ;
+        sh:message "A Video's sources:mediaType must be a video/* type (e.g. 'video/mp4')."@en
+    ] .
+
+
+#################################################################
+#  Extraction Shape
+#  Targets sources:Extraction individuals.
+#  Required: extractedFrom (1..N), extractedBy (1..1),
+#            extractionMethod (1..1, enumerated), extractedAt (1..1)
+#  Optional: confidence (0..1, 0 to 1 inclusive)
+#################################################################
+
+:ExtractionShape
+    a sh:NodeShape ;
+    sh:targetClass sources:Extraction ;
+    sh:message "An Extraction must name what it read, who or what did it, how, and when."@en ;
+
+    sh:property [
+        sh:path sources:extractedFrom ;
+        sh:class sources:SourceItem ;
+        sh:minCount 1 ;
+        sh:message "An Extraction must have at least one sources:extractedFrom, each a sources:SourceItem."@en
+    ] ;
+
+    # The union sources.ttl leaves off rdfs:range, as shacl/pod-shacl.ttl's
+    # :CGraphShape does for pod:claimant.
+    sh:property [
+        sh:path sources:extractedBy ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:or ( [ sh:class persona:Person ] [ sh:class service:Service ] ) ;
+        sh:message "An Extraction must have exactly one sources:extractedBy, a persona:Person or a service:Service."@en
+    ] ;
+
+    # The value list is frozen here rather than in other/sources.ttl, the same
+    # SHACL-enumeration pattern education:educationLevel and vehicles:fuelType use.
+    sh:property [
+        sh:path sources:extractionMethod ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:in ( "manual" "ocr" "llm" "parser" ) ;
+        sh:message "An Extraction must have exactly one sources:extractionMethod: 'manual', 'ocr', 'llm' or 'parser'."@en
+    ] ;
+
+    sh:property [
+        sh:path sources:extractedAt ;
+        sh:datatype xsd:dateTime ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:message "An Extraction must have exactly one sources:extractedAt, an xsd:dateTime."@en
+    ] ;
+
+    # ── Optional fields ──────────────────────────────────────────────────────
+    sh:property [
+        sh:path sources:confidence ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+        sh:minInclusive 0 ;
+        sh:maxInclusive 1 ;
+        sh:message "An Extraction may have at most one sources:confidence, an xsd:decimal from 0 to 1."@en
+    ] .
+
+
+#################################################################
+#  DerivedBy Shape
+#  Targets every subject of sources:derivedBy, whatever its class.
+#  Each value must be a sources:Extraction.
+#################################################################
+
+:DerivedByShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf sources:derivedBy ;
+    sh:message "Every sources:derivedBy value must be a sources:Extraction."@en ;
+
+    sh:property [
+        sh:path sources:derivedBy ;
+        sh:class sources:Extraction ;
+        sh:message "Every sources:derivedBy value must be a sources:Extraction."@en
+    ] .

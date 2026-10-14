@@ -66,7 +66,11 @@ DOC = os.path.join(REPO, "README.md")
 # whose sh:targetClass some other shape names as a value class — so that a
 # newly-added shape nobody registered is reported rather than silently
 # missing from the table.
-INFRA_FILES = {"shacl/pod-shacl.ttl", "shacl/service-shacl.ttl"}
+# other/shacl/sources-shacl.ttl holds no form shape either: its shapes are
+# companions applied alongside a graph's own form shape, constraining the
+# source items and extractions a structured record was derived from.
+INFRA_FILES = {"shacl/pod-shacl.ttl", "shacl/service-shacl.ttl",
+               "other/shacl/sources-shacl.ttl"}
 
 # The generated block's fences. Everything between them is this script's; the
 # prose above and below it is hand-written and never touched.

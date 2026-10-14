@@ -19,6 +19,7 @@ The following **domain ontologies** model claims about people, organizations, an
   - **Service Accounts ontology** (`other/service-accounts.ttl`) — models an online service account a person holds (e.g. with Google or AT&T): service name, username, service URI, password. See [Service Accounts Ontology](#service-accounts-ontology).
   - **Banking ontology** (`other/banking.ttl`) — models a debit card and the checking account it draws on. See [Banking Ontology](#banking-ontology).
   - **Education ontology** (`other/education.ttl`) — models one stage of a person's schooling: school name, city, state, year graduated, degrees. See [Education Ontology](#education-ontology).
+  - **Sources ontology** (`other/sources.ttl`) — models unstructured content a person brings in — images, documents, pasted text, videos — and the extractions that turn it into structured pod data, so a structured record can say what it came from. See [Sources Ontology](#sources-ontology).
   - **Residences ontology** (`other/residences.ttl`) — models a place a person has lived, current or past. See [Residences Ontology](#residences-ontology).
   - **Itineraries ontology** (`other/itineraries.ttl`) — models a specific trip a person is planning or taking. See [Itineraries Ontology](#itineraries-ontology).
 
@@ -1006,6 +1007,56 @@ Throughout this section, `education:` is both the file's real Turtle prefix and 
 ### Education Ontology Validation
 
 `other/shacl/education-shacl.ttl` runs against individual graphs (the template pass). See [Validation](example.md#validation).
+
+## Sources Ontology
+
+The Sources ontology (`other/sources.ttl`) is a small `other/` peer ontology for content a person merely *has* in unstructured form — a photo, a scan, a PDF, a pasted block of text, a video — rather than *is*. Every other ontology here models data that is already structured. People rarely bring data that way: they bring a photo of a passport, a PDF of a lease, a pasted confirmation email, and the structured record is something that can in principle be read out of it afterwards, by them or by an agent. This file names that unstructured starting point, a **source item**, and the act of reading structure out of it, an **extraction**, so that a structured record can say what it came from.
+
+The metadata a source item carries is the metadata the app and the PDN already keep for any file: a pod attachment has a file name, a media type, and pre-extracted text that is either present or marked unread, and at the PDN layer it is an opaque, immutable payload addressed by its BLAKE3 content hash. Nothing here models OCR, transcription or document conversion themselves — only their result (`sources:extractedText`) and their record (`sources:Extraction`).
+
+`persona.ttl` carries no thin `hasX` link into this file: a source item is reached from the content derived from it, never from the person directly. `pod:attachment` remains documentation-only (see [Documentation-only Properties](#documentation-only-properties)), so no triple links a pod to a `sources:SourceItem` either; a source item is the description of a file, kept in a graph alongside the structured content derived from it.
+
+Throughout this section, `sources:` is both the file's real Turtle prefix and its doc alias (`http://mee.foundation/ontologies/sources#`).
+
+### Source-Related Classes and Properties
+
+**Classes:**
+
+- `sources:SourceItem` — one piece of unstructured content a person brought into the app that could become structured pod data. A subclass of CCO's Information Bearing Artifact (`cco:ont00000798`): the bearer of some information, not the information itself, which is why the structured record read out of it is a separate individual. Abstract in intent — only ever asserted through one of its four subclasses. Immutable, like the attachment it describes: a corrected file is a new source item.
+- `sources:Image` — a still image: a photo, a screenshot, a scan of a card or a page. Also under CCO's Image (`cco:ont00000702`). Its media type is always `image/*`.
+- `sources:Document` — a document file: a PDF, a word-processor file, a spreadsheet, a Markdown file. Also under CCO's Document (`cco:ont00001298`). A scan saved as a PDF is a `sources:Document`; saved as a picture, a `sources:Image` — the file's format decides, not what the page shows. Not an `idoc:IdentityDocument`, which is the identity record a `sources:Document` may be the source of.
+- `sources:TextBlob` — free text pasted or typed into the app as a source rather than a file. Its text is its content, so `sources:extractedText` is required here and optional everywhere else. Not a pod's note and not a chat message, both of which are built-in areas of every pod rather than items a person brings.
+- `sources:Video` — a video file. Also under CCO's Video (`cco:ont00000874`). Its media type is always `video/*`.
+- `sources:Extraction` — one act of deriving structured content from one or more source items: a person typing a passport's fields in from a photo of it, an OCR pass over a scanned form, an LLM turning pasted text into a contact card. A subclass of CCO's Act of Information Processing (`cco:ont00000366`).
+
+**Source item properties** (domain `sources:SourceItem`):
+
+- `sources:mediaType` — the IANA media type, e.g. `"application/pdf"`. Required, exactly one, lowercase, no parameters.
+- `sources:fileName` — the file name as added. Optional, since a `sources:TextBlob` has no file behind it; a display and search hint only.
+- `sources:byteSize` — the content's size in bytes, an `xsd:nonNegativeInteger`.
+- `sources:contentHash` — the BLAKE3 hash of the content as 64 lowercase hex digits, the address the PDN's blob store keeps it under. Lets two members or two pods tell they hold the very same file.
+- `sources:addedAt` — when the item was added to the pod, an `xsd:dateTime`. Required. When the photo was taken or the document written is a different fact, not recorded here.
+- `sources:extractedText` — the item's text, as read off it by OCR, a converter or a person. Absent means **unread**; it is never the empty string, so an item nothing could be read from never looks like one whose text is empty.
+
+**Extraction properties** (domain `sources:Extraction`, except `sources:derivedBy`):
+
+- `sources:extractedFrom` — the source item(s) the extraction read, at least one: a license read from photos of its front and back is one extraction from two images.
+- `sources:extractedBy` — who or what performed it: a `p:Person` entering data by hand, or an `s:Service` (typically the person's own `s:AgentService`). Exactly one. The union is enforced in the shapes file rather than by `rdfs:range`, as `pod:claimant`'s is. Independent of the claimant of the graph the result sits in.
+- `sources:extractionMethod` — how: `"manual"`, `"ocr"`, `"llm"` or `"parser"` (a deterministic reader of a known format, such as a vCard). A controlled vocabulary enumerated in the shapes file, the same pattern `education:educationLevel` uses.
+- `sources:extractedAt` — when, an `xsd:dateTime`. Required.
+- `sources:confidence` — how sure the extractor was of the result as a whole, an `xsd:decimal` from 0 to 1. Normally present only for `"ocr"` and `"llm"`.
+- `sources:derivedBy` — links **any** structured content individual (an `idoc:Passport`, a `pets:Pet`, a `p:Person`'s contact details) to the `sources:Extraction` that produced it, 0..N. No `rdfs:domain`, for the same reason `p:hasPhoto` has none. Pointing from the derived record to the extraction, rather than the reverse, lets an existing record gain a provenance link while the immutable source item never changes.
+
+**Possible addition:** `sources:WebLink` — a URL or a saved web page brought as a source (`podcat:Information` already names web links among its contents). Not defined yet: nothing in the app ingests one, and it would first need reconciling with `p:WebURL`, which is a person's own web address rather than a source.
+
+### Sources Ontology Files
+
+- **`other/sources.ttl`** — Defines the classes and properties above. Carries no `owl:imports`; `p:Person`, `s:Service` and the CCO classes are referenced by name.
+- **`other/shacl/sources-shacl.ttl`** — `:SourceItemShape` (the constraints common to every kind, targeting all four concrete classes by name), `:ImageShape`, `:TextBlobShape` and `:VideoShape` (what each kind narrows), `:ExtractionShape`, and `:DerivedByShape` (every `sources:derivedBy` value is a `sources:Extraction`). None is a form shape — a source item describes a file, not a form a person fills in — so none appears in [Form Shapes](#form-shapes) below.
+
+### Sources Ontology Validation
+
+`other/shacl/sources-shacl.ttl` is a companion shape set: apply it in addition to a graph's own form shape whenever that graph also carries `sources:` individuals, the way `shacl/persona-shacl.ttl` is applied alongside the identity-document shapes. See [Validation](example.md#validation).
 
 ## Directory Profile Ontology
 

@@ -53,6 +53,10 @@
          uri="other/education.ttl"/>
     <uri id="education-shacl"             name="http://mee.foundation/ontologies/education/shapes"
          uri="other/shacl/education-shacl.ttl"/>
+    <uri id="sources"                     name="http://mee.foundation/ontologies/sources"
+         uri="other/sources.ttl"/>
+    <uri id="sources-shacl"               name="http://mee.foundation/ontologies/sources/shapes"
+         uri="other/shacl/sources-shacl.ttl"/>
 
     <!-- Persona extension ontologies (persona-ext/): peer ontologies whose
          properties have domain p:Person, too narrow for persona.ttl itself -->

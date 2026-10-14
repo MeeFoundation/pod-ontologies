@@ -1,0 +1,334 @@
+@prefix sources: <http://mee.foundation/ontologies/sources#> .
+@prefix persona: <http://mee.foundation/ontologies/persona#> .
+@prefix service: <http://mee.foundation/ontologies/service#> .
+@prefix cco: <https://w3id.org/cco-domains/cco/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@base <http://mee.foundation/ontologies/sources> .
+
+<http://mee.foundation/ontologies/sources> rdf:type owl:Ontology ;
+    owl:versionIRI <http://mee.foundation/ontologies/sources/1.0.0> ;
+    dc:date "2026-10-01"^^xsd:date ;
+    owl:versionInfo "Version 1.0.0 - initial version: source items (images, documents, text blobs, videos) and the extractions that turn them into structured content"@en ;
+    rdfs:label "Sources Ontology"@en ;
+    rdfs:comment """A small other/ peer ontology (see other/pets.ttl's own rdfs:comment for the
+                    general pattern) for content a person merely *has* in unstructured form — a
+                    photo, a scan, a PDF, a pasted block of text, a video — rather than *is*. Every
+                    other ontology in this project models data that is already structured: a
+                    pets:Pet's species, an identitydocuments:Passport's number. People rarely bring
+                    data that way. They bring a photo of the passport, a PDF of the lease, a pasted
+                    confirmation email, and the structured record is something that can in
+                    principle be read out of it afterwards, by them or by an agent. This file names
+                    that unstructured starting point (sources:SourceItem and its four concrete
+                    kinds) and the act of reading structure out of it (sources:Extraction), so
+                    that a structured record can say what it came from.
+
+                    Two halves:
+
+                    - sources:SourceItem — one unstructured item, described by the metadata the
+                      app and the PDN already keep for any file: its media type, original file
+                      name, size, content hash, when it was added, and any text extracted from it.
+                      Split into sources:Image, sources:Document, sources:TextBlob and
+                      sources:Video.
+                    - sources:Extraction — one act of deriving structured content from one or more
+                      source items: who or what did it (sources:extractedBy), how
+                      (sources:extractionMethod), when (sources:extractedAt) and, for automated
+                      methods, how sure it was (sources:confidence). Any structured content
+                      individual — a passport, a contact, a pet — points at the extraction that
+                      produced it with sources:derivedBy.
+
+                    Grounded in what the app actually supports today (pdn-agent and mia-docs, as
+                    of this version): a pod attachment is a file with a filename, a content type
+                    and pre-extracted text that is either present or marked unread (pdn-agent's
+                    Attachment type; its remaining-mee-tools design, D2); at the PDN layer every
+                    such file is an opaque, immutable payload addressed by its BLAKE3 content hash,
+                    with a known payload length (mia-docs' cells immutable-document record kind and
+                    data-store spec); and the agent already turns free text into a structured
+                    contact claim with an LLM, with OCR and document interpretation planned as
+                    AI-produced claims carrying provenance (pdn-agent README). Nothing here models
+                    OCR, transcription or conversion themselves, which both repos keep out of
+                    scope; only their result (sources:extractedText) and their record
+                    (sources:Extraction).
+
+                    Possible addition, deliberately not defined yet: sources:WebLink, a URL or a
+                    saved web page the person brings as a source — podcat:Information already
+                    names web links among its contents. Nothing in the app ingests one today, and
+                    it would need reconciling with persona.ttl's persona:WebURL designator (a
+                    person's own web address, not a source) before it is minted.
+
+                    pod.ttl's pod:attachment is a documentation-only property (README.md's
+                    Documentation-only Properties, integrity.md's PNG-3), so no triple links a pod to a
+                    sources:SourceItem; a source item is the description of a file, kept in a
+                    graph alongside the structured content derived from it. persona.ttl carries no
+                    thin hasX-link property for this file either, for the same reason
+                    residences.ttl needs none: a source item is reached from the content derived
+                    from it, never from the person directly. Referenced by name, with no
+                    owl:imports in either direction: persona:Person and service:Service (as
+                    sources:extractedBy's range) and the CCO artifact classes the four kinds are
+                    aligned to.
+
+                    sources:Image, sources:Document, sources:TextBlob and sources:Video are
+                    independent template type label classes, asserted via rdf:type directly on a
+                    source-item individual and targeted directly by their own SHACL shapes
+                    (other/shacl/sources-shacl.ttl) — independent of pod.ttl's pod:shape
+                    property, whose own range is sh:NodeShape (the validating shape, not the
+                    content's own class)."""@en .
+
+
+#################################################################
+#    SourceItem — the unstructured item itself
+#################################################################
+
+sources:SourceItem rdf:type owl:Class ;
+    rdfs:subClassOf cco:ont00000798 ;  # Information Bearing Artifact
+    rdfs:label "Source Item"@en ;
+    rdfs:comment """One piece of unstructured content a person brought into the app, which
+                    could in principle be turned into structured pod data: a photo, a scan, a PDF,
+                    a pasted block of text, a video. Abstract in intent: no individual is typed
+                    sources:SourceItem directly, only one of its four concrete subclasses
+                    (sources:Image, sources:Document, sources:TextBlob, sources:Video), the same
+                    way identitydocuments:IdentityDocument is only ever asserted through its
+                    subclasses.
+
+                    A subclass of CCO's Information Bearing Artifact (cco:ont00000798), the class
+                    CCO's own Image, Document and Video already sit under — what a source item is,
+                    is the bearer of some information, not the information itself, and the
+                    structured record read out of it is a second, separate individual linked back
+                    by sources:derivedBy and sources:extractedFrom.
+
+                    Immutable, like the pod attachment it describes: a source item's content is
+                    never updated in place, so its sources:contentHash never changes, and a
+                    corrected file is a new source item (app-behavior.md's Attachment Permissions;
+                    mia-docs' cells immutable-document record kind). Whether the file it describes
+                    is attached (shared with every member) or private to one member is a fact about
+                    the pod, not about the item, and is not recorded here.
+
+                    The one subclass this version deliberately does not define is
+                    sources:WebLink — a URL or saved web page brought as a source. See this
+                    file's own ontology-level comment for why it is left as a possible addition."""@en .
+
+sources:Image rdf:type owl:Class ;
+    rdfs:subClassOf sources:SourceItem ,
+                    cco:ont00000702 ;  # Image
+    rdfs:label "Image"@en ;
+    rdfs:comment """A source item that is a still image: a photo, a screenshot, or a scan of a
+                    card or a page — a photo of a passport, a business card, a receipt, a pet's
+                    vaccination certificate. Its sources:mediaType is always an image/* type.
+                    Also typed under CCO's own Image (cco:ont00000702). Its text, if any, is what
+                    an OCR pass or a person read off it, carried as sources:extractedText.
+                    Asserted via rdf:type directly on the source-item individual, validated by
+                    :ImageShape and :SourceItemShape in other/shacl/sources-shacl.ttl. Not to be
+                    confused with persona:hasPhoto, which points at an avatar or document photo by
+                    URI and says nothing about where structured data came from."""@en .
+
+sources:Document rdf:type owl:Class ;
+    rdfs:subClassOf sources:SourceItem ,
+                    cco:ont00001298 ;  # Document
+    rdfs:label "Document"@en ;
+    rdfs:comment """A source item that is a document file: a PDF, a word-processor file, a
+                    spreadsheet, a Markdown file — a lease, a tax form, a flight confirmation, a
+                    completed directory form. Also typed under CCO's own Document
+                    (cco:ont00001298). A scan saved as a PDF is a sources:Document; the same scan
+                    saved as a picture is a sources:Image — the file's own format decides, not
+                    what the page shows. Asserted via rdf:type directly on the source-item
+                    individual, validated by :SourceItemShape in other/shacl/sources-shacl.ttl.
+                    Not an identitydocuments:IdentityDocument: that class is the identity record
+                    itself, which a sources:Document may be the source of."""@en .
+
+sources:TextBlob rdf:type owl:Class ;
+    rdfs:subClassOf sources:SourceItem ;
+    rdfs:label "Text Blob"@en ;
+    rdfs:comment """A source item that is free text the person pasted or typed into the app
+                    as a source — a forwarded confirmation email, a block of contact details, a
+                    paragraph describing a pet — rather than a file. Its text is its content, so
+                    sources:extractedText is required on a text blob, where it is optional on every
+                    other kind; and it usually has no sources:fileName. Not a pod's note (the one
+                    jointly writable Markdown document every pod has) and not a chat message (a
+                    pod's chat stream): both are built-in areas of every pod rather than items a
+                    person brings, and neither is modelled as RDF at all (README.md's
+                    Documentation-only Properties). Typed only under sources:SourceItem: CCO has
+                    no class for a body of loose text. Asserted via rdf:type directly on the
+                    source-item individual, validated by :TextBlobShape and :SourceItemShape in
+                    other/shacl/sources-shacl.ttl."""@en .
+
+sources:Video rdf:type owl:Class ;
+    rdfs:subClassOf sources:SourceItem ,
+                    cco:ont00000874 ;  # Video
+    rdfs:label "Video"@en ;
+    rdfs:comment """A source item that is a video file. Its sources:mediaType is always a
+                    video/* type. Also typed under CCO's own Video (cco:ont00000874). The app
+                    previews video attachments (README.md's Introduction to Pods) and lists images
+                    and videos among the claims a person shares (mia-docs' claim language), but
+                    nothing reads structure out of a video yet, so a video's sources:extractedText
+                    is normally absent. Asserted via rdf:type directly on the source-item
+                    individual, validated by :VideoShape and :SourceItemShape in
+                    other/shacl/sources-shacl.ttl."""@en .
+
+
+#################################################################
+#    SourceItem properties — the metadata the app already keeps
+#################################################################
+
+sources:mediaType rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:SourceItem ;
+    rdfs:range xsd:string ;
+    rdfs:label "media type"@en ;
+    rdfs:comment """The item's IANA media type (RFC 6838), e.g. 'image/jpeg', 'application/pdf',
+                    'text/plain' — the same value pdn-agent's Attachment carries as its
+                    content_type. Required, exactly one value. Lowercase type and subtype; any
+                    parameters (e.g. '; charset=utf-8') are left off. Each concrete kind's own
+                    shape narrows the top-level type where the kind fixes one (image/* for
+                    sources:Image, video/* for sources:Video, text/* for sources:TextBlob); a
+                    sources:Document's types are too varied to narrow."""@en .
+
+sources:fileName rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:SourceItem ;
+    rdfs:range xsd:string ;
+    rdfs:label "file name"@en ;
+    rdfs:comment """The item's file name as it was added, e.g. 'lease-2026.pdf' — the same value
+                    pdn-agent's Attachment carries as its filename. At most one value: optional
+                    because a sources:TextBlob is pasted text with no file behind it. A display
+                    and search hint only; the item is identified by its own IRI, and its content
+                    by sources:contentHash."""@en .
+
+sources:byteSize rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:SourceItem ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "byte size"@en ;
+    rdfs:comment """The size of the item's content in bytes — the payload length the PDN's own
+                    data-store listings report (mia-docs' data-store spec). At most one value.
+                    Never zero in practice, since the PDN rejects an empty payload, but typed
+                    non-negative rather than positive so that a text blob's size need not be
+                    special-cased."""@en .
+
+sources:contentHash rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:SourceItem ;
+    rdfs:range xsd:string ;
+    rdfs:label "content hash"@en ;
+    rdfs:comment """The BLAKE3 hash of the item's content, as 64 lowercase hexadecimal digits —
+                    the address the PDN's content-addressed blob store already keeps every payload
+                    under (mia-docs' node-assembly and core specs). At most one value. Being a
+                    hash of immutable content, it also lets two members, or two pods, tell that
+                    they hold the very same file without comparing bytes — which is how the
+                    Browser tool's bit-for-bit copy of a credential (pod:Browser) can be seen to be
+                    unchanged."""@en .
+
+sources:addedAt rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:SourceItem ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "added at"@en ;
+    rdfs:comment """When the item was added to the pod, as an xsd:dateTime with a timezone.
+                    Required, exactly one value. When the photo was taken, or the document
+                    written, is a different and often unknown fact, and is not recorded
+                    here."""@en .
+
+sources:extractedText rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:SourceItem ;
+    rdfs:range xsd:string ;
+    rdfs:label "extracted text"@en ;
+    rdfs:comment """The item's text content: what an OCR pass, a document converter or a person
+                    read off it, as plain text or Markdown — the same value pdn-agent's
+                    Attachment carries as its pre-extracted text. At most one value. Absent means
+                    the item is unread: no text has been extracted from it, or none could be. It
+                    is never the empty string — an item from which nothing could be read must not
+                    look like one whose text is empty (pdn-agent's remaining-mee-tools design, D2).
+                    Required on a sources:TextBlob, whose text is its content. Who or what produced
+                    the text is not recorded on the item; the record of reading structure out of
+                    it is a sources:Extraction."""@en .
+
+
+#################################################################
+#    Extraction — reading structure out of a source item
+#################################################################
+
+sources:Extraction rdf:type owl:Class ;
+    rdfs:subClassOf <https://w3id.org/cco-domains/cco/ont00000366> ;  # Act of Information Processing
+    rdfs:label "Extraction"@en ;
+    rdfs:comment """One act of deriving structured content from one or more source items: a
+                    person typing a passport's fields in from a photo of it, an OCR pass over a
+                    scanned form, an LLM turning a pasted block of text into a contact card (which
+                    pdn-agent's create_contact_from_text already does). Carries what it read
+                    (sources:extractedFrom, at least one), who or what did it
+                    (sources:extractedBy), how (sources:extractionMethod), when
+                    (sources:extractedAt) and, optionally, how sure it was (sources:confidence).
+                    The content it produced points back at it with sources:derivedBy — the
+                    direction that lets an existing structured record gain a provenance link
+                    without the source item, which is immutable, ever changing.
+
+                    A subclass of CCO's Act of Information Processing (cco:ont00000366), "a
+                    Planned Act in which one or more input Information Content Entities are
+                    received, manipulated, transferred, or stored by an Agent". Its natural W3C
+                    counterpart is PROV-O's prov:Activity, with sources:extractedFrom a narrower
+                    prov:used and sources:derivedBy a narrower prov:wasGeneratedBy; that
+                    alignment is not asserted here, since project_files/prov-upper.ttl declares
+                    neither term yet.
+
+                    Asserted via rdf:type directly on the extraction individual, validated by
+                    :ExtractionShape in other/shacl/sources-shacl.ttl."""@en .
+
+sources:extractedFrom rdf:type owl:ObjectProperty ;
+    rdfs:domain sources:Extraction ;
+    rdfs:range sources:SourceItem ;
+    rdfs:label "extracted from"@en ;
+    rdfs:comment """Links an extraction to the source item(s) it read. Required, at least one
+                    value, no fixed upper bound: a driver's license read from photos of its front
+                    and its back is one extraction from two images."""@en .
+
+sources:extractedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain sources:Extraction ;
+    rdfs:label "extracted by"@en ;
+    rdfs:comment """Who or what performed the extraction: a persona:Person who read the item and
+                    entered the data by hand, or a service:Service — typically the person's own
+                    AI agent (service:AgentService) — that did it automatically. Required, exactly
+                    one value. Deliberately left without an rdfs:range, since OWL would read two
+                    rdfs:range values as an intersection; the persona:Person/service:Service union
+                    is enforced in other/shacl/sources-shacl.ttl instead, the same way
+                    shacl/pod-shacl.ttl enforces pod:claimant's three-way union. Both classes are
+                    referenced by name, with no owl:imports. Independent of the claimant of the
+                    graph the extracted content sits in: an agent may extract a record that the
+                    person then claims as their own."""@en .
+
+sources:extractionMethod rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:Extraction ;
+    rdfs:range xsd:string ;
+    rdfs:label "extraction method"@en ;
+    rdfs:comment """How the structured content was read out of the source. Required, exactly one
+                    value. Controlled vocabulary, enumerated in other/shacl/sources-shacl.ttl
+                    rather than here (the same SHACL-enumeration pattern education:educationLevel
+                    and vehicles:fuelType use): 'manual' (a person read it and entered the data),
+                    'ocr' (optical character recognition over an image or scan), 'llm' (a language
+                    model read the item's text or the item itself), 'parser' (a deterministic
+                    reader of a known format — a vCard, an ICS file, a credential's own
+                    encoding)."""@en .
+
+sources:extractedAt rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:Extraction ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "extracted at"@en ;
+    rdfs:comment """When the extraction was performed, as an xsd:dateTime with a timezone.
+                    Required, exactly one value."""@en .
+
+sources:confidence rdf:type owl:DatatypeProperty ;
+    rdfs:domain sources:Extraction ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "confidence"@en ;
+    rdfs:comment """How sure the extractor was of the result as a whole, from 0 (no confidence)
+                    to 1 (certain). At most one value, and normally present only for the 'ocr' and
+                    'llm' methods: a person entering data by hand, or a parser reading a known
+                    format, reports none. A score for the extraction as a whole rather than per
+                    field, since nothing in the app yet produces per-field scores."""@en .
+
+sources:derivedBy rdf:type owl:ObjectProperty ;
+    rdfs:range sources:Extraction ;
+    rdfs:label "derived by"@en ;
+    rdfs:comment """Links any structured content individual — an identitydocuments:Passport, a
+                    pets:Pet, a persona:Person's contact details — to the sources:Extraction that
+                    produced it. Zero or more values: content entered with no source has none, and
+                    a record built up from several sources over time has one per extraction.
+                    Deliberately left without an rdfs:domain, since any content class may carry it
+                    (the same reason persona:hasPhoto has none). No existing form shape is closed,
+                    so adding this property to an existing record leaves it valid under that
+                    record's own shape."""@en .

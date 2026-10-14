@@ -52,11 +52,11 @@
     <uri id="education"                   name="http://mee.foundation/ontologies/education"
          uri="file:/Users/paul/GitHub/pod-ontologies/other/education.ttl"/>
     <uri id="education-shacl"             name="http://mee.foundation/ontologies/education/shapes"
-         uri="file:/Users/paul/GitHub/tpod-ontologies/other/shacl/education-shacl.ttl"/>
+         uri="file:/Users/paul/GitHub/pod-ontologies/other/shacl/education-shacl.ttl"/>
     <uri id="sources"                     name="http://mee.foundation/ontologies/sources"
-         uri="file:/Users/paul/GitHub/tpod-ontologies/other/sources.ttl"/>
+         uri="file:/Users/paul/GitHub/pod-ontologies/other/sources.ttl"/>
     <uri id="sources-shacl"               name="http://mee.foundation/ontologies/sources/shapes"
-         uri="file:/Users/paul/GitHub/tpod-ontologies/other/shacl/sources-shacl.ttl"/>
+         uri="file:/Users/paul/GitHub/pod-ontologies/other/shacl/sources-shacl.ttl"/>
 
     <!-- Persona extension ontologies (persona-ext/): peer ontologies whose
          properties have domain p:Person, too narrow for persona.ttl itself -->

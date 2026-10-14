@@ -8,13 +8,14 @@
 @prefix p: <http://mee.foundation/ontologies/persona#> .
 @prefix o: <http://mee.foundation/ontologies/organization#> .
 @prefix service: <http://mee.foundation/ontologies/service#> .
+@prefix sources: <http://mee.foundation/ontologies/sources#> .
 @prefix podcat: <http://mee.foundation/ontologies/pod-categories#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/9.5.0> ;
-    dc:date "2026-09-26"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/9.6.0> ;
+    dc:date "2026-10-14"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — in the Pod Ontology."@en .
 
@@ -22,7 +23,7 @@
 #################################################################
 #  Pod
 #  pod:Pod carries only what's common to every pod regardless of
-#  kind: category. A pod records no tree position of its own — its
+#  kind: category and attachment. A pod records no tree position of its own — its
 #  parent is per-member state in that member's own store, never a
 #  stored path — so there's nothing to constrain here for that. Graph links (pod:member/
 #  pod:tool) live on :InstancePodShape below — since pod:TemplatePod
@@ -76,6 +77,21 @@
             sh:message "A pod:category value must be a concept in some skos:ConceptScheme — podcat:PodCategoryScheme (pod-categories.ttl) for a core category, or an extension's own scheme (pod-category-ext/), which must skos:broadMatch a core concept."@en
         ] ;
         sh:message "A pod may have at most one pod:category value: the category concept its content is filed under, if any."@en
+    ] ;
+
+    # pod:attachment — zero or more values, no upper bound, on any
+    # pod:Pod regardless of kind. Each value is a source item
+    # (other/sources.ttl), checked against its four concrete kinds by
+    # name rather than by sh:class sources:SourceItem, since a source
+    # item is only ever typed through one of them and the data graph
+    # need not carry sources.ttl's rdfs:subClassOf triples. What the
+    # item itself must carry is :SourceItemShape's job
+    # (other/shacl/sources-shacl.ttl), not this shape's.
+    sh:property [
+        sh:path pod:attachment ;
+        sh:nodeKind sh:IRI ;
+        sh:or ( [ sh:class sources:Image ] [ sh:class sources:Document ] [ sh:class sources:TextBlob ] [ sh:class sources:Video ] ) ;
+        sh:message "Each pod:attachment value must be a sources:SourceItem, typed as one of sources:Image, sources:Document, sources:TextBlob or sources:Video."@en
     ] ;
 
     # rdf:type — exactly one of pod:TemplatePod/pod:InstancePod, never

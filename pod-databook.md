@@ -100,9 +100,12 @@ no note-filename field: here the note is found by its name and the attachments b
 reserved folder, so adding a file to a pod is just putting a file in that pod's folder — and
 attaching it, so that every member gets it, is just putting it in `_pod-attachments` instead. At
 runtime the same two acts are ordinary app operations, and the attached/private distinction is a rule
-about what propagates rather than about where a file sits. `pod:note`, `pod:attachment` and `pod:chat` are documentation-only properties — described in
-README.md's [Documentation-only Properties](README.md#documentation-only-properties), declared in no
-ontology, and never written as a triple by anything (integrity.md's PNG-3).
+about what propagates rather than about where a file sits. `pod:attachment` is a real `pod.ttl`
+property, its values `sources:SourceItem`s, but the example DataBooks carry none of its triples: in
+this scaffolding the `_pod-attachments` folder stands for it. `pod:note` and `pod:chat` are
+documentation-only properties — described in README.md's
+[Documentation-only Properties](README.md#documentation-only-properties), declared in no ontology,
+and never written as a triple by anything (integrity.md's PNG-3).
 
 This document specifies the DataBook file and the folder this repo wraps it in; for what a pod
 holds in the app, see [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md, and for the

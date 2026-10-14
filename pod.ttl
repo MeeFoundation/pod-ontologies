@@ -3,6 +3,7 @@
 @prefix p: <http://mee.foundation/ontologies/persona#> .
 @prefix o: <http://mee.foundation/ontologies/organization#> .
 @prefix service: <http://mee.foundation/ontologies/service#> .
+@prefix sources: <http://mee.foundation/ontologies/sources#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -12,8 +13,8 @@
 @base <http://mee.foundation/ontologies/pod> .
 
 <http://mee.foundation/ontologies/pod> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/9.11.0> ;
-    dc:date "2026-09-26"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/9.12.0> ;
+    dc:date "2026-10-14"^^xsd:date ;
     rdfs:label "Pod Ontology"@en ;
     rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit of the user's tree, a unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). Defines pod:Pod — the self-contained content facet of a pod. pod:Pod stores no property recording the pod's own tree position: a pod's parent is per-member state in that member's own store, never shared content, and not a fact this RDF individual needs to carry. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:InstancePod (an actual pod instantiated in a user's own tree) — a pod is always exactly one of the two, never both. There are no further kinds of pod: an instance pod that carries anything beyond its pod:member baseline carries it as a pod:Tool — a form, a calendar, a drawing canvas, a map, an address-book sync or a connection to a standalone web browser, each with its own data format and its own contribution to the app's UI (pod:Form, pod:Calendar, pod:Canvas, pod:Map, pod:Contacts, pod:Browser), zero or more per pod, rather than in a subclass of its own. pod:InstancePod also carries the two tag properties — pod:userTag, a plain xsd:string, and pod:serviceTag, whose values are pod:ServiceTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, a retrieval dimension orthogonal to pod:category's single filing hint. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
 
@@ -49,7 +50,8 @@ pod:abstract rdf:type owl:AnnotationProperty ;
 #    running Tellipod (pod-databook.md's Development Scaffolding section).
 #
 #    pod:Pod itself carries only what's common to every pod
-#    regardless of facet: inherent classification (pod:category).
+#    regardless of facet: inherent classification (pod:category) and
+#    the files every member receives (pod:attachment).
 #    Everything facet-specific — including pod:member (its linked
 #    pod:MemberGraph container(s)) and pod:tool (its pod:Tool nodes) —
 #    lives on pod:TemplatePod or pod:InstancePod below. There is
@@ -70,7 +72,7 @@ pod:abstract rdf:type owl:AnnotationProperty ;
 pod:Pod rdf:type owl:Class ;
     pod:abstract true ;
     rdfs:label "Pod"@en ;
-    rdfs:comment """Superclass of every pod individual, carrying only what's common regardless of kind: inherent classification (pod:category). pod:Pod — the RDF content facet of a pod — stores no property recording its own tree position: a pod's parent is per-member state in that member's own store rather than shared content, so refiling a pod requires no triple to change, which is what keeps a pod robust under PDN sync. pod:category does not violate this: its range is skos:Concept — a category concept scoped to podcat:PodCategoryScheme (pod-categories.ttl), not a tree position — so it records what kind of thing the pod is, never where it currently lives. Creator and ownership metadata (pod:creator, pod:owner), the tag properties (pod:userTag, pod:serviceTag), the graph link pod:member and the tool link pod:tool live on the pod:InstancePod kind, not directly here — tags in particular are deliberately not hoisted up to pod:Pod the way pod:category is, since a pod:TemplatePod seeds none; validation shape is not stored on either kind, only derived (see pod:InstancePod's own comment)."""@en .
+    rdfs:comment """Superclass of every pod individual, carrying only what's common regardless of kind: inherent classification (pod:category) and the pod's attached files (pod:attachment, each a sources:SourceItem). pod:Pod — the RDF content facet of a pod — stores no property recording its own tree position: a pod's parent is per-member state in that member's own store rather than shared content, so refiling a pod requires no triple to change, which is what keeps a pod robust under PDN sync. pod:category does not violate this: its range is skos:Concept — a category concept scoped to podcat:PodCategoryScheme (pod-categories.ttl), not a tree position — so it records what kind of thing the pod is, never where it currently lives. Creator and ownership metadata (pod:creator, pod:owner), the tag properties (pod:userTag, pod:serviceTag), the graph link pod:member and the tool link pod:tool live on the pod:InstancePod kind, not directly here — tags in particular are deliberately not hoisted up to pod:Pod the way pod:category is, since a pod:TemplatePod seeds none; validation shape is not stored on either kind, only derived (see pod:InstancePod's own comment)."""@en .
 
 
 #################################################################
@@ -653,10 +655,12 @@ pod:member rdf:type owl:ObjectProperty ;
 #    content, even though it sits beneath it in the tree.
 #    The pod's note keeps its own separate role and its own Note
 #    area, and is neither an attachment nor a private file.
-#    The diagram (images/pod-ontology/pod.png)
-#    additionally sketches pod:note, pod:attachment, and pod:chat
-#    as arrows off Pod for documentation purposes only — none of the
-#    three is an actual property declared here, and none is ever
+#    pod:attachment, below, links a pod to each of its attachments,
+#    every one described as a sources:SourceItem (other/sources.ttl).
+#    A private file is never a pod:attachment value. The diagram
+#    (images/pod-ontology/pod.png) additionally sketches pod:note and
+#    pod:chat as arrows off Pod for documentation purposes only —
+#    neither is an actual property declared here, and neither is ever
 #    reified as a triple in any real graph (see integrity.md's PNG-3
 #    and README.md's Documentation-only Properties section).
 #
@@ -686,6 +690,12 @@ pod:member rdf:type owl:ObjectProperty ;
 #    and helper scripts comes from. None of it exists in a running Tellipod
 #    (pod-databook.md's Development Scaffolding section).
 #################################################################
+
+pod:attachment rdf:type owl:ObjectProperty ;
+    rdfs:domain pod:Pod ;
+    rdfs:range sources:SourceItem ;
+    rdfs:label "attachment"@en ;
+    rdfs:comment """One of the pod's attachments — the files every member of the pod receives, shown in the app's Attachments area and travelling with the pod when it is shared. Each value is a sources:SourceItem (other/sources.ttl) — in practice one of its concrete kinds, sources:Image, sources:Document, sources:TextBlob or sources:Video — describing the file by its media type, file name, size, content hash and any text read off it. Zero or more values, no fixed upper bound. The set is flat, like email attachments. An attachment is immutable, exactly as a sources:SourceItem is: a correction is a new item, never an update in place (app-behavior.md's Attachment Permissions). A file a member adds to the pod without attaching it is that member's own private file and is never a pod:attachment value, so whether a file is attached or private is recorded by whether this triple exists, not by anything on the item itself. The pod's Markdown note and its chat stream are not attachments. Domain pod:Pod, matching pod.png's attachment arrow off Pod. Range sources:SourceItem is referenced by name without owl:imports, the same by-name pattern pod:category uses for skos:Concept."""@en .
 
 pod:category rdf:type owl:ObjectProperty ;
     rdfs:domain pod:Pod ;

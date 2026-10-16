@@ -10,7 +10,7 @@
 
 <http://mee.foundation/ontologies/pets/shapes> rdf:type owl:Ontology ;
     owl:imports <http://mee.foundation/ontologies/pets> ;
-    owl:versionIRI <http://mee.foundation/ontologies/pets/shapes/1.9.0> ;
+    owl:versionIRI <http://mee.foundation/ontologies/pets/shapes/1.10.0> ;
     dc:date "2026-10-16"^^xsd:date ;
     rdfs:label "Pets Template SHACL Shapes"@en ;
     rdfs:comment """SHACL shapes for validating graph files carrying pod:shape petshapes:PetShape or
@@ -77,6 +77,7 @@
         sh:path pets:hasBodyWeight ;
         sh:maxCount 1 ;
         sh:class pets:BodyWeight ;
+        sh:node :BodyWeightShape ;
         sh:message "A Pet may link to at most one pets:BodyWeight via hasBodyWeight."@en
     ] ;
 
@@ -146,6 +147,7 @@
         sh:path pets:hasBodyWeight ;
         sh:maxCount 1 ;
         sh:class pets:BodyWeight ;
+        sh:node :BodyWeightShape ;
         sh:message "A Pet may link to at most one pets:BodyWeight via hasBodyWeight."@en
     ] ;
 
@@ -210,6 +212,7 @@
         sh:path pets:hasMedication ;
         sh:minCount 1 ;
         sh:class pets:Medication ;
+        sh:node :MedicationShape ;
         sh:message "A Pet Medications record must link to at least one pets:Medication via hasMedication."@en
     ] .
 
@@ -243,6 +246,7 @@
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:class pets:DosageAmount ;
+        sh:node :DosageAmountShape ;
         sh:message "A Medication must link to exactly one pets:DosageAmount via hasDosageAmount."@en
     ] ;
 
@@ -251,6 +255,7 @@
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:class pets:MedicationAdministration ;
+        sh:node :MedicationAdministrationShape ;
         sh:message "A Medication must link to exactly one pets:MedicationAdministration via hasAdministration."@en
     ] ;
 

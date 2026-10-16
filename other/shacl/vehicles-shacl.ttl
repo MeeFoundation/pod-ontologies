@@ -10,7 +10,7 @@
 
 <http://mee.foundation/ontologies/vehicles/shapes> rdf:type owl:Ontology ;
     owl:imports <http://mee.foundation/ontologies/vehicles> ;
-    owl:versionIRI <http://mee.foundation/ontologies/vehicles/shapes/1.6.0> ;
+    owl:versionIRI <http://mee.foundation/ontologies/vehicles/shapes/1.7.0> ;
     dc:date "2026-10-16"^^xsd:date ;
     rdfs:label "Vehicles Template SHACL Shapes"@en ;
     rdfs:comment """SHACL shapes for validating graph files carrying pod:shape vehicleshapes:VehicleShape. Apply in
@@ -117,6 +117,7 @@
         sh:path vehicles:hasOdometerReading ;
         sh:maxCount 1 ;
         sh:class vehicles:OdometerReading ;
+        sh:node :OdometerReadingShape ;
         sh:message "A Vehicle may link to at most one vehicles:OdometerReading via hasOdometerReading."@en
     ] ;
 
@@ -124,6 +125,7 @@
         sh:path vehicles:hasEngineSpecification ;
         sh:maxCount 1 ;
         sh:class vehicles:EngineSpecification ;
+        sh:node :EngineSpecificationShape ;
         sh:message "A Vehicle may link to at most one vehicles:EngineSpecification via hasEngineSpecification."@en
     ] .
 

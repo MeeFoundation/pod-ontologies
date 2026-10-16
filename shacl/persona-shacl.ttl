@@ -13,8 +13,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/persona/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/persona/shapes/4.19.0> ;
-    dc:date "2026-09-19"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/persona/shapes/4.20.0> ;
+    dc:date "2026-10-16"^^xsd:date ;
     rdfs:label "Tellipod's SHACL Validation Shapes"@en ;
     rdfs:comment """SHACL validation shapes for Tellipod, a free, open-source application under development at The Mee Foundation.
 
@@ -379,11 +379,15 @@
         sh:message "At most one Height quality may be asserted."@en
     ] ;
 
-    # Optional: height measurement (0..1) — asserted as a sibling bearer-of
-    # value alongside the Height quality itself, matching graph-17's own
-    # pattern rather than second-guessing the data model.
+    # Optional: height measurement (0..1) — a Ratio Measurement ICE reached
+    # from the person via their Height quality and CCO's "is a ratio
+    # measurement of" (cco:ont00001983). It is NOT a bearer-of value: a
+    # measurement ICE is a generically dependent continuant, while bearer-of
+    # (BFO_0000196) ranges over specifically dependent continuants. The value
+    # and unit sit on a separate Information Bearing Entity that is carrier of
+    # the measurement (see the Health & Wellness example graph).
     sh:property [
-        sh:path <http://purl.obolibrary.org/obo/BFO_0000196> ;  # bearer of
+        sh:path ( <http://purl.obolibrary.org/obo/BFO_0000196> [ sh:inversePath cco:ont00001983 ] ) ;
         sh:qualifiedValueShape [ sh:class cco:ont00001022 ] ;  # Ratio Measurement ICE
         sh:qualifiedMinCount 0 ;
         sh:qualifiedMaxCount 1 ;

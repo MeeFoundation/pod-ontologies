@@ -2,7 +2,7 @@
 id: http://www.example.org/tpod/pods/pod-40
 title: "Medical"
 type: pod-databook
-version: 2.2.0
+version: 2.3.0
 created: 2026-08-21
 description: >
   Pod DataBook for folder "Medical" (pod:category: podcat:PetsMedical). It is a two-member pod, shared by Alice with Paula, with two members (about :Self and :Paula_Walker) and one graph about :Ginger, Alice's cat (the pod's subject).
@@ -118,6 +118,7 @@ This graph captures Alice's record of her cat Ginger's medications — an amoxic
 @prefix : <http://www.example.org/tpod#> .
 @prefix pets: <http://mee.foundation/ontologies/pets#> .
 @prefix cco: <https://w3id.org/cco-domains/cco/> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -151,8 +152,12 @@ This graph captures Alice's record of her cat Ginger's medications — an amoxic
 
 :Ginger_Medication_Clavamox_Dosage rdf:type owl:NamedIndividual ,
                pets:DosageAmount ;
-    rdfs:comment "1 tablet — a count of discrete dose-form units (see hasDoseForm above), not a measured quantity, so no 'uses measurement unit' link (per UCUM's own stance that 'tablet' is not a real unit)."@en ;
-    cco:ont00001773 1 .  # has integer value
+    rdfs:comment "1 tablet — a count of discrete dose-form units (see hasDoseForm above), not a measured quantity, so no 'uses measurement unit' link (per UCUM's own stance that 'tablet' is not a real unit)."@en .
+
+:Ginger_Medication_Clavamox_Dosage_Bearer rdf:type owl:NamedIndividual ,
+               cco:ont00000253 ;                 # Information Bearing Entity
+    obo:BFO_0000101 :Ginger_Medication_Clavamox_Dosage ;  # is carrier of
+    cco:ont00001773 1 .                          # has integer value
 
 :Ginger_Medication_Clavamox_Administration rdf:type owl:NamedIndividual ,
                pets:MedicationAdministration ;
@@ -176,7 +181,11 @@ This graph captures Alice's record of her cat Ginger's medications — an amoxic
 
 :Ginger_Medication_Glucosamine_Dosage rdf:type owl:NamedIndividual ,
                pets:DosageAmount ;
-    rdfs:comment "1 teaspoon — a true measured liquid quantity, so it carries a real CCO measurement unit (unlike the tablet count above)."@en ;
+    rdfs:comment "1 teaspoon — a true measured liquid quantity, so it carries a real CCO measurement unit (unlike the tablet count above)."@en .
+
+:Ginger_Medication_Glucosamine_Dosage_Bearer rdf:type owl:NamedIndividual ,
+               cco:ont00000253 ;                 # Information Bearing Entity
+    obo:BFO_0000101 :Ginger_Medication_Glucosamine_Dosage ;  # is carrier of
     cco:ont00001769 "1.0"^^xsd:decimal ;         # has decimal value
     cco:ont00001863 cco:ont00001573 .            # uses measurement unit → Teaspoon Measurement Unit
 

@@ -12,9 +12,9 @@
 <http://mee.foundation/ontologies/vehicles> rdf:type owl:Ontology ;
     owl:imports <http://mee.foundation/ontologies/wikidata-vehicle-makes-subset> ,
                 <http://mee.foundation/ontologies/wikidata-vehicle-models-subset> ;
-    owl:versionIRI <http://mee.foundation/ontologies/vehicles/1.10.0> ;
-    dc:date "2026-09-19"^^xsd:date ;
-    owl:versionInfo "Version 1.10.0 - the category ontology renamed to pod-categories, with the cat: prefix becoming podcat:"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/vehicles/1.11.0> ;
+    dc:date "2026-10-16"^^xsd:date ;
+    owl:versionInfo "Version 1.11.0 - v:OdometerReading corrected from cco:ont00001283 to cco:ont00001022, with value and unit on a separate bearer"@en ;
     rdfs:label "Vehicles Ontology"@en ;
     rdfs:comment """The second of this project's other/ peer ontologies (after other/pets.ttl) — small,
                     mostly-vendored ontologies for domains a person merely *has* (a pet, a vehicle) rather
@@ -182,20 +182,19 @@ vehicles:driveWheelConfiguration rdf:type owl:DatatypeProperty ;
 #################################################################
 
 vehicles:OdometerReading rdf:type owl:Class ;
-    rdfs:subClassOf <https://w3id.org/cco-domains/cco/ont00000253> ,  # Information Bearing Entity
-                    <https://w3id.org/cco-domains/cco/ont00001283> ; # Ratio Measurement Information Content Entity
+    rdfs:subClassOf <https://w3id.org/cco-domains/cco/ont00001022> ; # Ratio Measurement Information Content Entity
     rdfs:label "Odometer Reading"@en ;
-    rdfs:comment """A vehicle's current odometer reading. Multi-typed as both CCO's Information Bearing
-                    Entity (cco:ont00000253) and Ratio Measurement Information Content Entity
-                    (cco:ont00001283) on one individual — the exact same deliberate simplification
-                    pets:BodyWeight/pets:DosageAmount already use (a single reified "amount" individual
-                    rather than CCO's usual two-individual generic-dependence pattern). Carries exactly one
-                    cco:ont00001769 ("has decimal value") and exactly one cco:ont00001863 ("uses measurement
-                    unit") pointing at one of project_files/UnitsOfMeasureOntology.ttl's Measurement Unit
-                    individuals — e.g. cco:ont00001433 "Mile Measurement Unit" or cco:ont00001598 "Kilometer
-                    Measurement Unit". The unit is required here, mirroring pets:BodyWeight rather than
-                    pets:DosageAmount's optional unit: mileage is always in either miles or kilometers, never
-                    a unitless count, so a bare number alone would be ambiguous."""@en .
+    rdfs:comment """A vehicle's current odometer reading. A CCO Ratio Measurement Information Content
+                    Entity (cco:ont00001022). Following CCO's two-individual pattern, this individual is the
+                    abstract measurement only; the value and unit sit on a separate Information Bearing Entity
+                    (cco:ont00000253) that is carrier of it (obo:BFO_0000101), the same two-individual style
+                    pets:BodyWeight/pets:DosageAmount use. That bearer carries exactly one cco:ont00001769
+                    ("has decimal value") and exactly one cco:ont00001863 ("uses measurement unit") pointing
+                    at one of project_files/UnitsOfMeasureOntology.ttl's Measurement Unit individuals — e.g.
+                    cco:ont00001433 "Mile Measurement Unit" or cco:ont00001598 "Kilometer Measurement Unit".
+                    The unit is required here, mirroring pets:BodyWeight rather than pets:DosageAmount's
+                    optional unit: mileage is always in either miles or kilometers, never a unitless count,
+                    so a bare number alone would be ambiguous."""@en .
 
 vehicles:hasOdometerReading rdf:type owl:ObjectProperty ;
     rdfs:domain vehicles:Vehicle ;

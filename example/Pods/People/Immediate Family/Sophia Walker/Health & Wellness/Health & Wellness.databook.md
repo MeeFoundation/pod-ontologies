@@ -2,7 +2,7 @@
 id: http://www.example.org/tpod/pods/pod-13
 title: "Health & Wellness"
 type: pod-databook
-version: 1.3.0
+version: 1.4.0
 created: 2026-07-10
 description: >
   Pod DataBook for folder "Health & Wellness" (pod:category: podcat:HealthWellness). It is a one-member pod with one member entry about :Self and one graph about :Sophia_Walker (the pod's subject).
@@ -58,7 +58,7 @@ This graph captures Alice's own bare identity claim (just her given name) — th
 
 #### Overview
 
-This graph captures Sophia Walker's physical body characteristics — properties that are intrinsic to her as a person and do not belong to any particular institutional or social graph — as recorded by Alice. Height is recorded as a CCO Height quality with a RatioMeasurementICE (52 inches). Eye color is modeled as Sophia bearing a BlueEyeColor quality directly. Hair color is borne by her ScalpHair continuant part. Alice is the claimant; Sophia is the pod's `subject` but, since this pod now has a real member entry (graph 35, above) about Alice herself, Sophia's graph is held by the pod's form tool rather than being one of the required `member` entries.
+This graph captures Sophia Walker's physical body characteristics — properties that are intrinsic to her as a person and do not belong to any particular institutional or social graph — as recorded by Alice. Height is recorded as a CCO Height quality, measured by a RatioMeasurementICE ("is a ratio measurement of") whose value and unit (52 inches) sit on a separate Information Bearing Entity that is carrier of it. Eye color is modeled as Sophia bearing a BlueEyeColor quality directly. Hair color is borne by her ScalpHair continuant part. Alice is the claimant; Sophia is the pod's `subject` but, since this pod now has a real member entry (graph 35, above) about Alice herself, Sophia's graph is held by the pod's form tool rather than being one of the required `member` entries.
 
 #### Graph
 
@@ -81,7 +81,6 @@ This graph captures Sophia Walker's physical body characteristics — properties
     # ── Height ───────────────────────────────────────────────────────────────
 
     <http://purl.obolibrary.org/obo/BFO_0000196> :Sophia_Height ;
-    <http://purl.obolibrary.org/obo/BFO_0000196> :Sophia_Height_Measurement ;
 
     # ── Eye color ────────────────────────────────────────────────────────────
 
@@ -108,7 +107,11 @@ This graph captures Sophia Walker's physical body characteristics — properties
 
 :Sophia_Height_Measurement rdf:type owl:NamedIndividual ,
                                    <https://w3id.org/cco-domains/cco/ont00001022> ;  # Ratio Measurement ICE
-    <https://w3id.org/cco-domains/cco/ont00001983> :Sophia_Height ;
+    <https://w3id.org/cco-domains/cco/ont00001983> :Sophia_Height .  # is a ratio measurement of
+
+:Sophia_Height_Measurement_Bearer rdf:type owl:NamedIndividual ,
+                                   <https://w3id.org/cco-domains/cco/ont00000253> ;  # Information Bearing Entity
+    <http://purl.obolibrary.org/obo/BFO_0000101> :Sophia_Height_Measurement ;  # is carrier of
     <https://w3id.org/cco-domains/cco/ont00001863> <https://w3id.org/cco-domains/cco/ont00001677> ;  # uses measurement unit: Inch
     <https://w3id.org/cco-domains/cco/ont00001769> "52"^^xsd:decimal .  # has decimal value
 ```

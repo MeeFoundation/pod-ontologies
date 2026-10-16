@@ -12,9 +12,9 @@
     owl:imports <http://mee.foundation/ontologies/dron-upper-subset> ,
                 <http://mee.foundation/ontologies/ncbitaxon-subset> ,
                 <http://mee.foundation/ontologies/vbo-subset> ;
-    owl:versionIRI <http://mee.foundation/ontologies/pets/1.13.0> ;
-    dc:date "2026-09-19"^^xsd:date ;
-    owl:versionInfo "Version 1.13.0 - the category ontology renamed to pod-categories, with the cat: prefix becoming podcat:"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/pets/1.14.0> ;
+    dc:date "2026-10-16"^^xsd:date ;
+    owl:versionInfo "Version 1.14.0 - pets:DosageAmount re-parented from Ratio Measurement ICE (wrong IRI cco:ont00001283) to Quality Specification, with value/unit on a separate bearer; pets:BodyWeight corrected to cco:ont00001022 with a bearer"@en ;
     persona:usesDrOnClass <http://purl.obolibrary.org/obo/DRON_00000074> ,  # drug product
                     <http://purl.obolibrary.org/obo/DRON_00000028> ,  # active ingredient (role)
                     <http://purl.obolibrary.org/obo/DRON_00000022> ,  # drug tablet
@@ -119,20 +119,19 @@ pets:birthDate rdf:type owl:DatatypeProperty ;
                     at most one value: omit entirely when not known at all, even approximately."""@en .
 
 pets:BodyWeight rdf:type owl:Class ;
-    rdfs:subClassOf <https://w3id.org/cco-domains/cco/ont00000253> ,  # Information Bearing Entity
-                    <https://w3id.org/cco-domains/cco/ont00001283> ; # Ratio Measurement Information Content Entity
+    rdfs:subClassOf <https://w3id.org/cco-domains/cco/ont00001022> ; # Ratio Measurement Information Content Entity
     rdfs:label "Body Weight"@en ;
     rdfs:comment """A pet's body weight as of a single current measurement (not a weigh-in history).
-                    Multi-typed as both CCO's Information Bearing Entity (cco:ont00000253) and Ratio
-                    Measurement Information Content Entity (cco:ont00001283) on one individual — the exact
-                    same deliberate simplification pets:DosageAmount already uses (a single reified "amount"
-                    individual rather than CCO's usual two-individual generic-dependence pattern). Carries
-                    exactly one cco:ont00001769 ("has decimal value") and exactly one cco:ont00001863 ("uses
-                    measurement unit") pointing at one of project_files/UnitsOfMeasureOntology.ttl's
-                    Measurement Unit individuals — e.g. cco:ont00001477 "Kilogram Measurement Unit" or
-                    cco:ont00001728 "Pound Measurement Unit". Unlike pets:DosageAmount (where the unit is
-                    optional, since a discrete dose-form count like "1 tablet" carries no true unit), the
-                    unit is required here — a bare number alone is meaningless for a weight."""@en .
+                    A CCO Ratio Measurement Information Content Entity (cco:ont00001022). Following CCO's
+                    two-individual pattern, this individual is the abstract measurement only; the decimal
+                    value and the unit sit on a separate Information Bearing Entity (cco:ont00000253) that
+                    is carrier of it (obo:BFO_0000101). That bearer carries exactly one cco:ont00001769
+                    ("has decimal value") and exactly one cco:ont00001863 ("uses measurement unit") pointing
+                    at one of project_files/UnitsOfMeasureOntology.ttl's Measurement Unit individuals —
+                    e.g. cco:ont00001477 "Kilogram Measurement Unit" or cco:ont00001728 "Pound Measurement
+                    Unit". Unlike pets:DosageAmount (where the unit is optional, since a discrete dose-form
+                    count like "1 tablet" carries no true unit), the unit is required here — a bare number
+                    alone is meaningless for a weight."""@en .
 
 pets:hasBodyWeight rdf:type owl:ObjectProperty ;
     rdfs:domain pets:Pet ;
@@ -235,19 +234,19 @@ pets:hasDoseForm rdf:type owl:ObjectProperty ;
                     which are real measurement units."""@en .
 
 pets:DosageAmount rdf:type owl:Class ;
-    rdfs:subClassOf <https://w3id.org/cco-domains/cco/ont00000253> ,  # Information Bearing Entity
-                    <https://w3id.org/cco-domains/cco/ont00001283> ; # Ratio Measurement Information Content Entity
+    rdfs:subClassOf <https://w3id.org/cco-domains/cco/ont00000575> ; # Quality Specification
     rdfs:label "Dosage Amount"@en ;
-    rdfs:comment """How much of a Medication is given per dose. Multi-typed as both CCO's
-                    Information Bearing Entity (cco:ont00000253) and Ratio Measurement Information
-                    Content Entity (cco:ont00001283) on one individual — a deliberate simplification
-                    of CCO's usual two-individual pattern (a concrete Information Bearing Entity that
-                    generically depends-bears an abstract Measurement Information Content Entity), made
-                    because a single reified "amount" individual is simpler for a consumer-app medication
-                    list. Carries exactly one of cco:ont00001769 ("has decimal value") or cco:ont00001773
-                    ("has integer value") — the count/measurement itself — and, only when the amount is a
-                    true measured physical quantity (not a count of discrete dose-form units — see
-                    pets:hasDoseForm), cco:ont00001863 ("uses measurement unit") pointing at one of
+    rdfs:comment """How much of a Medication is given per dose. A CCO Quality Specification
+                    (cco:ont00000575, a Directive Information Content Entity): a dose is an instruction
+                    that prescribes an amount to give, not a measurement of something that was observed, so
+                    it is not typed as a Measurement Information Content Entity. Following CCO's
+                    two-individual pattern, this individual is the abstract specification only; the value
+                    and unit sit on a separate Information Bearing Entity (cco:ont00000253) that is carrier
+                    of it (obo:BFO_0000101). That bearer carries exactly one of cco:ont00001769 ("has
+                    decimal value") or cco:ont00001773 ("has integer value") — the amount itself — and,
+                    only when the amount is a true measured physical quantity (not a count of discrete
+                    dose-form units — see pets:hasDoseForm), cco:ont00001863 ("uses measurement unit")
+                    pointing at one of
                     project_files/UnitsOfMeasureOntology.ttl's Measurement Unit individuals (e.g.
                     "Teaspoon Measurement Unit", cco:ont00001573). This is CCO's own quantity/unit
                     machinery, reused here in place of pulling in UCUM or FHIR's Quantity datatype."""@en .

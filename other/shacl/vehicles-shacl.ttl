@@ -10,8 +10,8 @@
 
 <http://mee.foundation/ontologies/vehicles/shapes> rdf:type owl:Ontology ;
     owl:imports <http://mee.foundation/ontologies/vehicles> ;
-    owl:versionIRI <http://mee.foundation/ontologies/vehicles/shapes/1.5.0> ;
-    dc:date "2026-09-19"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/vehicles/shapes/1.6.0> ;
+    dc:date "2026-10-16"^^xsd:date ;
     rdfs:label "Vehicles Template SHACL Shapes"@en ;
     rdfs:comment """SHACL shapes for validating graph files carrying pod:shape vehicleshapes:VehicleShape. Apply in
                     addition to shacl/persona-shacl.ttl when validating a vehicle identity graph file. Targets
@@ -131,6 +131,8 @@
 #################################################################
 #  Odometer Reading Shape
 #  Targets vehicles:OdometerReading individuals.
+#  Values are read from the individual's carrier — the Information Bearing Entity that is
+#  carrier of it (the inverse of obo:BFO_0000101) — following CCO's two-individual pattern.
 #  Required: decimal value (cco:ont00001769, 1..1, xsd:decimal)
 #            measurement unit (cco:ont00001863, 1..1, IRI — CCO Measurement Unit individual)
 #################################################################
@@ -141,7 +143,7 @@
     sh:message "Odometer Reading validation: exactly one decimal value and exactly one measurement unit are required."@en ;
 
     sh:property [
-        sh:path <https://w3id.org/cco-domains/cco/ont00001769> ;  # has decimal value
+        sh:path ( [ sh:inversePath <http://purl.obolibrary.org/obo/BFO_0000101> ] <https://w3id.org/cco-domains/cco/ont00001769> ) ;  # has decimal value
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:decimal ;
@@ -149,7 +151,7 @@
     ] ;
 
     sh:property [
-        sh:path <https://w3id.org/cco-domains/cco/ont00001863> ;  # uses measurement unit
+        sh:path ( [ sh:inversePath <http://purl.obolibrary.org/obo/BFO_0000101> ] <https://w3id.org/cco-domains/cco/ont00001863> ) ;  # uses measurement unit
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:nodeKind sh:IRI ;

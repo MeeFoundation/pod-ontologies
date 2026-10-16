@@ -7,55 +7,59 @@ flowchart TD
 
     subgraph ctx["Graph"]
         direction LR
-        ctx_meta["claimant: :Self\ntoolTopic: :Ginger\nformShape: petshapes:PetMedicationRecordShape"]:::meta
+        ctx_meta["claimant: :Self\nformTopic: :Ginger\nshape: petshapes:PetMedicationRecordShape"]:::meta
     end
 
-    n8c49398c722e[":Ginger"]
-    necaf6f0a9b01[":Ginger_Medication_Clavamox\n(Medication)"]
-    n17dcf70f57c7("CHEBI_2676"):::lit
-    n5d0613638339("CHEBI_48947"):::lit
-    na93e495a4d4b("DRON_00000022"):::lit
-    n207b3499add0("Clavamox"):::lit
-    nf26d218574fc("Zoetis"):::lit
-    nc32c35310b69[":Ginger_Medication_Clavamox_Dosage\n(DosageAmount)"]
-    na85fe94ddb34[":Ginger_Medication_Clavamox_Administration\n(MedicationAdministration)"]
-    n136da128aa5d("2"):::lit
-    n1235b9a939c4[":Ginger_Medication_Clavamox_Interval\n(TemporalInterval)"]
-    ne6c6b9487cf7("1"):::lit
-    n5a2d41da5b88("2026-08-10"):::lit
-    n131f4f854a66("2026-08-20"):::lit
-    ne568a955bab4[":Ginger_Medication_Glucosamine\n(Medication)"]
-    n2e92ccc8998b("CHEBI_5417"):::lit
-    n2646c2e145da("CHEBI_37397"):::lit
-    n00ea6f03ba81[":Ginger_Medication_Glucosamine_Dosage\n(DosageAmount)"]
-    n573c4534e5b8[":Ginger_Medication_Glucosamine_Administration\n(MedicationAdministration)"]
-    ne3cbe1f669ee("1"):::lit
-    n73d74c70a9c0[":Ginger_Medication_Glucosamine_Interval\n(TemporalInterval)"]
-    n1e0198ebb806("1.0"):::lit
-    n8bd474f324ed("ont00001573"):::lit
-    n14b9b0c6ed26("2026-01-15"):::lit
-    n5f974f0a15c0[":Ginger_Medications\n(PetMedicationRecord)"]
+    n43c9cc44a97c[":Ginger"]
+    n6fb6d680dc83[":Ginger_Medication_Clavamox\n(Medication)"]
+    nba3dde96700f("CHEBI_2676"):::lit
+    n0a079351ea32("CHEBI_48947"):::lit
+    n9c405805f0be("DRON_00000022"):::lit
+    nd1956bb3c926("Clavamox"):::lit
+    n18d316ca20fb("Zoetis"):::lit
+    n1a9c5c49b28e[":Ginger_Medication_Clavamox_Dosage\n(DosageAmount)"]
+    n070de3d54bfa[":Ginger_Medication_Clavamox_Administration\n(MedicationAdministration)"]
+    n1ea4b00975d2("2"):::lit
+    n6cae6fb60d73[":Ginger_Medication_Clavamox_Interval\n(TemporalInterval)"]
+    n82e38acbdefb[":Ginger_Medication_Clavamox_Dosage_Bearer\n(InformationBearingEntity)"]
+    n21733f6bb658("1"):::lit
+    n61f5e838d518("2026-08-10"):::lit
+    nd2a5ec099851("2026-08-20"):::lit
+    nf277630c34aa[":Ginger_Medication_Glucosamine\n(Medication)"]
+    n637e4568087c("CHEBI_5417"):::lit
+    nafd09f14902d("CHEBI_37397"):::lit
+    n6e80a2bb7f05[":Ginger_Medication_Glucosamine_Dosage\n(DosageAmount)"]
+    nc46367935de5[":Ginger_Medication_Glucosamine_Administration\n(MedicationAdministration)"]
+    n6a087452c244("1"):::lit
+    n6199aba64003[":Ginger_Medication_Glucosamine_Interval\n(TemporalInterval)"]
+    ndf02cffa5d69[":Ginger_Medication_Glucosamine_Dosage_Bearer\n(InformationBearingEntity)"]
+    ne1e4c3ccc6ae("1.0"):::lit
+    nfdfaaeb0a392("ont00001573"):::lit
+    n4d3289bc6e4e("2026-01-15"):::lit
+    nab5aa1d8dc53[":Ginger_Medications\n(PetMedicationRecord)"]
 
-    necaf6f0a9b01 -->|"hasActiveIngredient"| n17dcf70f57c7
-    necaf6f0a9b01 -->|"hasActiveIngredient"| n5d0613638339
-    necaf6f0a9b01 -->|"hasDoseForm"| na93e495a4d4b
-    necaf6f0a9b01 -->|"medicationBrandName"| n207b3499add0
-    necaf6f0a9b01 -->|"medicationManufacturer"| nf26d218574fc
-    necaf6f0a9b01 -->|"hasDosageAmount"| nc32c35310b69
-    necaf6f0a9b01 -->|"hasAdministration"| na85fe94ddb34
-    na85fe94ddb34 -->|"medicationFrequencyPerDay"| n136da128aa5d
-    na85fe94ddb34 -->|"BFO_0000199"| n1235b9a939c4
-    nc32c35310b69 -->|"ont00001773"| ne6c6b9487cf7
-    n1235b9a939c4 -->|"hasStartDate"| n5a2d41da5b88
-    n1235b9a939c4 -->|"hasEndDate"| n131f4f854a66
-    ne568a955bab4 -->|"hasActiveIngredient"| n2e92ccc8998b
-    ne568a955bab4 -->|"hasActiveIngredient"| n2646c2e145da
-    ne568a955bab4 -->|"hasDosageAmount"| n00ea6f03ba81
-    ne568a955bab4 -->|"hasAdministration"| n573c4534e5b8
-    n573c4534e5b8 -->|"medicationFrequencyPerDay"| ne3cbe1f669ee
-    n573c4534e5b8 -->|"BFO_0000199"| n73d74c70a9c0
-    n00ea6f03ba81 -->|"hasDecimalValue"| n1e0198ebb806
-    n00ea6f03ba81 -->|"usesMeasurementUnit"| n8bd474f324ed
-    n73d74c70a9c0 -->|"hasStartDate"| n14b9b0c6ed26
-    n5f974f0a15c0 -->|"hasMedication"| necaf6f0a9b01
-    n5f974f0a15c0 -->|"hasMedication"| ne568a955bab4
+    n6fb6d680dc83 -->|"hasActiveIngredient"| nba3dde96700f
+    n6fb6d680dc83 -->|"hasActiveIngredient"| n0a079351ea32
+    n6fb6d680dc83 -->|"hasDoseForm"| n9c405805f0be
+    n6fb6d680dc83 -->|"medicationBrandName"| nd1956bb3c926
+    n6fb6d680dc83 -->|"medicationManufacturer"| n18d316ca20fb
+    n6fb6d680dc83 -->|"hasDosageAmount"| n1a9c5c49b28e
+    n6fb6d680dc83 -->|"hasAdministration"| n070de3d54bfa
+    n070de3d54bfa -->|"medicationFrequencyPerDay"| n1ea4b00975d2
+    n070de3d54bfa -->|"BFO_0000199"| n6cae6fb60d73
+    n82e38acbdefb -->|"isCarrierOf"| n1a9c5c49b28e
+    n82e38acbdefb -->|"ont00001773"| n21733f6bb658
+    n6cae6fb60d73 -->|"hasStartDate"| n61f5e838d518
+    n6cae6fb60d73 -->|"hasEndDate"| nd2a5ec099851
+    nf277630c34aa -->|"hasActiveIngredient"| n637e4568087c
+    nf277630c34aa -->|"hasActiveIngredient"| nafd09f14902d
+    nf277630c34aa -->|"hasDosageAmount"| n6e80a2bb7f05
+    nf277630c34aa -->|"hasAdministration"| nc46367935de5
+    nc46367935de5 -->|"medicationFrequencyPerDay"| n6a087452c244
+    nc46367935de5 -->|"BFO_0000199"| n6199aba64003
+    ndf02cffa5d69 -->|"isCarrierOf"| n6e80a2bb7f05
+    ndf02cffa5d69 -->|"hasDecimalValue"| ne1e4c3ccc6ae
+    ndf02cffa5d69 -->|"usesMeasurementUnit"| nfdfaaeb0a392
+    n6199aba64003 -->|"hasStartDate"| n4d3289bc6e4e
+    nab5aa1d8dc53 -->|"hasMedication"| n6fb6d680dc83
+    nab5aa1d8dc53 -->|"hasMedication"| nf277630c34aa

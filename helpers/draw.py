@@ -131,6 +131,7 @@ LABELS = {
     "https://w3id.org/cco-domains/cco/ont00000020":         "Container",
     "https://w3id.org/cco-domains/cco/ont00000058":         "ScalpHair",
     "https://w3id.org/cco-domains/cco/ont00001022":         "RatioMeasurementICE",
+    "https://w3id.org/cco-domains/cco/ont00000253":         "InformationBearingEntity",
     "https://w3id.org/cco-domains/cco/ont00000967":         "Height",
     "https://w3id.org/cco-domains/cco/ont00000026":         "HairColor",
     "https://w3id.org/cco-domains/cco/ont00001677":         "Inch",

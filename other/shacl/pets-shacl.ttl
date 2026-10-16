@@ -10,8 +10,8 @@
 
 <http://mee.foundation/ontologies/pets/shapes> rdf:type owl:Ontology ;
     owl:imports <http://mee.foundation/ontologies/pets> ;
-    owl:versionIRI <http://mee.foundation/ontologies/pets/shapes/1.8.0> ;
-    dc:date "2026-09-19"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pets/shapes/1.9.0> ;
+    dc:date "2026-10-16"^^xsd:date ;
     rdfs:label "Pets Template SHACL Shapes"@en ;
     rdfs:comment """SHACL shapes for validating graph files carrying pod:shape petshapes:PetShape or
                     petshapes:PetMedicationRecordShape. Apply in addition to shacl/persona-shacl.ttl when validating a pet
@@ -167,6 +167,8 @@
 #################################################################
 #  Body Weight Shape
 #  Targets pets:BodyWeight individuals.
+#  Values are read from the individual's carrier — the Information Bearing Entity that is
+#  carrier of it (the inverse of obo:BFO_0000101) — following CCO's two-individual pattern.
 #  Required: decimal value (cco:ont00001769, 1..1, xsd:decimal)
 #            measurement unit (cco:ont00001863, 1..1, IRI — CCO Measurement Unit individual)
 #################################################################
@@ -177,7 +179,7 @@
     sh:message "Body Weight validation: exactly one decimal value and exactly one measurement unit are required."@en ;
 
     sh:property [
-        sh:path <https://w3id.org/cco-domains/cco/ont00001769> ;  # has decimal value
+        sh:path ( [ sh:inversePath <http://purl.obolibrary.org/obo/BFO_0000101> ] <https://w3id.org/cco-domains/cco/ont00001769> ) ;  # has decimal value
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:datatype xsd:decimal ;
@@ -185,7 +187,7 @@
     ] ;
 
     sh:property [
-        sh:path <https://w3id.org/cco-domains/cco/ont00001863> ;  # uses measurement unit
+        sh:path ( [ sh:inversePath <http://purl.obolibrary.org/obo/BFO_0000101> ] <https://w3id.org/cco-domains/cco/ont00001863> ) ;  # uses measurement unit
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:nodeKind sh:IRI ;
@@ -297,13 +299,13 @@
 
     sh:xone (
         [ sh:property [
-            sh:path <https://w3id.org/cco-domains/cco/ont00001769> ;  # has decimal value
+            sh:path ( [ sh:inversePath <http://purl.obolibrary.org/obo/BFO_0000101> ] <https://w3id.org/cco-domains/cco/ont00001769> ) ;  # has decimal value
             sh:minCount 1 ;
             sh:maxCount 1 ;
             sh:datatype xsd:decimal
         ] ]
         [ sh:property [
-            sh:path <https://w3id.org/cco-domains/cco/ont00001773> ;  # has integer value
+            sh:path ( [ sh:inversePath <http://purl.obolibrary.org/obo/BFO_0000101> ] <https://w3id.org/cco-domains/cco/ont00001773> ) ;  # has integer value
             sh:minCount 1 ;
             sh:maxCount 1 ;
             sh:datatype xsd:integer
@@ -311,7 +313,7 @@
     ) ;
 
     sh:property [
-        sh:path <https://w3id.org/cco-domains/cco/ont00001863> ;  # uses measurement unit
+        sh:path ( [ sh:inversePath <http://purl.obolibrary.org/obo/BFO_0000101> ] <https://w3id.org/cco-domains/cco/ont00001863> ) ;  # uses measurement unit
         sh:maxCount 1 ;
         sh:nodeKind sh:IRI ;
         sh:message "A Dosage Amount may use at most one measurement unit."@en

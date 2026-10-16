@@ -2,7 +2,7 @@
 id: http://www.example.org/tpod/pods/pod-44
 title: "RAV4"
 type: pod-databook
-version: 1.0.0
+version: 1.1.0
 created: 2026-08-29
 description: >
   Pod DataBook for folder "RAV4" (pod:category: podcat:Vehicles). A user-defined instance folder for
@@ -71,7 +71,7 @@ This graph is the pod's one required `member` entry — a pod with a single `mem
 
 #### Overview
 
-This graph captures Alice's basic claim about her car itself — just enough to back the pod's `subject: ":Alice_RAV4"` with a real graph (see YAML-4) — and, validated by `vehicles:Vehicle`'s SHACL shape (`other/shacl/vehicles-shacl.ttl`'s `:VehicleShape`), identifies its vehicle type (`vehicles:Car`, class-value-punned), make and model (both real Wikidata individuals vendored in `project_files/wikidata-vehicle-makes-subset.ttl`/`project_files/wikidata-vehicle-models-subset.ttl`), model year, VIN, color, body type, fuel type, drive wheel configuration, current odometer reading (a `vehicles:OdometerReading` individual reusing CCO's decimal-value/measurement-unit pattern, the same reification style `pets:BodyWeight`/`pets:DosageAmount` already use), and engine specification. `:Self persona:hasVehicle :Alice_RAV4` closes the loop from the Person side.
+This graph captures Alice's basic claim about her car itself — just enough to back the pod's `subject: ":Alice_RAV4"` with a real graph (see YAML-4) — and, validated by `vehicles:Vehicle`'s SHACL shape (`other/shacl/vehicles-shacl.ttl`'s `:VehicleShape`), identifies its vehicle type (`vehicles:Car`, class-value-punned), make and model (both real Wikidata individuals vendored in `project_files/wikidata-vehicle-makes-subset.ttl`/`project_files/wikidata-vehicle-models-subset.ttl`), model year, VIN, color, body type, fuel type, drive wheel configuration, current odometer reading (a `vehicles:OdometerReading` measurement whose decimal value and unit sit on a separate CCO Information Bearing Entity that is carrier of it, the same two-individual pattern `pets:BodyWeight`/`pets:DosageAmount` use), and engine specification. `:Self persona:hasVehicle :Alice_RAV4` closes the loop from the Person side.
 
 #### Graph
 
@@ -83,6 +83,7 @@ This graph captures Alice's basic claim about her car itself — just enough to 
 @prefix vehicles: <http://mee.foundation/ontologies/vehicles#> .
 @prefix wd: <http://www.wikidata.org/entity/> .
 @prefix cco: <https://w3id.org/cco-domains/cco/> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -109,9 +110,13 @@ This graph captures Alice's basic claim about her car itself — just enough to 
 
 :Alice_RAV4_Odometer rdf:type owl:NamedIndividual ,
                      vehicles:OdometerReading ;
-    rdfs:comment "Alice's RAV4's odometer reading as of its most recent service."@en ;
-    cco:ont00001769 "32150.0"^^xsd:decimal ;   # has decimal value
-    cco:ont00001863 cco:ont00001433 .          # uses measurement unit → Mile Measurement Unit
+    rdfs:comment "Alice's RAV4's odometer reading as of its most recent service."@en .
+
+:Alice_RAV4_Odometer_Bearer rdf:type owl:NamedIndividual ,
+                     cco:ont00000253 ;           # Information Bearing Entity
+    obo:BFO_0000101 :Alice_RAV4_Odometer ;       # is carrier of
+    cco:ont00001769 "32150.0"^^xsd:decimal ;     # has decimal value
+    cco:ont00001863 cco:ont00001433 .            # uses measurement unit → Mile Measurement Unit
 
 :Alice_RAV4_Engine rdf:type owl:NamedIndividual ,
                      vehicles:EngineSpecification ;

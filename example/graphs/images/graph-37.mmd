@@ -7,28 +7,30 @@ flowchart TD
 
     subgraph ctx["Graph"]
         direction LR
-        ctx_meta["claimant: :Self\ntoolTopic: :Ginger\nformShape: petshapes:PetShape"]:::meta
+        ctx_meta["claimant: :Self\nformTopic: :Ginger\nshape: petshapes:PetShape"]:::meta
     end
 
-    n8c49398c722e[":Ginger\n(Pet)"]
-    n501e80e40f64("Ginger"):::lit
-    ncb60ed920d0b("NCBITaxon_9685"):::lit
-    nfa3aa3f99d5b("VBO_0100262"):::lit
-    n74ac8c3d6df5("2020-06-15"):::lit
-    n62e93d3f5324[":Ginger_Weight\n(BodyWeight)"]
-    ne42aabd190a5("Female"):::lit
-    nf972faa53823("true"):::lit
-    nc4062761723e("9.5"):::lit
-    n383a5917db61("ont00001728"):::lit
-    n655e442e50be[":Self\n(Person)"]:::person
+    n43c9cc44a97c[":Ginger\n(Pet)"]
+    nda7dea760404("Ginger"):::lit
+    n4851d05fdc4b("NCBITaxon_9685"):::lit
+    nd5d5463638ee("VBO_0100262"):::lit
+    nf2b139fbfb46("2020-06-15"):::lit
+    n5b1a355baa3e[":Ginger_Weight\n(BodyWeight)"]
+    nafec4fd818f4("Female"):::lit
+    nbb0d84896e68("true"):::lit
+    n8d4395793a7f[":Ginger_Weight_Bearer\n(InformationBearingEntity)"]
+    n8ed45ef08ea8("9.5"):::lit
+    n5e3555f0120d("ont00001728"):::lit
+    n61a8e87382f0[":Self\n(Person)"]:::person
 
-    n8c49398c722e -->|"name"| n501e80e40f64
-    n8c49398c722e -->|"hasSpecies"| ncb60ed920d0b
-    n8c49398c722e -->|"hasBreed"| nfa3aa3f99d5b
-    n8c49398c722e -->|"birthDate"| n74ac8c3d6df5
-    n8c49398c722e -->|"hasBodyWeight"| n62e93d3f5324
-    n8c49398c722e -->|"sex"| ne42aabd190a5
-    n8c49398c722e -->|"isSpayedOrNeutered"| nf972faa53823
-    n62e93d3f5324 -->|"hasDecimalValue"| nc4062761723e
-    n62e93d3f5324 -->|"usesMeasurementUnit"| n383a5917db61
-    n655e442e50be -->|"hasPet"| n8c49398c722e
+    n43c9cc44a97c -->|"name"| nda7dea760404
+    n43c9cc44a97c -->|"hasSpecies"| n4851d05fdc4b
+    n43c9cc44a97c -->|"hasBreed"| nd5d5463638ee
+    n43c9cc44a97c -->|"birthDate"| nf2b139fbfb46
+    n43c9cc44a97c -->|"hasBodyWeight"| n5b1a355baa3e
+    n43c9cc44a97c -->|"sex"| nafec4fd818f4
+    n43c9cc44a97c -->|"isSpayedOrNeutered"| nbb0d84896e68
+    n8d4395793a7f -->|"isCarrierOf"| n5b1a355baa3e
+    n8d4395793a7f -->|"hasDecimalValue"| n8ed45ef08ea8
+    n8d4395793a7f -->|"usesMeasurementUnit"| n5e3555f0120d
+    n61a8e87382f0 -->|"hasPet"| n43c9cc44a97c

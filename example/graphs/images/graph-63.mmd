@@ -7,40 +7,42 @@ flowchart TD
 
     subgraph ctx["Graph"]
         direction LR
-        ctx_meta["claimant: :Self\ntoolTopic: :Alice_RAV4\nformShape: vehicleshapes:VehicleShape"]:::meta
+        ctx_meta["claimant: :Self\nformTopic: :Alice_RAV4\nshape: vehicleshapes:VehicleShape"]:::meta
     end
 
-    n9424653351e9[":Alice_RAV4\n(Vehicle)"]
-    n8b971278d5f3("Car"):::lit
-    n792aea40f32d("Q53268"):::lit
-    n7405adebb5f6("Q819982"):::lit
-    n27f2f4921cbc("2022"):::lit
-    n43495ebecdb6("JT3RWRFV1NU012345"):::lit
-    n3e0236ac8dbc("Silver"):::lit
-    n79dd110b0637("SUV"):::lit
-    n222e07080ca2("Gasoline"):::lit
-    nb65bc64a6dd7("AWD"):::lit
-    n65e4544e91a7[":Alice_RAV4_Odometer\n(OdometerReading)"]
-    n48c0b8606d16[":Alice_RAV4_Engine\n(EngineSpecification)"]
-    nce471cda8d7e("Internal Combustion"):::lit
-    ndf18fa81870e("2.5"):::lit
-    n4daec8768361("32150.0"):::lit
-    n6807fae90784("ont00001433"):::lit
-    n655e442e50be[":Self\n(Person)"]:::person
+    nd8c79720191b[":Alice_RAV4\n(Vehicle)"]
+    n0250a721c4d0("Car"):::lit
+    na4ab05daf9e9("Q53268"):::lit
+    nfe0fc520ed3a("Q819982"):::lit
+    n892b169ae17f("2022"):::lit
+    n07fb50e3ac73("JT3RWRFV1NU012345"):::lit
+    n5d877ef36421("Silver"):::lit
+    na7535ee39fce("SUV"):::lit
+    n74a26d126c56("Gasoline"):::lit
+    n562ea9a716cd("AWD"):::lit
+    nffa0cf9e657b[":Alice_RAV4_Odometer\n(OdometerReading)"]
+    n82479b6a8d9f[":Alice_RAV4_Engine\n(EngineSpecification)"]
+    n38b4f51285f9("Internal Combustion"):::lit
+    n916fbcff9ce8("2.5"):::lit
+    na41494bd91f4[":Alice_RAV4_Odometer_Bearer\n(InformationBearingEntity)"]
+    n43f8c4361d67("32150.0"):::lit
+    n7829ea115009("ont00001433"):::lit
+    n61a8e87382f0[":Self\n(Person)"]:::person
 
-    n9424653351e9 -->|"hasVehicleType"| n8b971278d5f3
-    n9424653351e9 -->|"hasMake"| n792aea40f32d
-    n9424653351e9 -->|"hasModel"| n7405adebb5f6
-    n9424653351e9 -->|"modelYear"| n27f2f4921cbc
-    n9424653351e9 -->|"vehicleIdentificationNumber"| n43495ebecdb6
-    n9424653351e9 -->|"color"| n3e0236ac8dbc
-    n9424653351e9 -->|"bodyType"| n79dd110b0637
-    n9424653351e9 -->|"fuelType"| n222e07080ca2
-    n9424653351e9 -->|"driveWheelConfiguration"| nb65bc64a6dd7
-    n9424653351e9 -->|"hasOdometerReading"| n65e4544e91a7
-    n9424653351e9 -->|"hasEngineSpecification"| n48c0b8606d16
-    n48c0b8606d16 -->|"engineType"| nce471cda8d7e
-    n48c0b8606d16 -->|"engineDisplacementLiters"| ndf18fa81870e
-    n65e4544e91a7 -->|"hasDecimalValue"| n4daec8768361
-    n65e4544e91a7 -->|"usesMeasurementUnit"| n6807fae90784
-    n655e442e50be -->|"hasVehicle"| n9424653351e9
+    nd8c79720191b -->|"hasVehicleType"| n0250a721c4d0
+    nd8c79720191b -->|"hasMake"| na4ab05daf9e9
+    nd8c79720191b -->|"hasModel"| nfe0fc520ed3a
+    nd8c79720191b -->|"modelYear"| n892b169ae17f
+    nd8c79720191b -->|"vehicleIdentificationNumber"| n07fb50e3ac73
+    nd8c79720191b -->|"color"| n5d877ef36421
+    nd8c79720191b -->|"bodyType"| na7535ee39fce
+    nd8c79720191b -->|"fuelType"| n74a26d126c56
+    nd8c79720191b -->|"driveWheelConfiguration"| n562ea9a716cd
+    nd8c79720191b -->|"hasOdometerReading"| nffa0cf9e657b
+    nd8c79720191b -->|"hasEngineSpecification"| n82479b6a8d9f
+    n82479b6a8d9f -->|"engineType"| n38b4f51285f9
+    n82479b6a8d9f -->|"engineDisplacementLiters"| n916fbcff9ce8
+    na41494bd91f4 -->|"isCarrierOf"| nffa0cf9e657b
+    na41494bd91f4 -->|"hasDecimalValue"| n43f8c4361d67
+    na41494bd91f4 -->|"usesMeasurementUnit"| n7829ea115009
+    n61a8e87382f0 -->|"hasVehicle"| nd8c79720191b

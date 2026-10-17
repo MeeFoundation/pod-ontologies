@@ -58,13 +58,16 @@ The model is unaffected. What changes is where it lives and how some of its rule
   *propagation* rather than about directories: an attachment is content every member receives, and a
   private file stays in one member's copy and reaches no one else. What changes is only that the two
   are told apart by how the member filed them in the app, not by which directory they sit in.
-- **The note.** Still exactly one per pod, still Markdown, still supporting `[[wikilinks]]` that
-  resolve by target pod id. It is no longer a file, so the folder-note convention that once tied it
-  to a filename is gone.
+- **The note.** Still exactly one per pod, still supporting links to other pods that resolve by
+  target pod id, and now also links to the pod's own tools, graphs and attachments. It is a
+  rich-text document with Markdown-like formatting, held in the app's own internal format — one
+  suited to those links and to merging concurrent edits by several members — rather than as
+  Markdown, and it is no longer a file, so the folder-note convention that once tied it to a
+  filename is gone. A member can export it as a Markdown file.
 - **PKM vault interoperability is retired.** Running Tellipod's storage as, or alongside, an Obsidian-style
   vault was a consequence of keeping notes and attachments as ordinary files in ordinary folders.
-  With the files gone, so is the property. The note's Markdown and the wikilink syntax remain, for
-  their own reasons.
+  With the files gone, so is the property. Wikilink-style linking remains, for its own reasons, and
+  the note's Markdown export is what is left of the bridge to PKM tools.
 
 ## What is real Tellipod, and what is scaffolding
 

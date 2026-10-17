@@ -26,8 +26,9 @@ in that folder:
   requires them to agree; that is what keeps the scaffolding from drifting away from the tree it
   represents. At runtime nothing marks a pod, because there is no folder to mark.
 - **A pod's note is a file named after its folder** (`X.md` inside the folder `X`), the folder-note
-  convention PKM tools such as Obsidian use. At runtime the note is app-internal and has no name of
-  its own.
+  convention PKM tools such as Obsidian use. The file is plain Markdown, a stand-in approximating
+  what the app's Markdown export of the note would write. At runtime the note is app-internal, held
+  in the app's own format rather than as Markdown, and has no name of its own.
 - **A pod's attachments are the plain files inside its `_pod-attachments` folder, and the member's
   own private files are the ones loose beside it.** At runtime the same distinction is a rule about
   what propagates on a share, decided by how the member filed the file in the app, not by which
@@ -83,7 +84,10 @@ the metadata about the pod itself; a pod's unstructured content sits beside it:
 
 - **the note** — one Markdown file named after the folder (`X.md` inside the folder `X`), shown in
   the app's Note area. Naming it after its folder is the folder-note convention PKM tools such as
-  Obsidian use, which is what lets this repo's tree be browsed in one;
+  Obsidian use, which is what lets this repo's tree be browsed in one. It is Markdown because that
+  is what the app's export of a note writes, not because the note is Markdown: a link to another
+  pod is written in the export's `[[id|text]]` form, and a link to a block inside the pod has no
+  syntax here at all (see [Where the note's format and block links go](#where-the-notes-format-and-block-links-go));
 - **the attachments** — the plain files inside the folder's own `_pod-attachments` subfolder, flat,
   like email attachments. Every pod has that subfolder, empty or not, and its contents are the part
   of a pod's folder that travels when the pod is shared;
@@ -638,7 +642,7 @@ no specified storage at all. Once a pod's structured content is app-internal rat
 chat simply goes where that content goes, and the reasons it never fit the folder stop mattering.
 
 Two constraints shaped that answer and still bound the app's own design. A chat is unlike the other
-content: a note is one document that is rewritten, while a chat is append-only, authored per message,
+content: a note is one document that members edit in place, concurrently, while a chat is append-only, authored per message,
 potentially far larger, and read at its tail far more often than in full. And a private 1:1 thread
 between a member and their own agent is not visible to other members (see
 [Chat Area](app-behavior.md#chat-area) in app-behavior.md), so it cannot live in shared, synced pod
@@ -651,6 +655,26 @@ What is genuinely still open is the storage format the app uses for it, which is
 question this document does not reach. Nothing about it is a filesystem question any more: a
 transcript is not a file anywhere, so the only thing left to settle is how the app's own store holds
 an append-only, mostly-read-at-the-tail stream with two propagation rules inside it.
+
+### Where the note's format and block links go
+
+A pod's note is a rich-text document held in the app's own internal format, not Markdown (see
+[Pod Contents](app-behavior.md#pod-contents) in app-behavior.md). Like chat's storage format, that
+format is an app-internal question this document does not reach; what reaches it is the
+scaffolding's stand-in. The `X.md` file beside each DataBook is plain Markdown approximating the
+app's Markdown export, and that export is lossy in exactly one place that matters here: a **block
+link** — a link from the note to one of the pod's own tools, graphs or attachments — has no
+Markdown equivalent and exports as its display text. So the scaffolding has no way to write one, and
+no example note contains one.
+
+Two things are open. The first is whether the scaffolding should carry a block-link syntax of its
+own, so that an example note can exercise one; nothing needs it yet. The second is what a block
+link resolves by. A graph has an IRI (its `id`, see
+[Graph Ids and Named Graphs](#graph-ids-and-named-graphs)) and an attachment is a
+`sources:SourceItem` individual with an IRI of its own, so both already have something stable to
+point at. A tool does not: a `tpod.tool` entry carries only `type`, `formTopic` and `graph`, and
+`pod:Tool` has no identifying property, so a block link to a tool currently has nothing to resolve
+by — and a stub tool such as `pod:Calendar`, holding no graph, cannot borrow one from its content.
 
 ### Where a non-form tool's content goes
 

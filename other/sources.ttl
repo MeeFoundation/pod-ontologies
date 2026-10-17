@@ -10,9 +10,9 @@
 @base <http://mee.foundation/ontologies/sources> .
 
 <http://mee.foundation/ontologies/sources> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.0> ;
-    dc:date "2026-10-14"^^xsd:date ;
-    owl:versionInfo "Version 1.1.0 - sources:SourceItem is now the range of pod.ttl's pod:attachment"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.1> ;
+    dc:date "2026-10-17"^^xsd:date ;
+    owl:versionInfo "Version 1.1.1 - sources:TextBlob comment describes the pod note as a rich-text document"@en ;
     rdfs:label "Sources Ontology"@en ;
     rdfs:comment """A small other/ peer ontology (see other/pets.ttl's own rdfs:comment for the
                     general pattern) for content a person merely *has* in unstructured form — a
@@ -146,7 +146,7 @@ sources:TextBlob rdf:type owl:Class ;
                     paragraph describing a pet — rather than a file. Its text is its content, so
                     sources:extractedText is required on a text blob, where it is optional on every
                     other kind; and it usually has no sources:fileName. Not a pod's note (the one
-                    jointly writable Markdown document every pod has) and not a chat message (a
+                    jointly writable rich-text document every pod has) and not a chat message (a
                     pod's chat stream): both are built-in areas of every pod rather than items a
                     person brings, and neither is modelled as RDF at all (README.md's
                     Documentation-only Properties). Typed only under sources:SourceItem: CCO has

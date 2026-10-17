@@ -18,7 +18,8 @@ tpod:
     subject: ":Self"
     shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-26"
+      type: "form"
       formTopic: ":Ginger"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-37"

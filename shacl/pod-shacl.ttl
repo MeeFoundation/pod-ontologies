@@ -14,8 +14,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/9.6.0> ;
-    dc:date "2026-10-14"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/9.7.0> ;
+    dc:date "2026-10-17"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — in the Pod Ontology."@en .
 
@@ -333,10 +333,15 @@
 #                         carries none of the three, so each
 #                         requirement is conditioned on pod:Form
 #                         rather than asserted outright.
+#                         Every live tool, of any kind, is named by
+#                         its own IRI — its id, which a note's block
+#                         links resolve by.
 #    :DeclaredToolShape — a declaration, reached by pod:declaresTool
 #                         from a pod:TemplatePod. Carries
 #                         pod:formShape alone: a template cannot
 #                         know what a future pod's tool will be about.
+#                         Left anonymous: a declaration is never a
+#                         block-link target, so it needs no id.
 #
 #  pod:formGraph's real upper bound — one value per pod member, each
 #  with a distinct claimant — is a cross-property invariant SHACL can't
@@ -347,6 +352,12 @@
     a sh:NodeShape ;
     sh:targetObjectsOf pod:tool ;
     sh:message "Tool validation."@en ;
+
+    # A live tool is named by its own IRI, never a blank node: that IRI is
+    # the tool's id, minted when the tool is created and fixed for its
+    # lifetime, and it is what a block link in the pod's note resolves by
+    # (pod-databook.md's Tool Ids). A declared tool, below, stays anonymous.
+    sh:nodeKind sh:IRI ;
 
     # All three tool-content properties are scoped to pod:Form
     # (pod.ttl), the one tool class with a content model, so the

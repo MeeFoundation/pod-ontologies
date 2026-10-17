@@ -32,7 +32,8 @@ tpod:
       subject: ":Bob_Johnson"
       shape: "bhsshapes:MemberShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-15"
+      type: "form"
       formTopic: ":BHS"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-92"

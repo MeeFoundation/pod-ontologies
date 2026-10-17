@@ -384,6 +384,7 @@ One entry per tool the pod carries; zero is the ordinary case. Always written as
 
 | Sub-key | Required | Value |
 |---------|----------|-------|
+| `id` | yes | The tool's full IRI — see [Tool Ids](#tool-ids) |
 | `type` | yes | Which tool class this is: `form`, `calendar`, `canvas`, `contacts`, `map` or `browser`, mapping to `pod:Form`/`pod:Calendar`/`pod:Canvas`/`pod:Contacts`/`pod:Map`/`pod:Browser`. Only `form` has a content model today. `form` and `browser` are the two that appear in the example tree, `browser` only in the PRIVO and Facenook pods |
 | `formTopic` | yes on a form | What the tool's content is about (`pod:formTopic`) — any resource IRI, stated once by the tool rather than repeated on each graph beneath it |
 | `graph` | yes on a form | A list of that tool's own graph entries, at least one |
@@ -419,6 +420,38 @@ directly as its own `id` field — there's no separate list to cross-reference i
 **DataBook IRI convention**: a document's `id:` and its `graph.named_graph:` always differ by the
 `#graph` fragment — `named_graph` is always `{id}#graph`. The `databook:id` on a block is a fragment
 identifier making that block independently addressable as `{id}#{block-id}`.
+
+### Tool Ids
+
+A live tool is named by its own IRI, carried as its `tpod.tool` entry's `id`, and that IRI is the
+tool's id. It exists so that a block link in the pod's note — a link to one of the pod's own tools
+(see [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md) — has something stable to
+resolve by. A tool's position among its pod's tools would not do: reordering the tools, or removing
+one, would silently retarget every link to the tools after it.
+
+At runtime the app mints a tool's id when the tool is created, whether the person adds it with Add
+Tool or Lazy Instantiation clones it from a template's declared tool. Like a pod id and a graph id,
+it is flat, opaque and globally unique, generated from fresh random bytes and never derived from the
+tool's kind, its `formTopic`, its position, or the pod that holds it. It is fixed for the tool's
+lifetime, and when the tool is removed its id is retired, never given to another tool, so a stale
+block link shows as unresolved rather than landing on a newcomer.
+
+A tool's id names the tool node itself, not a named graph: a tool holds graphs, each with its own
+`id`, but is not one, so there is no `{id}#graph` counterpart. A tool declared by a template
+(`pod:declaresTool` in `pod-category-templates.ttl`) has no id at all — it is a class-level
+declaration, never a block-link target — and is a blank node; the live tool cloned from it gets a
+fresh id of its own.
+
+This repo's example data uses a flat sequence instead, under the same example domain as its graphs
+and pods:
+
+```
+http://www.example.org/tpod/tools/tool-<NN>
+```
+
+padded the way graph ids are — two digits up to `tool-99`, three from `tool-100` — and numbered in
+one sequence across the whole tree (integrity.md's YAML-10). As with a pod or graph id, an existing
+tool id is never renumbered.
 
 ### `:Self` and Locally-Minted IRIs
 
@@ -559,7 +592,8 @@ tpod:
       subject: ":Self"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-NN"
+      type: "form"
       formTopic: ":Topic"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-MM"
@@ -614,8 +648,9 @@ No single tool checks the whole format. It is enforced in three places:
   YAML-1 (`graph-<NN>` id pattern), YAML-2 (entry well-formedness: which sub-keys each kind of
   entry carries), YAML-3 (`pod-<NN>` id pattern), FS-5 (folder ↔ pod-databook structure),
   YAML-5 (`title:` matches the folder's OS name), TTL-3/TTL-4 (a `shape:` value against the
-  graph's own content, and against the pod's category's own template), and YAML-9
-  (`tpod.userTag`/`tpod.serviceTag` well-formedness).
+  graph's own content, and against the pod's category's own template), YAML-9
+  (`tpod.userTag`/`tpod.serviceTag` well-formedness), and YAML-10 (`tool-<NN>` id pattern and
+  uniqueness).
 - **`helpers/validate.py`** — synthesizes `pod:` triples from the frontmatter and runs SHACL
   (`shacl/pod-shacl.ttl` and friends) against them, plus a per-graph template pass driven by each
   entry's `shape:` value. See [Validation](example.md#validation) in example.md for the commands.
@@ -623,7 +658,7 @@ No single tool checks the whole format. It is enforced in three places:
   keys are actually consumed. It reads exactly: top-level `id` and `type`;
   `tpod.category`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.serviceTag[].{namespace,key,value}`;
   `tpod.member[].{id,claimant,subject,shape}`; and
-  `tpod.tool[].{type,formTopic,graph[].{id,claimant,shape}}`. No other key is consumed anywhere; an
+  `tpod.tool[].{id,type,formTopic,graph[].{id,claimant,shape}}`. No other key is consumed anywhere; an
   unrecognized key is silently ignored.
 
 ## Open Questions
@@ -667,14 +702,11 @@ link** — a link from the note to one of the pod's own tools, graphs or attachm
 Markdown equivalent and exports as its display text. So the scaffolding has no way to write one, and
 no example note contains one.
 
-Two things are open. The first is whether the scaffolding should carry a block-link syntax of its
-own, so that an example note can exercise one; nothing needs it yet. The second is what a block
-link resolves by. A graph has an IRI (its `id`, see
-[Graph Ids and Named Graphs](#graph-ids-and-named-graphs)) and an attachment is a
-`sources:SourceItem` individual with an IRI of its own, so both already have something stable to
-point at. A tool does not: a `tpod.tool` entry carries only `type`, `formTopic` and `graph`, and
-`pod:Tool` has no identifying property, so a block link to a tool currently has nothing to resolve
-by — and a stub tool such as `pod:Calendar`, holding no graph, cannot borrow one from its content.
+What a block link resolves by is settled: every kind of target has an IRI of its own — a tool its
+`id` (see [Tool Ids](#tool-ids)), a graph its `id` (see
+[Graph Ids and Named Graphs](#graph-ids-and-named-graphs)), and an attachment the IRI of its
+`sources:SourceItem` individual. What is open is only whether the scaffolding should carry a
+block-link syntax of its own, so that an example note can exercise one; nothing needs it yet.
 
 ### Where a non-form tool's content goes
 

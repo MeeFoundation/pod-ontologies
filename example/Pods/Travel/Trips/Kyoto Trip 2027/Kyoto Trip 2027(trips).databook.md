@@ -34,7 +34,8 @@ tpod:
       subject: ":Dave"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-33"
+      type: "form"
       formTopic: ":Kyoto_Trip_2027"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-69"

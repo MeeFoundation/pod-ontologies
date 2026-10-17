@@ -33,13 +33,15 @@ tpod:
       subject: ":Facenook_Site"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-04"
+      type: "form"
       formTopic: ":Alice_Facenook_Account"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-106"
           claimant: ":Self"
           shape: "sashapes:ServiceAccountShape"
-    - type: "browser"
+    - id: "http://www.example.org/tpod/tools/tool-05"
+      type: "browser"
 ---
 
 ## Graphs

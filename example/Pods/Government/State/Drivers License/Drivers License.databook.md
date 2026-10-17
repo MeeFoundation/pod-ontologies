@@ -19,7 +19,8 @@ tpod:
     subject: ":Self"
     shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-14"
+      type: "form"
       formTopic: ":Self"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-79"

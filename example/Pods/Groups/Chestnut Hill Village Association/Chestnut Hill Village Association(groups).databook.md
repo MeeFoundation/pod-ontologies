@@ -29,7 +29,8 @@ tpod:
       subject: ":Henry"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-16"
+      type: "form"
       formTopic: ":CHVA"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-101"

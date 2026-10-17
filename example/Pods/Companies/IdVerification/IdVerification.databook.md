@@ -21,7 +21,8 @@ tpod:
       subject: ":Self"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "browser"
+    - id: "http://www.example.org/tpod/tools/tool-07"
+      type: "browser"
 ---
 
 ## Graphs

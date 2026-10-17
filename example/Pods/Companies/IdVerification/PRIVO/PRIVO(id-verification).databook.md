@@ -30,7 +30,8 @@ tpod:
       subject: ":PRIVO_Site"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "browser"
+    - id: "http://www.example.org/tpod/tools/tool-08"
+      type: "browser"
 ---
 
 ## Graphs

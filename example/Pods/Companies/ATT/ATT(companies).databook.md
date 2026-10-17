@@ -19,7 +19,8 @@ tpod:
     subject: ":Self"
     shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-01"
+      type: "form"
       formTopic: ":Alice_ATT_Account"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-74"

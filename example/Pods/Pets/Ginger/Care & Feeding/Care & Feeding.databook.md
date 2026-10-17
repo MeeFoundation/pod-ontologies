@@ -22,7 +22,8 @@ tpod:
       subject: ":Paula_Walker"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-25"
+      type: "form"
       formTopic: ":Ginger"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-60"

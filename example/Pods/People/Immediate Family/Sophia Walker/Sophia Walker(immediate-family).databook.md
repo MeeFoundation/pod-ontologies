@@ -20,7 +20,8 @@ tpod:
       subject: ":Dave"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-24"
+      type: "form"
       formTopic: ":Sophia_Walker"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-07"

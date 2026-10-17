@@ -28,7 +28,8 @@ tpod:
       subject: ":Arca_Backup"
       shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-02"
+      type: "form"
       formTopic: ":Alice_Arca_Account"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-97"

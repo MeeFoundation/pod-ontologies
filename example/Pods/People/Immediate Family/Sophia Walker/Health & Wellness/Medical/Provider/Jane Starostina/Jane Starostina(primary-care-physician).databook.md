@@ -16,7 +16,8 @@ tpod:
     subject: ":Self"
     shape: "pshapes:ContactInfoShape"
   tool:
-    - type: "form"
+    - id: "http://www.example.org/tpod/tools/tool-22"
+      type: "form"
       formTopic: ":Jane_Starostina"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-25"

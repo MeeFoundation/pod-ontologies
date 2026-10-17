@@ -14,7 +14,7 @@ Checks are grouped by **what the check reads**, and numbered from 1 within each 
 |---|---|---|
 | **PNG-n** | a diagram image — its pixels, or the drawing compared by eye against the data | 11 (+8 sub-checks) |
 | **TTL-n** | a `.ttl` file, asking about triples; parses with `rdflib` | 8 |
-| **YAML-n** | a pod DataBook's YAML frontmatter and Markdown body, as written | 9 |
+| **YAML-n** | a pod DataBook's YAML frontmatter and Markdown body, as written | 10 |
 | **FS-n** | the filesystem, and the documentation prose that refers to it | 6 |
 
 A check that reads two kinds is filed under its **primary** input — the one that makes it the check it is — and says so in its own text. `TTL-2` also reads DataBook YAML; `YAML-5` also reads folder names.
@@ -870,7 +870,7 @@ These read a pod DataBook's **YAML frontmatter**, and sometimes its Markdown bod
 
 **YAML-1 — Graph id naming convention**: Every `tpod.member[]`/`tpod.tool[].graph[]` entry's own `id` value's local-name (the string after the final `/`) — across all pod-databooks in `example/Pods/` — must follow the flat pattern `graph-<NN>`, where `<NN>` is the graph's own number — zero-padded to two digits up to `graph-99`, three digits from `graph-100` on — matching the graph's own diagram label, `### Graph NN` body heading, and `<a id="graph-NN">` anchor. If an id does not match this pattern, flag it rather than silently renaming — the entry's `id` also doubles as the graph's own named-graph identity (`{id}#graph`), so changing it is a bigger operation than a file rename ever was.
 
-**YAML-2 — `member`/`tool` entry well-formedness** (the format itself is specified in [pod-databook.md](pod-databook.md#the-tpod-block)): Each `tpod.member` entry carries a graph's full metadata directly (`id`, `claimant`, `subject`, and optionally `shape`), and each `tpod.tool` entry carries its own `type`/`formTopic` plus a nested `graph` list whose entries carry `id`, `claimant` and optionally `shape` — rather than a bare local-name reference into a separate list, so there's no cross-list consistency left to check. A tool graph carries no about-ness field of its own: its topic is the tool's single `formTopic`, which is exactly what makes several members' claims unable to disagree about what they are about. `formTopic` and the nested `graph` list are both scoped to a **form** tool (`pod:Form` is the one tool class with a content model — see `pod.ttl`'s Pod Tools section), so an entry of any other type (`calendar`, `canvas`, `contacts`, `map`, `browser`) carries neither. But a malformed entry (e.g. a stray bare string left over from a hand edit, or a missing required field) would otherwise go unnoticed. Which about-ness field an entry carries depends on which list it sits in, since the two lists hold different classes of graph (`pod.ttl`): a `tpod.member` entry is a `pod:MemberGraph` and carries `subject`, while a `tpod.tool[].graph` entry is a `pod:FormGraph` and carries no about-ness field of its own — its topic is the holding tool's single `formTopic`. Neither kind ever carries the other's field — they are `owl:disjointWith`, enforced by `shacl/pod-shacl.ttl`'s `:FormGraphShape` `sh:maxCount 0` guard. For every pod-databook under `example/Pods/`, verify that every `tpod.member` entry and every tool graph is a mapping (never a bare string), that its `id` matches the `graph-<NN>` id pattern (see YAML-1), that `claimant` is present (required on both kinds, per `:CGraphShape`), and that the entry carries exactly its own list's about-ness field and not the other's; `template` stays optional (see TTL-5 for when it's actually required). Run:
+**YAML-2 — `member`/`tool` entry well-formedness** (the format itself is specified in [pod-databook.md](pod-databook.md#the-tpod-block)): Each `tpod.member` entry carries a graph's full metadata directly (`id`, `claimant`, `subject`, and optionally `shape`), and each `tpod.tool` entry carries its own `id`/`type`/`formTopic` plus a nested `graph` list whose entries carry `id`, `claimant` and optionally `shape` — rather than a bare local-name reference into a separate list, so there's no cross-list consistency left to check. A tool graph carries no about-ness field of its own: its topic is the tool's single `formTopic`, which is exactly what makes several members' claims unable to disagree about what they are about. `formTopic` and the nested `graph` list are both scoped to a **form** tool (`pod:Form` is the one tool class with a content model — see `pod.ttl`'s Pod Tools section), so an entry of any other type (`calendar`, `canvas`, `contacts`, `map`, `browser`) carries neither. But a malformed entry (e.g. a stray bare string left over from a hand edit, or a missing required field) would otherwise go unnoticed. Which about-ness field an entry carries depends on which list it sits in, since the two lists hold different classes of graph (`pod.ttl`): a `tpod.member` entry is a `pod:MemberGraph` and carries `subject`, while a `tpod.tool[].graph` entry is a `pod:FormGraph` and carries no about-ness field of its own — its topic is the holding tool's single `formTopic`. Neither kind ever carries the other's field — they are `owl:disjointWith`, enforced by `shacl/pod-shacl.ttl`'s `:FormGraphShape` `sh:maxCount 0` guard. For every pod-databook under `example/Pods/`, verify that every tool entry carries an `id` (its pattern and uniqueness are YAML-10's), that every `tpod.member` entry and every tool graph is a mapping (never a bare string), that its `id` matches the `graph-<NN>` id pattern (see YAML-1), that `claimant` is present (required on both kinds, per `:CGraphShape`), and that the entry carries exactly its own list's about-ness field and not the other's; `template` stays optional (see TTL-5 for when it's actually required). Run:
 
 ```python
 import glob, re, yaml
@@ -901,6 +901,11 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
             print(f'{path}: tool entry {i} is not a mapping: {tool!r}')
             errors += 1
             continue
+        # Every live tool is named by its own IRI, its id (pod-databook.md's
+        # Tool Ids); YAML-10 checks the id's pattern and uniqueness.
+        if not tool.get('id'):
+            print(f'{path}: tool entry {i} missing id')
+            errors += 1
         if tool.get('type') not in ('form', 'calendar', 'canvas', 'contacts', 'map', 'browser'):
             print(f"{path}: tool entry {i} has unknown type {tool.get('type')!r}")
             errors += 1
@@ -949,7 +954,7 @@ if not errors:
     print('All pod-databooks: every member entry and tool graph is a well-formed mapping.')
 ```
 
-If a malformed entry is found, fix it directly (turn a stray bare string back into a full mapping, correct the id, or add the missing `claimant`/`subject`/`formTopic`).
+If a malformed entry is found, fix it directly (turn a stray bare string back into a full mapping, correct the id, or add the missing `id`/`claimant`/`subject`/`formTopic`).
 
 **YAML-3 — Pod id naming convention**: This check applies only to `example/Pods/` — the user's own instance tree — since there is no separate canonical-instance file tree: the canonical tree is the `podcat:PodCategoryScheme` SKOS concept scheme in `pod-categories.ttl` itself, with class-level templates in `pod-category-templates.ttl`. A pod-databook's `id:` is deliberately independent of its filename — the filename stays the folder's own verbatim name per the [Filename Convention](pod-databook.md#filename-convention), but the `id:` value is a flat, opaque, globally-unique identifier, following the same reasoning and pattern as the [Graph Ids and Named Graphs](pod-databook.md#graph-ids-and-named-graphs)'s `graph-<NN>`: encoding the folder's name and catType into the id would risk a collision the moment two different folders elsewhere in the tree shared both a name and a catType, and nothing in the repo actually depends on the id's string *structure* — it's purely a self-contained RDF subject identifier for that one pod, never cross-referenced by another pod, a graph, or a catalog file. Every `id:` value — across all pod-databooks in `example/Pods/` — must follow the flat pattern `http://www.example.org/tpod/pods/pod-<NN>`, where `<NN>` is a zero-padded two-digit number, assigned once at creation and never reused or renumbered. Every `<NN>` must be globally unique across the whole tree. Run:
 
@@ -1277,6 +1282,49 @@ print('Every pod tag is well-formed.' if violations == 0 else f'{violations} vio
 ```
 
 If a violation is found: quote a value that parsed as a number, trim the padding, drop the duplicate, restore a flat-string `serviceTag` entry to the three-sub-key mapping form, or delete a tag field that carries nothing rather than leaving it present and empty. Never "fix" a duplicate by moving one copy to a different tag kind just to silence the check — if the same label genuinely belongs to two kinds that is legal and this check already permits it, but a duplicate *within* one kind is always an editing slip. Nor should a repeated `(namespace, key)` pair be "fixed" by inventing a second key: a contact in two Apple Contacts Groups is two entries differing only in `value`, which is exactly right.
+
+**YAML-10 — Tool id naming convention and uniqueness**: A live tool is named by its own IRI, carried as its `tpod.tool` entry's `id` — the id a block link in the pod's note resolves by (see [Tool Ids](pod-databook.md#tool-ids)). In `example/Pods/` that id follows the flat pattern `http://www.example.org/tpod/tools/tool-<NN>`, padded the way graph ids are — two digits up to `tool-99`, three from `tool-100` — and numbered in a single sequence across the whole tree, so no number is used twice. YAML-2 checks that every tool entry carries an `id` at all; this check checks what it says. The id is not related to the tool's kind, topic, position or pod, so nothing beyond the pattern and uniqueness is checked. Run:
+
+```python
+import glob, re, yaml
+
+pattern = re.compile(r'^http://www\.example\.org/tpod/tools/tool-(\d{2}|[1-9]\d{2,})$')
+
+def frontmatter(path):
+    text = open(path, encoding='utf-8').read()
+    m = re.match(r'^---\n(.*?)\n---', text, re.DOTALL)
+    return yaml.safe_load(m.group(1)) if m else None
+
+def as_list(v):
+    return [] if v is None else (v if isinstance(v, list) else [v])
+
+seen = {}
+errors = 0
+for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+    if 'under-development' in path.split('/'):
+        continue
+    fm = frontmatter(path)
+    if not fm or fm.get('type') != 'pod-databook':
+        continue
+    for i, tool in enumerate(as_list((fm.get('tpod') or {}).get('tool'))):
+        if not isinstance(tool, dict) or not tool.get('id'):
+            continue  # YAML-2's finding, not this check's
+        tid = tool['id']
+        m = pattern.match(tid)
+        if not m:
+            print(f'MALFORMED  {path}  tool entry {i} id={tid!r} does not match http://www.example.org/tpod/tools/tool-<NN>')
+            errors += 1
+            continue
+        nn = int(m.group(1))
+        if nn in seen:
+            print(f'DUPLICATE  tool-{m.group(1)}  used by both {seen[nn]!r} and {path!r}')
+            errors += 1
+        else:
+            seen[nn] = path
+print('YAML-10: OK' if errors == 0 else f'YAML-10: {errors} issue(s) found')
+```
+
+If a malformed id is found, fix it to match the pattern. If a duplicate number is found, give the newer tool the next unused number — never renumber an existing tool's id, since a block link in some member's copy of the note may already resolve by it. As with YAML-3, this holds for `example/Pods/` too, fictional as its data is.
 
 ## FS — filesystem and documentation checks
 

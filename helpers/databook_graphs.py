@@ -193,7 +193,8 @@ def term(node):
     """Format a node as a Turtle term: a blank-node label (`_:x`) is written
     as-is, anything else is an IRI and gets angle brackets. Blank nodes enter
     the picture only as pod:serviceTag's pod:ServiceTag value nodes
-    (pod.ttl's Service Tag section)."""
+    (pod.ttl's Service Tag section), and as tool_node()'s fallback for a
+    malformed tool entry with no `id`."""
     return node if node.startswith("_:") else f"<{node}>"
 
 
@@ -209,13 +210,17 @@ def tag_node(pod_id, index):
     return f"_:tag_{pod_id.rsplit('/', 1)[-1]}_{index}"
 
 
-def tool_node(pod_id, index):
-    """A stable blank-node label for one pod:Tool value node, derived the
-    same way tag_node() derives a pod:ServiceTag's — from the pod's own id
-    local-name plus the tool's position in tpod.tool — and for the same reason:
-    yaml-to-rdf.py emits every pod in the tree into one Turtle document, so a
-    label unique only within a single process_pod_databook() call would
-    silently merge two pods' tools into one node."""
+def tool_node(pod_id, entry, index):
+    """The node for one pod:Tool value. A live tool is named by its own IRI,
+    the entry's `id` — what a note's block links resolve by (pod-databook.md's
+    Tool Ids). An entry with no `id` is malformed, and falls back to a blank-node
+    label derived the way tag_node() derives a pod:ServiceTag's, from the pod's
+    own id local-name plus the tool's position in tpod.tool, so that it still
+    synthesizes and then fails :LiveToolShape's sh:nodeKind sh:IRI instead of
+    vanishing; integrity.md's YAML-2 and YAML-10 catch the same thing at YAML
+    level, where they can name the file."""
+    if isinstance(entry, dict) and entry.get("id"):
+        return entry["id"]
     return f"_:tool_{pod_id.rsplit('/', 1)[-1]}_{index}"
 
 
@@ -302,8 +307,8 @@ def process_pod_databook(fm, triples):
         emit_obj(triples, subj, POD + "member", entry["id"])
         process_embedded_graph(entry, triples, "member")
 
-    # pod:tool — zero or more per pod, each a blank node for one object
-    # the pod carries: a form, a calendar, a drawing canvas, a map, an
+    # pod:tool — zero or more per pod, each a node named by the entry's own
+    # `id` for one object the pod carries: a form, a calendar, a drawing canvas, a map, an
     # address-book sync or a connection to a web browser,
     # each with its own data format. The node's rdf:type comes from the
     # entry's own `type` key (form/calendar/canvas/map/contacts/browser); pod:formTopic, what the tool's
@@ -311,7 +316,7 @@ def process_pod_databook(fm, triples):
     # each graph beneath it, which is what makes its graphs unable to
     # disagree about what they are about.
     for i, entry in enumerate(as_list(tpod.get("tool"))):
-        node = tool_node(subj, i)
+        node = tool_node(subj, entry, i)
         emit_obj(triples, subj, POD + "tool", node)
         emit_type(triples, node, POD + TOOL_TYPES[entry.get("type", "form")])
         if entry.get("formTopic"):

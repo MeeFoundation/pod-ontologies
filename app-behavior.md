@@ -254,7 +254,7 @@ Results are scoped to the searching member's own tree.
 
 Tags are not the only way to gather pods. The user — or their own AI agent, working on their behalf — can also search for every pod whose tool graph carries a given **property**, and get back the same flat list of pod links a tag search returns.
 
-The worked example is the one a tag would otherwise have handled: "show me every pod where I hold a loyalty program." That is a search for `sa:loyaltyProgramID` (see [Service Accounts Ontology](README.md#service-accounts-ontology) in README.md), and it returns Alice's `Hilton` pod because that pod's tool graph records her Hilton Honors membership number. Nobody had to label the pod for this to work.
+The worked example is the one a tag would otherwise have handled: "show me every pod where I hold a loyalty program." That is a search for `sa:loyaltyProgramID` (see [Service Accounts Ontology](other-ontologies.md#service-accounts-ontology) in other-ontologies.md), and it returns Alice's `Hilton` pod because that pod's tool graph records her Hilton Honors membership number. Nobody had to label the pod for this to work.
 
 The two searches complement each other rather than competing. A property search needs no one to have remembered to tag anything and cannot drift out of date, since it reads the same fact the pod already stores for its own sake — but it only reaches what the data actually models. A tag reaches anything at all, including a grouping that exists only in the user's head ("Ginger"), at the cost of someone having to apply it. So a fact with a property of its own is found by that property, and a tag is for what the data does not already model — which is why the app ships no built-in tag vocabulary.
 

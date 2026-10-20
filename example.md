@@ -1,10 +1,12 @@
 # Tellipod Ontologies — Illustrative Example
 
-This file continues [README.md](README.md), which describes the Category, Pod, Graph, Persona, and Organization ontologies, and is continued by [app-behavior.md](app-behavior.md), which documents how the app behaves on top of this data. It provides an illustrative example — a hypothetical user, Alice Walker — showing how those ontologies are used together, followed by diagram-generation instructions and the full validation pipeline for the example dataset.
+This file continues [README.md](README.md), which describes the Category, Pod, Graph, Persona, and Organization ontologies, and is continued by [app-behavior.md](app-behavior.md), which documents how the Tellipod app behaves on top of this data. It provides an illustrative example — a hypothetical user, Alice Walker — showing how those ontologies are used together, followed by diagram-generation instructions and the full validation pipeline for the example dataset.
 
-## Illustrative Example: Alice
+## How Alice uses Tellipod
 
-This section describes the local dataset for a hypothetical user, Alice Walker. Alice's pods live in a tree of pods rooted at `example/Pods/`, where this repo carries each one as a folder — marked as a pod by the `_pod-attachments` folder inside it, and holding a pod DataBook file — all of which is [development scaffolding](pod-databook.md#development-scaffolding) rather than anything a running Tellipod produces (see [storage.md](storage.md)). Every mention of "Self" in the following is a reference to the user, Alice.
+Alice has been using the app for some time and has created a number of different pods and/or has been invited into them by others. She has chosen to organize these pods using the [Pod Categories](readme.md#pod-categories) taxonomy.
+
+Alice's pods live in a tree rooted at `example/Pods/`, where this repo carries each one as a folder — marked as a pod by the `_pod-attachments` folder inside it, and holding a pod DataBook file — all of which is [development scaffolding](pod-databook.md#development-scaffolding) rather than anything a running Tellipod produces (see [storage.md](storage.md)). Every mention of "Self" in the following is a reference to the user, Alice.
 
 ### Bob and Fred
 

@@ -8,8 +8,8 @@
 @base <http://mee.foundation/ontologies/pod-categories> .
 
 <http://mee.foundation/ontologies/pod-categories> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod-categories/2.12.0> ;
-    dc:date "2026-09-26"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod-categories/2.13.0> ;
+    dc:date "2026-10-20"^^xsd:date ;
     rdfs:label "Pod Categories"@en ;
     rdfs:comment """Pod Categories for the Tellipod App."""@en .
 
@@ -150,7 +150,7 @@ podcat:LendingCredit rdf:type skos:Concept ;
     skos:prefLabel "Lending & Credit Firms"@en ;
     skos:broader podcat:Finances ;
     skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Firms that lend you money when you need to buy something expensive that you cannot pay for all at once. These include Mortgage Lenders, banks or specialized companies that give you loans specifically to buy a home; Consumer Finance Companies, that give out personal loans, auto loans, or student loans; and Credit Card Issuers, banks that give you a plastic card to borrow money on the spot for daily purchases."@en .
+    rdfs:comment "Firms that lend you money when you need to buy something expensive that you cannot pay for all at once. These include Mortgage Lenders, banks or specialized companies that give you loans specifically to buy a home; Consumer Finance Companies, which give out personal loans, auto loans, or student loans; and Credit Card Issuers, banks that give you a plastic card to borrow money on the spot for daily purchases."@en .
 
 podcat:Insurance rdf:type skos:Concept ;
     skos:prefLabel "Insurance Firms"@en ;
@@ -286,7 +286,7 @@ podcat:Fitness rdf:type skos:Concept ;
     skos:prefLabel "Fitness"@en ;
     skos:broader podcat:HealthWellness ;
     skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "General fitness and preventive physical health — exercise, gyms, trainers, and other non-clinical wellbeing information."@en .
+    rdfs:comment "General fitness and preventive physical health — exercise, gyms, trainers, and other non-clinical well-being information."@en .
 
 podcat:FitnessProvider rdf:type skos:Concept ;
     skos:prefLabel "Provider"@en ;
@@ -595,7 +595,7 @@ podcat:Customers rdf:type skos:Concept ;
     skos:prefLabel "Customers"@en ;
     skos:broader podcat:Organization ;
     skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Customer organizations. Rename to 'Clients', etc."@en .
+    rdfs:comment "Customer organizations. Can be renamed, e.g. to 'Clients'."@en .
 
 podcat:Marketing rdf:type skos:Concept ;
     skos:prefLabel "Marketing"@en ;
@@ -607,7 +607,7 @@ podcat:Prospects rdf:type skos:Concept ;
     skos:prefLabel "Prospects"@en ;
     skos:broader podcat:Marketing ;
     skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Customer prospects. Rename to 'Client prospects', etc."@en .
+    rdfs:comment "Customer prospects. Can be renamed, e.g. to 'Client prospects'."@en .
 
 podcat:Partners rdf:type skos:Concept ;
     skos:prefLabel "Partners"@en ;
@@ -733,7 +733,7 @@ podcat:Investing\(org\) rdf:type skos:Concept ;
     skos:prefLabel "Investing (org)"@en ;
     skos:broader podcat:Finances\(org\) ;
     skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "These include Investment firms, Private Equity firms, Venture Capitalists, Brokerage Firms like Charles Schwab and Mutual Fund companies like Vanguard or Fidelity."@en .
+    rdfs:comment "Investment firms, private equity firms, venture capitalists, brokerage firms like Charles Schwab, and mutual fund companies like Vanguard or Fidelity."@en .
 
 podcat:LendingCredit\(org\) rdf:type skos:Concept ;
     skos:prefLabel "Lending & Credit (org)"@en ;
@@ -751,4 +751,4 @@ podcat:Advisory\(org\) rdf:type skos:Concept ;
     skos:prefLabel "Advisory (org)"@en ;
     skos:broader podcat:Finances\(org\) ;
     skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Financial Planners, outsourced CFO consultants, Accountants and Bookkeepers and Tax preparers."@en .
+    rdfs:comment "Financial planners, outsourced CFO consultants, accountants, bookkeepers, and tax preparers."@en .

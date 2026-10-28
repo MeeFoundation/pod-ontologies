@@ -104,7 +104,7 @@ Every pod in every table now carries a decided value. A pod reading `n/a` marks 
 
 An attachment is a file every member of the pod receives, shown in the app's Attachments area (see [Pod Contents](#pod-contents) above). An attachment is **immutable**: once added, its content is never updated in place by any role, so a correction means deleting it and adding the corrected file. Vladimir and Sergey call this an *immutable document*, a PDF being their example.
 
-A file the member adds to the pod without attaching it is instead their own **private** file, which no other member ever receives. Every row below reads the same for one, with a single difference: both *another member's* rows become `n/a`, since no other member ever has one of this member's private files to read or delete. A service reaches exactly what its principal reaches — its access is its principal's access (see [Pod Interface](#pod-interface) below) — so a member's own agent or backup service sees their private files, and a service acting for another member never does.
+A file the member adds to the pod without attaching it is instead their own **private** file, which no other member ever receives. Every row below reads the same for one, with a single difference: both *another member's* rows become `n/a`, since no other member ever has one of this member's private files to read or delete. A service reaches exactly what its principal reaches — its access is its principal's access (see [Pod Interface](#pod-interface) below) — so a member's own agent service, such as a backup service, sees their private files, a service acting for another member never does, and a pod agent, which has no principal, sees no member's.
 
 | Capability | Owner | Member | Service | 
 |---|---|---|---|
@@ -294,7 +294,7 @@ The Note area is a rich-text editor for the pod's one note. Its formatting is Ma
 
 ### Chat Area
 
-Chat is one feature with two visibility modes, not two separate concepts. By default, every message posts to the pod's one shared group stream, visible to every member. Any message can additionally be *directed* at a specific named member — human or agent — while staying in the shared stream (e.g. Alice @-mentions her agent; every member sees both her prompt and the agent's reply). Separately, a true private 1:1 thread between a member and their own agent is also supported, whose transcript is not visible to other members — only the *resulting* committed changes (note edits, tool-graph revisions, new attachments) surface into the shared pod.
+Chat is one feature with two visibility modes, not two separate concepts. By default, every message posts to the pod's one shared group stream, visible to every member. Any message can additionally be *directed* at a specific named member — human or agent — while staying in the shared stream (e.g. Alice @-mentions her agent; every member sees both her prompt and the agent's reply). Separately, a true private 1:1 thread between a member and an agent is also supported, whose transcript is not visible to other members — only the *resulting* committed changes (note edits, tool-graph revisions, new attachments) surface into the shared pod. With a [pod agent](#inviting-ai-agents), any member may open such a thread, not only its sponsor; the transcript passes through the agent's gateway and language model, so it is visible to whoever hosts those, but not to the sponsor unless the sponsor hosts the gateway.
 
 ### Inviting services
 
@@ -302,7 +302,7 @@ A member may invite a service — their own AI agent, a backup service, or an or
 
 #### Inviting AI Agents
 
-A member may invite their own AI agent (`s:ChatGPT`, a leaf under `s:AgentService` — see README.md's [Service Ontology](README.md#service-ontology)) into a shared pod — e.g. inviting ChatGPT to help plan a trip in a `podcat:Trips` pod. An invited agent becomes a real pod member: it gets its own self-claimed `pod:member` entry alongside the human members, which raises the pod's own distinct-member count (e.g. Alice + her own agent = two distinct members, a two-member pod; a third member joining too — human or service — would raise it to three members, the same derivation applying regardless of count — see [Number of Members](#number-of-members) above). Because the agent is a literal member, it needs no special-case permission logic — [Permissions](#permissions) above already covers it: by default, an invited agent gets exactly the same read/write access to the pod's note, files, and [chat](#chat-area) that any non-owner human member has (see [Permissions](#permissions) above) — and, unlike a human member, a service member can never be promoted to owner, so it stays at that baseline permanently.
+A member may invite an AI agent — a **pod agent** (`s:PodAgent` — see README.md's [Service Ontology](README.md#service-ontology)) — into a shared pod, e.g. to help plan a trip in a `podcat:Trips` pod. The inviting member becomes its sponsor (`s:sponsoredBy`), paying for the gateway and the language model behind it (e.g. ChatGPT) whether or not they host either, but the agent does not work for them: every member can address it, ask it questions, and have it contribute, and any owner can remove it. An invited agent becomes a real pod member: it gets its own self-claimed `pod:member` entry alongside the human members, which raises the pod's own distinct-member count (e.g. Alice + her own agent = two distinct members, a two-member pod; a third member joining too — human or service — would raise it to three members, the same derivation applying regardless of count — see [Number of Members](#number-of-members) above). Because the agent is a literal member, it needs no special-case permission logic — [Permissions](#permissions) above already covers it: by default, an invited agent gets exactly the same read/write access to the pod's note, files, and [chat](#chat-area) that any non-owner human member has (see [Permissions](#permissions) above) — and, unlike a human member, a service member can never be promoted to owner, so it stays at that baseline permanently.
 
 #### Inviting Backup Services
 
@@ -328,14 +328,14 @@ Where one such field's legal values depend on another field already filled in, t
 
 Every service the app offers *is* one of the classes in README.md's [Service Ontology](README.md#service-ontology) — there is no separate wrapper concept sitting over one. What the app ships per service is the code that runs it on the member's own device, translating between the external system's own API and the pod, which it reaches through the [Pod Interface](#pod-interface) like any other member, with that member's own access and no more.
 
-Each principal runs their own services independently — their own credentials, their own connection to the underlying external system — the same way each peer already manages their own tree position for a shared pod independently (see [Pod Storage](#pod-storage) above). An AI agent runs whenever a message addressed to it arrives (matched via `s:actsFor`); a contact sync or a backup service runs on its own schedule instead. Because a service acts for exactly one member, everything it records privately stays on that member's side — which is the whole reason a hidden [service tag](README.md#tags) never propagates on a share.
+Each principal runs their own services independently — their own credentials, their own connection to the underlying external system — the same way each peer already manages their own tree position for a shared pod independently (see [Pod Storage](#pod-storage) above). A backup service runs on its own schedule. Because an `s:AgentService` acts for exactly one member, everything it records privately stays on that member's side — which is the whole reason a hidden [service tag](README.md#tags) never propagates on a share. A pod agent is the exception to running on a member's device: it runs at its gateway (`s:PodGateway`), which takes part in the pod over the PDN, invokes the language model whenever a message addressed to the agent arrives from any member, and writes the result back as the agent.
 
-Two are documented below. Both are `s:AgentService`s, meaning each acts for exactly one member:
+Two are documented below:
 
 | Service | Class | What it does |
 |---|---|---|
-| ChatGPT | `s:ChatGPT` | An LLM assistant that collaborates in the pod's chat, note, and tool graphs |
-| Arca Backup | `s:ArcaBackup` | Backs up the member's own copy of a pod |
+| ChatGPT | `s:PodAgent` using an `s:ChatGPT` model | An AI agent, sponsored by one member and answering to all, that collaborates in the pod's chat, note, and tool graphs |
+| Arca Backup | `s:ArcaBackup` (an `s:AgentService`) | Backs up the member's own copy of a pod, acting for that one member |
 
 An `s:ServiceProvider` — an organization's own service, such as Citibank's — is equally a service by this definition; it simply acts for the organization that provides it rather than for a member, and the app does not ship its code. So is an `s:WebsiteService`, the website a credential is issued by or presented to, known by its `s:siteDomain`. The app runs no code for one: either the site takes no part in the pod and the app simply mints its member, or the site supports the Pod Interface natively and takes part as an `s:ServiceProvider` would — see [Browser Extension](#browser-extension) below.
 
@@ -348,7 +348,7 @@ This is why an invited service needs no special-case permission logic anywhere i
 - **Read access is unrestricted across the pod** — every member, human or service, can read the note, every member's and every tool's claims, and attachment metadata. "Across the pod" means the pod's shared content: a member's own private files are not part of it, and a service reaches them only when it acts for that member, its access being its principal's access.
 - **Write access is scoped to the caller's own claimant identity** — a service creates, updates and deletes only the claims it claims itself. It can edit the shared note and add attachments like any member, but it can never write to another party's `pod:member` graph or tool graph.
 - **A service is never an owner.** It cannot be promoted (`pod:owner`'s range is `p:Person`), so it permanently sits at the non-owner baseline: it cannot delete another member's claims or attachments, and it cannot delete the pod for everyone.
-- **Its access is its principal's access.** An `s:AgentService` operates with the access of the one member it `s:actsFor`, never more — inviting an agent grants it nothing its principal did not already have.
+- **Its access is its principal's access.** An `s:AgentService` operates with the access of the one member it `s:actsFor`, never more — inviting an agent grants it nothing its principal did not already have. An `s:PodAgent` has no principal: it has an ordinary non-owner member's access to the pod's shared content, and never reaches any member's private files, its sponsor's included.
 - **Hidden [service tags](README.md#tags) are namespace-scoped.** A module searches, reads, adds and deletes only the `pod:serviceTag` nodes carrying its own developer's `pod:tagNamespace`; another module's are neither readable nor writable, and none of them is exposed to the user's own UI at all.
 
 What a service does *beyond* the pod — call an LLM, read an address book, write a backup — is its own business and is not the Pod Interface's concern. The interface's job is that everything arriving back *in* the pod arrives through the same door, under the same rules, as a person's own edits.
@@ -363,11 +363,11 @@ Two practical consequences for a module. First, results are scoped to its own me
 
 ### The Iterative Prompt/Response Loop
 
-Each turn of a member's conversation with the agent proceeds as follows:
+Each turn of a member's conversation with a pod agent proceeds as follows:
 
-1. The member sends a message — in the shared group stream (optionally @-directed at their agent) or in a private DM thread with their agent.
-2. Their own device — running their agent service, invoked on receiving a message addressed to it (matched via `s:actsFor`) — assembles context: the shared note's current text, the agent's single evolving tool graph (its accumulated understanding of the trip, or whatever the pod concerns), recent relevant chat turns, and existing attachment metadata (filenames/captions).
-3. This context plus the new message is sent to the underlying LLM service (push model — the app calls out; no inbound endpoint is ever exposed).
+1. Any member sends a message — in the shared group stream (optionally @-directed at the agent) or in a private DM thread with it.
+2. The agent's gateway, invoked on receiving a message addressed to the agent, assembles context: the shared note's current text, the agent's single evolving tool graph (its accumulated understanding of the trip, or whatever the pod concerns), recent relevant chat turns, and existing attachment metadata (filenames/captions).
+3. This context plus the new message is sent to the agent's language model (`s:usesLLM`), which may be hosted by the same party as the gateway or by another.
 4. The response is applied as one atomic turn, all under the agent's own existing member-level write rights:
    - a conversational reply posted back into the same stream/thread the prompt came from (group-visible or private, matching where it arrived);
    - the agent's tool graph revised in place to fold in this turn's new facts/decisions — a single evolving graph, not a new one per turn, mirroring how the note itself is one living document rather than a new copy per edit;
@@ -377,13 +377,13 @@ Nothing currently records *which* conversation (group vs. private) produced a gi
 
 ### ChatGPT Service
 
-This module lets a member invite OpenAI's ChatGPT into a pod as a real `s:ChatGPT` member (see [Inviting AI Agents](#inviting-ai-agents) and README.md's [Service Ontology](README.md#service-ontology)). At a high level, once invited, it does four things:
+This module lets a member invite a pod agent backed by OpenAI's ChatGPT into a pod as a real `s:PodAgent` member, its language model an `s:ChatGPT` (see [Inviting AI Agents](#inviting-ai-agents) and README.md's [Service Ontology](README.md#service-ontology)). At a high level, once invited, it does four things:
 
 1. **Participates in the pod's chat.** It posts and receives messages through the same group/directed/private-DM model described in [Chat Area](#chat-area) above — no separate messaging channel of its own.
 2. **Reads all of the pod's data.** Unlike its write access (below), read access is unrestricted: the note's current text, every member's `pod:MemberGraph` and every tool's `pod:FormGraph` content, and attachment metadata are all available to it as context for each turn — this is the raw material the [Iterative Prompt/Response Loop](#the-iterative-promptresponse-loop) assembles on its behalf.
 3. **Writes edits to the note.** Because it's a real pod member, it has the same free note-editing rights [Permissions](#permissions) already grants any member — no agent-specific carve-out is needed.
 4. **Creates, reads, updates, and deletes its own claims, as claimant** — but only within the two graphs it actually claims:
-    - **Its own `pod:member` entry** — the self-claimed graph proving its membership (e.g. [graph 67](<example/Pods/Travel/Trips/Kyoto Trip 2027/Kyoto Trip 2027(trips).databook.md#graph-67>)'s `s:actsFor` claim) — content *about itself*.
+    - **Its own `pod:member` entry** — the self-claimed graph proving its membership (e.g. [graph 67](<example/Pods/Travel/Trips/Kyoto Trip 2027/Kyoto Trip 2027(trips).databook.md#graph-67>)'s `s:sponsoredBy`, gateway and language-model claims) — content *about itself*.
     - **Its own tool graph (or graphs)** — content about whatever the pod's relationship concerns (e.g. [graph 70](<example/Pods/Travel/Trips/Kyoto Trip 2027/Kyoto Trip 2027(trips).databook.md#graph-70>)'s evolving itinerary) — content about *the tool's topic*, distinct from any other member's or party's own claims about that same topic.
 
    It never writes to a graph claimed by someone else — not another member's `pod:member` entry, not a tool graph another party claims — read access is unrestricted, but write access is always scoped to the module's own claimant identity. In the steady state this means revising its tool graph in place turn by turn (see [The Iterative Prompt/Response Loop](#the-iterative-promptresponse-loop)); "create" and "delete" cover the initial contribution and retracting a claim that's no longer accurate (e.g. a cancelled leg of an itinerary), respectively. Each of those revisions is a delete-and-re-issue at the PDN layer, exactly as for a human member's own edit (see [Tool & Member Info Permissions](#tool--member-info-permissions) above).

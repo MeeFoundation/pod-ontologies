@@ -11,9 +11,9 @@
 @base <http://mee.foundation/ontologies/service> .
 
 <http://mee.foundation/ontologies/service> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/service/2.11.0> ;
-    dc:date "2026-09-26"^^xsd:date ;
-    owl:versionInfo "Version 2.11.0 - service:WebsiteService covers a site that supports the Pod Interface natively, as a service:ServiceProvider too"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/service/2.12.0> ;
+    dc:date "2026-10-28"^^xsd:date ;
+    owl:versionInfo "Version 2.12.0 - added service:PodAgent, sponsored by one member and answering to every member, reaching its LLM (service:LLMService) through a gateway (service:PodGateway); service:ChatGPT is now an LLM service"@en ;
     owl:imports <https://w3id.org/cco-domains/cco/AgentOntology> ,
                 <http://mee.foundation/ontologies/prov-upper-subset> ;
     rdfs:label "Service Ontology"@en ;
@@ -22,7 +22,11 @@
                     shared pod — the second kind of first-class, member-capable participant,
                     peer to persona.ttl (models Person). A service is not a service plus some
                     separate module wrapping it: every service the app offers is one of the
-                    classes below, and every class below is a service the app can run.
+                    service:Service classes below, and every one of them is a service the app
+                    can run. The file also defines the two pieces of software a
+                    service:PodAgent reaches its language model through —
+                    service:PodGateway and service:LLMService — which are deliberately not
+                    service:Service subclasses, since neither ever joins a pod.
                     A pod's members are only ever
                     p:Person or service:Service individuals: o:Organization
                     (organization.ttl) is not itself member-capable, and reaches a pod only
@@ -38,8 +42,9 @@
                     cco:ont00001180 (Organization); and project_files/prov-upper.ttl (via
                     http://mee.foundation/ontologies/prov-upper-subset), a hand-curated subset
                     of the W3C PROV Ontology (PROV-O), since a service:Service is also a
-                    real-world instance of prov:Agent, its two software kinds are
-                    prov:SoftwareAgent, and service:actsFor is a narrower case of PROV-O's
+                    real-world instance of prov:Agent, its software kinds
+                    (service:AgentService, service:PodAgent, service:PodGateway,
+                    service:LLMService) are prov:SoftwareAgent, and service:actsFor is a narrower case of PROV-O's
                     prov:actedOnBehalfOf delegation relation — see each term's own comment
                     below for the exact alignment triples."""@en .
 
@@ -68,15 +73,17 @@ service:Service rdf:type owl:Class ;
                     see pod:claimant's own comment for which of the two a graph names. Whatever it does outside the
                     pod, every service:Service reaches the pod itself through one surface — the Pod Interface, the
                     same read/write surface a human member's own UI uses (app-behavior.md), which is why an invited
-                    service needs no special-case permission logic. It branches in three on the
+                    service needs no special-case permission logic. It branches in four on the
                     question of whom the service acts for: service:AgentService acts on
                     behalf of exactly one p:Person member of the pod (service:actsFor),
-                    service:ServiceProvider acts on behalf of the o:Organization that
-                    provides it (service:providedBy), and service:WebsiteService stands for
-                    a website known only by its domain (service:siteDomain), with no
-                    member or organization it is known to act for. The concrete services the app
-                    ships — service:ChatGPT and service:ArcaBackup — are both the former,
-                    each a leaf under service:AgentService. No class here
+                    service:PodAgent answers to every member of the pod alike, one member
+                    paying for it (service:sponsoredBy), service:ServiceProvider acts on
+                    behalf of the o:Organization that provides it (service:providedBy), and
+                    service:WebsiteService stands for a website known only by its domain
+                    (service:siteDomain), with no member or organization it is known to act
+                    for. The concrete services the app ships are service:ArcaBackup, a leaf
+                    under service:AgentService, and the pod agent, which reaches its language
+                    model (e.g. service:ChatGPT) through a gateway. No class here
                     is declared owl:disjointWith any other, since one real service can
                     legitimately be more than one kind at once. rdfs:subClassOf cco:ont00001017 (CCO Agent,
                     "A Material Entity that bears an Agent Capability", itself a
@@ -101,8 +108,10 @@ service:providedBy rdf:type owl:ObjectProperty ;
                     as an AI agent a person runs on their own device, simply omits it), and
                     required, exactly one value on service:ServiceProvider and
                     service:ArcaBackup specifically (1..1); all three cardinalities are
-                    enforced by shacl/service-shacl.ttl. service:ChatGPT deliberately requires none: naming the vendor is the
-                    class's own job, and OpenAI is not a party to the pod's relationship. This is the only route by which an
+                    enforced by shacl/service-shacl.ttl. A service:PodAgent normally carries
+                    none: whoever runs its gateway and its language model is recorded by
+                    service:hostedBy on those, and is not a party to the pod's relationship.
+                    This is the only route by which an
                     o:Organization reaches a pod's member list at all: the organization
                     itself is not member-capable, its service is. It is also what identifies
                     the party a provider service's claims are attributed to — see
@@ -121,13 +130,12 @@ service:AgentService rdf:type owl:Class ;
     rdfs:label "Agent Service"@en ;
     rdfs:comment """A service that acts on behalf of exactly one p:Person member of the pod,
                     named by its own required service:actsFor value — this is what defines the
-                    class, not what the service happens to do with that mandate. An LLM
-                    assistant (service:ChatGPT) and a backup service (service:ArcaBackup)
-                    are agent services in exactly the same sense: each was invited by one member, works for that member, and
-                    answers to no one else in the pod. It is the whole of the
-                    service:actsFor side of service:Service's two-way branch; the other side,
-                    service:ServiceProvider, acts for the o:Organization that provides it
-                    instead, recorded by service:providedBy rather than service:actsFor.
+                    class, not what the service happens to do with that mandate. A backup
+                    service (service:ArcaBackup) is one: it was invited by one member, works
+                    for that member, and answers to no one else in the pod. Contrast
+                    service:PodAgent, which answers to every member, and
+                    service:ServiceProvider, which acts for the o:Organization that provides
+                    it, recorded by service:providedBy rather than service:actsFor.
                     Directly instantiable, not abstract: a member's agent that has no vendor
                     class of its own is typed service:AgentService and nothing more, so
                     modeling a new service never requires minting a class for it first.
@@ -148,7 +156,7 @@ service:actsFor rdf:type owl:ObjectProperty ;
     rdfs:range p:Person ;
     rdfs:label "acts for"@en ;
     rdfs:comment """Identifies the p:Person member this agent service is a
-                    delegate/collaborator for — e.g. Alice's own travel agent carries
+                    delegate/collaborator for — e.g. Alice's own backup service carries
                     service:actsFor :Self. Required, exactly one value: a
                     service:AgentService is always invited into a pod by, and acts on behalf
                     of, exactly one person, never independently — a second member who wants
@@ -167,26 +175,6 @@ service:actsFor rdf:type owl:ObjectProperty ;
 
 
 #################################################################
-#    ChatGPT
-#################################################################
-
-service:ChatGPT rdf:type owl:Class ;
-    rdfs:subClassOf service:AgentService ;
-    rdfs:label "ChatGPT"@en ;
-    rdfs:comment """OpenAI's ChatGPT, invited by a member into a shared pod to collaborate —
-                    e.g. :Alice_Travel_Agent, joining her Kyoto trip pod alongside Alice and
-                    Dave, with its own self-claimed pod:member entry and its own tool
-                    contribution to the itinerary. Inherits service:actsFor from
-                    service:AgentService, required exactly once, naming the member whose agent
-                    it is; each member wanting one invites their own individual. Carries no
-                    service:providedBy: the class already names the vendor, and no
-                    o:Organization stands behind it inside the pod's own relationship —
-                    contrast service:ArcaBackup, where the providing organization is a party
-                    to the arrangement. See app-behavior.md's ChatGPT Service Module
-                    section for what it actually does once invited."""@en .
-
-
-#################################################################
 #    Arca Backup
 #################################################################
 
@@ -201,10 +189,128 @@ service:ArcaBackup rdf:type owl:Class ;
                     the pod it preserves, which is why it has a single principal like any
                     other agent service. Carries service:providedBy as well, required exactly
                     once (1..1, shacl/service-shacl.ttl's :ArcaBackupShape), naming the
-                    o:Organization that runs it — the one leaf under service:AgentService that
-                    names a provider, since the arrangement genuinely involves Arca as well as
-                    the member. It still claims its own graphs under its own IRI rather than
-                    Arca's, unlike a service:ServiceProvider."""@en .
+                    o:Organization that runs it, since the arrangement genuinely involves Arca
+                    as well as the member. It still claims its own graphs under its own IRI
+                    rather than Arca's, unlike a service:ServiceProvider."""@en .
+
+
+#################################################################
+#    Pod Agent
+#################################################################
+
+service:PodAgent rdf:type owl:Class ;
+    rdfs:subClassOf service:Service ,
+                    prov:SoftwareAgent ;
+    rdfs:label "Pod Agent"@en ;
+    rdfs:comment """An AI agent that joins a pod as a real member and answers to every member
+                    of it alike — any member can address it in the pod's chat, and it can
+                    contribute to the note and to a tool's graphs like any other member. One
+                    member pays for it, named by its required service:sponsoredBy value, but
+                    it does not act on that member's behalf: that is the whole of the
+                    difference from a service:AgentService, whose service:actsFor names the
+                    one member it works for. It carries no service:actsFor. Any owner can
+                    remove it from the pod, as with any non-owner member. Its handle in the
+                    pod's chat (e.g. "@ChatGPT") is its own rdfs:label.
+                    A pod agent is the member-facing end of two pieces of software, neither of
+                    which joins the pod: a gateway (service:viaGateway, a service:PodGateway)
+                    that speaks the PDN/Tellipod protocols on one side and talks to a language
+                    model on the other, and that language model itself (service:usesLLM, a
+                    service:LLMService). Either can be hosted by a company or by an
+                    individual, the sponsor included, which is why paying for them
+                    (service:sponsoredBy) is recorded separately from running them
+                    (service:hostedBy). Like a service:AgentService, it claims the graphs it
+                    contributes under its own IRI, since no organization stands behind it in
+                    the pod's relationship. rdfs:subClassOf prov:SoftwareAgent
+                    (project_files/prov-upper.ttl) alongside its service:Service parent, since
+                    it is real software; subClassOf rather than owl:equivalentClass since
+                    prov:SoftwareAgent's own membership is far broader."""@en .
+
+service:sponsoredBy rdf:type owl:ObjectProperty ;
+    rdfs:domain service:PodAgent ;
+    rdfs:range p:Person ;
+    rdfs:label "sponsored by"@en ;
+    rdfs:comment """Identifies the p:Person member who pays for this pod agent — for its gateway
+                    and its language model — whoever hosts either one. Required, exactly one
+                    value, and the sponsor is always a member of the same pod (integrity.md's
+                    YAML-11, since no single graph can show it). The range is p:Person alone,
+                    mirroring pod:creator's and pod:owner's own person-only ranges, referenced
+                    by name without owl:imports the same way. Deliberately not an
+                    rdfs:subPropertyOf prov:actedOnBehalfOf, unlike service:actsFor: a pod
+                    agent answers to every member, not to the one who pays for it."""@en .
+
+service:viaGateway rdf:type owl:ObjectProperty ;
+    rdfs:domain service:PodAgent ;
+    rdfs:range service:PodGateway ;
+    rdfs:label "via gateway"@en ;
+    rdfs:comment """The gateway this pod agent reaches its language model through. Required,
+                    exactly one value."""@en .
+
+service:usesLLM rdf:type owl:ObjectProperty ;
+    rdfs:domain service:PodAgent ;
+    rdfs:range service:LLMService ;
+    rdfs:label "uses LLM"@en ;
+    rdfs:comment """The language model that produces this pod agent's replies and
+                    contributions. Required, exactly one value."""@en .
+
+
+#################################################################
+#    Pod Gateway and LLM Service
+#################################################################
+
+service:PodGateway rdf:type owl:Class ;
+    rdfs:subClassOf cco:ont00001017 ,  # CCO Agent
+                    prov:SoftwareAgent ;
+    rdfs:label "Pod Gateway"@en ;
+    rdfs:comment """Software that bridges the PDN/Tellipod protocols on one side to a language
+                    model (a service:LLMService) on the other, so that a service:PodAgent can
+                    take part in a pod. It receives the pod's content and the messages
+                    addressed to the agent, calls the model, and writes the result back into
+                    the pod as the agent. A company may host the gateway alone or together
+                    with the model, and so may a technically inclined individual; who does is
+                    recorded by service:hostedBy. Not a service:Service: it never joins a pod
+                    itself, the service:PodAgent it serves being the member. Parented directly
+                    on cco:ont00001017 (CCO Agent) and prov:SoftwareAgent instead, the same
+                    two alignments service:Service and service:AgentService carry."""@en .
+
+service:LLMService rdf:type owl:Class ;
+    rdfs:subClassOf cco:ont00001017 ,  # CCO Agent
+                    prov:SoftwareAgent ;
+    rdfs:label "LLM Service"@en ;
+    rdfs:comment """A large language model a service:PodAgent uses, reached through its
+                    service:PodGateway. Directly instantiable: a model with no vendor class of
+                    its own (e.g. one an individual hosts themselves) is typed
+                    service:LLMService and nothing more. Who runs it is recorded by
+                    service:hostedBy. Not a service:Service, for the same reason as
+                    service:PodGateway: it never joins a pod."""@en .
+
+service:hostedBy rdf:type owl:ObjectProperty ;
+    rdfs:domain [ rdf:type owl:Class ;
+                  owl:unionOf ( service:PodGateway service:LLMService ) ] ;
+    rdfs:range [ rdf:type owl:Class ;
+                 owl:unionOf ( p:Person o:Organization ) ] ;
+    rdfs:label "hosted by"@en ;
+    rdfs:comment """The p:Person or o:Organization that runs this gateway or language model —
+                    a company offering hosting, or an individual hosting it themselves, who may
+                    also be the pod agent's sponsor. Optional, at most one value (0..1,
+                    shacl/service-shacl.ttl): hosting is often unknown to the pod, and the
+                    sponsor is what the pod depends on. Ranges referenced by name without
+                    owl:imports, as elsewhere in this file."""@en .
+
+
+#################################################################
+#    ChatGPT
+#################################################################
+
+service:ChatGPT rdf:type owl:Class ;
+    rdfs:subClassOf service:LLMService ;
+    rdfs:label "ChatGPT"@en ;
+    rdfs:comment """OpenAI's ChatGPT, as the language model behind a service:PodAgent — the
+                    model, not the pod member: the member is the pod agent that uses it
+                    (service:usesLLM), whose own rdfs:label is its handle in the pod's chat.
+                    Carries no service:providedBy, since the class already names the vendor;
+                    who runs a particular instance is recorded by service:hostedBy. See
+                    app-behavior.md's ChatGPT Service section for what a pod agent does once
+                    invited."""@en .
 
 
 #################################################################

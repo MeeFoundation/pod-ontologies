@@ -470,7 +470,7 @@ pod:claimant rdf:type owl:AnnotationProperty ;
                     the claim and the one an eventual cryptographic signature would name);
                     and the service:Service itself for a service with no organization
                     standing behind it in the relationship — an invited
-                    service:AgentService self-claiming its own pod:member entry and
+                    service:AgentService or service:PodAgent self-claiming its own pod:member entry and
                     claiming whatever tool content it contributes. A claimant need
                     not itself be one of the pod's members: a provider service's
                     organization is reachable from a member subject via

@@ -11,8 +11,8 @@
 
 <http://mee.foundation/ontologies/service/shapes> rdf:type owl:Ontology ;
     owl:imports <http://mee.foundation/ontologies/service> ;
-    owl:versionIRI <http://mee.foundation/ontologies/service/shapes/2.1.0> ;
-    dc:date "2026-09-26"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/service/shapes/2.2.0> ;
+    dc:date "2026-10-28"^^xsd:date ;
     rdfs:label "Service Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for the Service Ontology."@en .
 
@@ -33,9 +33,11 @@
 #  typed both an agent service and a provider.
 #
 #  service:ChatGPT gets no shape of its own: it adds no constraint
-#  beyond the :AgentServiceShape it already inherits by
+#  beyond the :LLMServiceShape it already inherits by
 #  rdfs:subClassOf, and an empty shape would be noise. service:ArcaBackup gets one only because it additionally
-#  requires service:providedBy.
+#  requires service:providedBy. For the same no-lowered-bound reason,
+#  :PodAgentShape asserts no sh:maxCount 0 on service:actsFor, though
+#  a pod agent carries none.
 #################################################################
 
 :ServiceShape
@@ -73,8 +75,7 @@
 
     # service:actsFor — required, exactly one value: an agent service is always
     # invited by, and acts on behalf of, exactly one person. Inherited by
-    # service:ChatGPT and service:ArcaBackup, which is why neither needs a
-    # shape of its own for it.
+    # service:ArcaBackup, which is why it needs no shape of its own for it.
     sh:property [
         sh:path service:actsFor ;
         sh:minCount 1 ;
@@ -104,6 +105,75 @@
         sh:message "A service:ArcaBackup must have exactly one service:providedBy value, a single o:Organization."@en
     ] ;
     sh:message "Arca Backup validation."@en .
+
+
+#################################################################
+#  Pod Agent
+#################################################################
+
+:PodAgentShape
+    a sh:NodeShape ;
+    sh:targetClass service:PodAgent ;
+
+    # service:sponsoredBy — required, exactly one value: one member pays for
+    # the agent. That the sponsor is a member of the same pod is checked by
+    # integrity.md's YAML-11, since no single graph can show it.
+    sh:property [
+        sh:path service:sponsoredBy ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class p:Person ;
+        sh:message "A service:PodAgent must have exactly one service:sponsoredBy value, a single p:Person."@en
+    ] ;
+
+    # service:viaGateway — required, exactly one value.
+    sh:property [
+        sh:path service:viaGateway ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class service:PodGateway ;
+        sh:message "A service:PodAgent must have exactly one service:viaGateway value, a single service:PodGateway."@en
+    ] ;
+
+    # service:usesLLM — required, exactly one value.
+    sh:property [
+        sh:path service:usesLLM ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class service:LLMService ;
+        sh:message "A service:PodAgent must have exactly one service:usesLLM value, a single service:LLMService."@en
+    ] ;
+    sh:message "Pod Agent validation."@en .
+
+
+#################################################################
+#  Pod Gateway and LLM Service
+#################################################################
+#  service:hostedBy — optional, at most one value, a p:Person or an
+#  o:Organization: whoever runs the software, often unknown to the pod.
+#################################################################
+
+:PodGatewayShape
+    a sh:NodeShape ;
+    sh:targetClass service:PodGateway ;
+    sh:property [
+        sh:path service:hostedBy ;
+        sh:maxCount 1 ;
+        sh:or ( [ sh:class p:Person ] [ sh:class o:Organization ] ) ;
+        sh:message "A service:PodGateway may have at most one service:hostedBy value, a single p:Person or o:Organization."@en
+    ] ;
+    sh:message "Pod Gateway validation."@en .
+
+:LLMServiceShape
+    a sh:NodeShape ;
+    sh:targetClass service:LLMService ;
+    sh:property [
+        sh:path service:hostedBy ;
+        sh:maxCount 1 ;
+        sh:or ( [ sh:class p:Person ] [ sh:class o:Organization ] ) ;
+        sh:message "A service:LLMService may have at most one service:hostedBy value, a single p:Person or o:Organization."@en
+    ] ;
+    sh:message "LLM Service validation."@en .
 
 
 #################################################################

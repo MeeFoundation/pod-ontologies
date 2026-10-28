@@ -52,7 +52,7 @@ graph's own real subject and may legitimately lack a GivenName.
 The graph's own YAML `subject:` isn't a safe stand-in for "the individual
 to validate" here either — a member graph's `subject` can legitimately name
 a non-`persona:Person` party (e.g. a Kyoto trip's agent member has
-`subject: ":Alice_Travel_Agent"`, a `service:ChatGPT`, while the real
+`subject: ":Alice_Travel_Agent"`, a `service:PodAgent`, while the real
 ContactInfo-conformant content is asserted on `:Self` in that same graph). So whenever the resolved
 shape's own declared target is exactly `sh:targetClass persona:Person`,
 `scope_shape` (below) instead re-targets it at every *substantive*

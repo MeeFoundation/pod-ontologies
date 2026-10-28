@@ -2,13 +2,14 @@
 id: http://www.example.org/tpod/pods/pod-47
 title: "Kyoto Trip 2027"
 type: pod-databook
-version: 1.2.0
+version: 1.3.0
 created: 2026-08-30
 description: >
   Pod DataBook for folder "Kyoto Trip 2027" (pod:category: podcat:Trips, reusing its parent "Trips"
   pod's own origin), nested under "Travel" > "Trips". A user-defined instance folder for a
   specific trip Alice is planning with her spouse Dave. A three-member pod demonstrating
-  service:ChatGPT as a real pod member: Alice's own AI travel agent joins alongside Alice and Dave,
+  a service:PodAgent as a real pod member: an AI travel agent Alice sponsors, backed by ChatGPT,
+  joins alongside Alice and Dave,
   each with a self-claimed member entry (graph-66, graph-67, graph-68). The trip itself is backed
   by three tool graphs sharing one subject (:Kyoto_Trip_2027), one per member, each with a
   distinct claimant — Alice's own basic claim (graph-69), her agent's own evolving,
@@ -97,7 +98,7 @@ This graph is one of the pod's three required `member` entries — Alice's own b
 
 #### Overview
 
-This graph is another of the pod's three required `member` entries — Alice's own AI travel agent, invited to collaborate on planning this trip, joins as a real pod member (see README.md's Service Ontology section) rather than staying an invisible tool: it gets its own self-claimed member graph, exactly like a human member's, typed `service:ChatGPT` — a leaf under `service:AgentService` — and carrying `service:actsFor :Self` to record which member it is a delegate for. A `service:Service` is never a `pod:creator` — Alice alone created this pod — but it is a legitimate `pod:claimant` and `pod:member` participant. Unlike a `service:ServiceProvider`, whose claims are attributed to the organization providing it, an AI agent claims under its own IRI: no organization stands behind it in this pod's relationship.
+This graph is another of the pod's three required `member` entries — an AI travel agent Alice invited to collaborate on planning this trip, joining as a real pod member (see README.md's Service Ontology section) rather than staying an invisible tool: it gets its own self-claimed member graph, exactly like a human member's, typed `service:PodAgent`. It answers to Dave as readily as to Alice — either can address it as "@ChatGPT", its `rdfs:label` — so it carries no `service:actsFor`; instead `service:sponsoredBy :Self` records that Alice pays for it. Behind it sit two pieces of software that are not pod members: its gateway (`:Alice_Travel_Gateway`, a `service:PodGateway`, whose host is not recorded) and the language model it uses (`:Alice_Travel_LLM`, a `service:ChatGPT`, hosted by OpenAI). A `service:Service` is never a `pod:creator` — Alice alone created this pod — but it is a legitimate `pod:claimant` and `pod:member` participant. Unlike a `service:ServiceProvider`, whose claims are attributed to the organization providing it, a pod agent claims under its own IRI: no organization stands behind it in this pod's relationship, OpenAI merely hosting its model.
 
 #### Graph
 
@@ -111,6 +112,7 @@ This graph is another of the pod's three required `member` entries — Alice's o
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix persona: <http://mee.foundation/ontologies/persona#> .
 @prefix cco: <https://w3id.org/cco-domains/cco/> .
+@prefix o: <http://mee.foundation/ontologies/organization#> .
 
 :Self rdf:type owl:NamedIndividual ,
                persona:Person ;
@@ -120,9 +122,22 @@ This graph is another of the pod's three required `member` entries — Alice's o
     ] .
 
 :Alice_Travel_Agent rdf:type owl:NamedIndividual ,
-                    service:ChatGPT ;
-    rdfs:label "Alice's Travel Agent (ChatGPT)"@en ;
-    service:actsFor :Self .
+                    service:PodAgent ;
+    rdfs:label "ChatGPT"@en ;
+    service:sponsoredBy :Self ;
+    service:viaGateway :Alice_Travel_Gateway ;
+    service:usesLLM :Alice_Travel_LLM .
+
+:Alice_Travel_Gateway rdf:type owl:NamedIndividual ,
+                      service:PodGateway .
+
+:Alice_Travel_LLM rdf:type owl:NamedIndividual ,
+                  service:ChatGPT ;
+    service:hostedBy :OpenAI .
+
+:OpenAI rdf:type owl:NamedIndividual ,
+                 o:Organization ;
+    rdfs:label "OpenAI"@en .
 ```
 
 <a id="graph-68"></a>

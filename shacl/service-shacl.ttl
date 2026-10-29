@@ -11,7 +11,7 @@
 
 <http://mee.foundation/ontologies/service/shapes> rdf:type owl:Ontology ;
     owl:imports <http://mee.foundation/ontologies/service> ;
-    owl:versionIRI <http://mee.foundation/ontologies/service/shapes/2.2.0> ;
+    owl:versionIRI <http://mee.foundation/ontologies/service/shapes/3.0.0> ;
     dc:date "2026-10-28"^^xsd:date ;
     rdfs:label "Service Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for the Service Ontology."@en .
@@ -34,10 +34,9 @@
 #
 #  service:ChatGPT gets no shape of its own: it adds no constraint
 #  beyond the :LLMServiceShape it already inherits by
-#  rdfs:subClassOf, and an empty shape would be noise. service:ArcaBackup gets one only because it additionally
-#  requires service:providedBy. For the same no-lowered-bound reason,
-#  :PodAgentShape asserts no sh:maxCount 0 on service:actsFor, though
-#  a pod agent carries none.
+#  rdfs:subClassOf, and an empty shape would be noise.
+#  service:ArcaBackup gets one only because it additionally requires
+#  service:providedBy.
 #################################################################
 
 :ServiceShape
@@ -108,31 +107,21 @@
 
 
 #################################################################
-#  Pod Agent
+#  Personal Agent
 #################################################################
 
-:PodAgentShape
+:PersonalAgentShape
     a sh:NodeShape ;
-    sh:targetClass service:PodAgent ;
+    sh:targetClass service:PersonalAgent ;
 
-    # service:sponsoredBy — required, exactly one value: one member pays for
-    # the agent. That the sponsor is a member of the same pod is checked by
-    # integrity.md's YAML-11, since no single graph can show it.
+    # service:actsFor — required, exactly one value: a personal agent
+    # belongs to exactly one user.
     sh:property [
-        sh:path service:sponsoredBy ;
+        sh:path service:actsFor ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:class p:Person ;
-        sh:message "A service:PodAgent must have exactly one service:sponsoredBy value, a single p:Person."@en
-    ] ;
-
-    # service:viaGateway — required, exactly one value.
-    sh:property [
-        sh:path service:viaGateway ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:class service:PodGateway ;
-        sh:message "A service:PodAgent must have exactly one service:viaGateway value, a single service:PodGateway."@en
+        sh:message "A service:PersonalAgent must have exactly one service:actsFor value, a single p:Person."@en
     ] ;
 
     # service:usesLLM — required, exactly one value.
@@ -141,28 +130,17 @@
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:class service:LLMService ;
-        sh:message "A service:PodAgent must have exactly one service:usesLLM value, a single service:LLMService."@en
+        sh:message "A service:PersonalAgent must have exactly one service:usesLLM value, a single service:LLMService."@en
     ] ;
-    sh:message "Pod Agent validation."@en .
+    sh:message "Personal Agent validation."@en .
 
 
 #################################################################
-#  Pod Gateway and LLM Service
+#  LLM Service
 #################################################################
 #  service:hostedBy — optional, at most one value, a p:Person or an
-#  o:Organization: whoever runs the software, often unknown to the pod.
+#  o:Organization: whoever runs the model, often unknown to the user.
 #################################################################
-
-:PodGatewayShape
-    a sh:NodeShape ;
-    sh:targetClass service:PodGateway ;
-    sh:property [
-        sh:path service:hostedBy ;
-        sh:maxCount 1 ;
-        sh:or ( [ sh:class p:Person ] [ sh:class o:Organization ] ) ;
-        sh:message "A service:PodGateway may have at most one service:hostedBy value, a single p:Person or o:Organization."@en
-    ] ;
-    sh:message "Pod Gateway validation."@en .
 
 :LLMServiceShape
     a sh:NodeShape ;

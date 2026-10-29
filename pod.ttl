@@ -404,7 +404,7 @@ pod:Map rdf:type owl:Class ;
 pod:Contacts rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;
     rdfs:label "Contacts"@en ;
-    rdfs:comment """A tool whose data format is a correspondence between the pod's member info and an entry in the device's own address book — Apple Contacts, its Android equivalent, Windows People — contributing a sync action to the app's UI: a member imports a contact into the pod, and later edits on either side travel back across. Defined with no properties at all yet, inheriting none either, for the same reason pod:Calendar, pod:Canvas and pod:Map have none: what the correspondence has to record has not been worked out. It is a tool rather than a service because it never joins the pod as a member — no claim in a pod is the address book's, so there is no party for a pod:member entry to name, which is exactly what separates it from service:ChatGPT and service:ArcaBackup (each a real pod:member with claims of its own). The pod:ServiceTag values the module writes — namespace foundation.mee.applecontacts, key group, value the name of the Apple Contacts Group a synced contact sat in — are local to the member's own instance and never propagate on a share, as any module's are. See app-behavior.md's Apple Contacts section."""@en .
+    rdfs:comment """A tool whose data format is a correspondence between the pod's member info and an entry in the device's own address book — Apple Contacts, its Android equivalent, Windows People — contributing a sync action to the app's UI: a member imports a contact into the pod, and later edits on either side travel back across. Defined with no properties at all yet, inheriting none either, for the same reason pod:Calendar, pod:Canvas and pod:Map have none: what the correspondence has to record has not been worked out. It is a tool rather than a service because it never joins the pod as a member — no claim in a pod is the address book's, so there is no party for a pod:member entry to name, which is exactly what separates it from service:ArcaBackup (a real pod:member with claims of its own). The pod:ServiceTag values the module writes — namespace foundation.mee.applecontacts, key group, value the name of the Apple Contacts Group a synced contact sat in — are local to the member's own instance and never propagate on a share, as any module's are. See app-behavior.md's Apple Contacts section."""@en .
 
 pod:Browser rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;
@@ -470,7 +470,7 @@ pod:claimant rdf:type owl:AnnotationProperty ;
                     the claim and the one an eventual cryptographic signature would name);
                     and the service:Service itself for a service with no organization
                     standing behind it in the relationship — an invited
-                    service:AgentService or service:PodAgent self-claiming its own pod:member entry and
+                    service:AgentService self-claiming its own pod:member entry and
                     claiming whatever tool content it contributes. A claimant need
                     not itself be one of the pod's members: a provider service's
                     organization is reachable from a member subject via

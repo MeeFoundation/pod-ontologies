@@ -676,20 +676,17 @@ attachments, and no place in the DataBook either, leaving it the one piece of a 
 no specified storage at all. Once a pod's structured content is app-internal rather than a file,
 chat simply goes where that content goes, and the reasons it never fit the folder stop mattering.
 
-Two constraints shaped that answer and still bound the app's own design. A chat is unlike the other
-content: a note is one document that members edit in place, concurrently, while a chat is append-only, authored per message,
-potentially far larger, and read at its tail far more often than in full. And a private 1:1 thread
-between a member and their own agent is not visible to other members (see
-[Chat Area](app-behavior.md#chat-area) in app-behavior.md), so it cannot live in shared, synced pod
-content the way the group stream can — whatever holds a pod's chat has to hold at least two things
-with different propagation rules. A pod already has two pieces of content that do not propagate on a
-share, `pod:serviceTag` and a member's own private files, so the precedent exists; what is particular
-here is that the split runs *within* one feature rather than between two properties.
+One constraint shaped that answer and still bounds the app's own design: a chat is unlike the other
+content. A note is one document that members edit in place, concurrently, while a chat is
+append-only, authored per message, potentially far larger, and read at its tail far more often than
+in full. A user's private conversation with their own personal agent is not part of any pod's chat:
+it happens in the Telli chat, which belongs to no pod (see [Chat Area](app-behavior.md#chat-area)
+in app-behavior.md), so a pod's chat stream carries one propagation rule, the group stream's.
 
 What is genuinely still open is the storage format the app uses for it, which is an app-internal
 question this document does not reach. Nothing about it is a filesystem question any more: a
 transcript is not a file anywhere, so the only thing left to settle is how the app's own store holds
-an append-only, mostly-read-at-the-tail stream with two propagation rules inside it.
+an append-only, mostly-read-at-the-tail stream.
 
 ### Where the note's format and block links go
 

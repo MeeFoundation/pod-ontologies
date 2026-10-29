@@ -11,9 +11,9 @@
 @base <http://mee.foundation/ontologies/service> .
 
 <http://mee.foundation/ontologies/service> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/service/3.0.0> ;
+    owl:versionIRI <http://mee.foundation/ontologies/service/3.0.1> ;
     dc:date "2026-10-28"^^xsd:date ;
-    owl:versionInfo "Version 3.0.0 - replaced the pod agent with service:PersonalAgent, which acts for one user, is never a pod member, and uses a language model (service:LLMService); removed service:PodAgent, service:PodGateway, service:sponsoredBy and service:viaGateway"@en ;
+    owl:versionInfo "Version 3.0.1 - comments no longer describe an AI agent as a service or pod member: a pod member is only ever a person or a service, and a user's AI agent is a service:PersonalAgent"@en ;
     owl:imports <https://w3id.org/cco-domains/cco/AgentOntology> ,
                 <http://mee.foundation/ontologies/prov-upper-subset> ;
     rdfs:label "Service Ontology"@en ;
@@ -104,7 +104,7 @@ service:providedBy rdf:type owl:ObjectProperty ;
                     :Citibank_Service carries service:providedBy :Citibank, and :Arca_Backup
                     carries service:providedBy :Arca. At most one value on a service:Service
                     generally (0..1 — a service standing behind no organization at all, such
-                    as an AI agent a person runs on their own device, simply omits it), and
+                    as a service a person runs on their own device, simply omits it), and
                     required, exactly one value on service:ServiceProvider and
                     service:ArcaBackup specifically (1..1); all three cardinalities are
                     enforced by shacl/service-shacl.ttl. This is the only route by which an
@@ -131,7 +131,7 @@ service:AgentService rdf:type owl:Class ;
                     for that member, and answers to no one else in the pod. Contrast
                     service:ServiceProvider, which acts for the o:Organization that provides
                     it, recorded by service:providedBy rather than service:actsFor.
-                    Directly instantiable, not abstract: a member's agent that has no vendor
+                    Directly instantiable, not abstract: an agent service that has no vendor
                     class of its own is typed service:AgentService and nothing more, so
                     modeling a new service never requires minting a class for it first.
                     Unlike a service:ServiceProvider, an agent service claims the graphs it

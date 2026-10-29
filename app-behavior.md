@@ -299,9 +299,14 @@ The Note area is a rich-text editor for the pod's one note. Its formatting is Ma
 
 ### Chat Area
 
-Chat is one feature with two visibility modes, not two separate concepts. By default, every message posts to the pod's one shared group stream, visible to every member. Any message can additionally be *directed* at a specific named member while staying in the shared stream (e.g. Alice @-mentions Dave; every member sees both her message and his reply).
+A pod's chat area supports both **group chat** and **direct messages**:
 
-A member's conversation with their own [personal agent](#personal-agent) is not part of any pod's chat. It happens in a separate **Telli chat**, a private stream between the user and their agent alone, whose transcript no pod member sees — only the *resulting* changes the agent makes in a pod (note edits, tool-graph revisions, new attachments) surface there, as the user's own. When a personal agent does write into a pod's chat, the message appears under the user's name followed by an asterisk (e.g. "Alice Walker\*"), so members can tell it from something the user typed. Members address it the same way, as "@Alice Walker\*" (see [Characteristics](#characteristics)).
+- **Group chat** — by default, every message posts to the pod's one shared group stream, visible to every member. A message can additionally be *directed* at a specific named member while staying in the shared stream (e.g. Alice @-mentions Dave; every member sees both her message and his reply).
+- **Direct messages** — a private 1:1 conversation between two members of the pod, inside that pod's chat area. Only those two members see it.
+
+A user's own [personal agent](#personal-agent) is not a member, but the chat area reaches it too. Its home is the separate **Telli chat**, a private conversation between the user and their agent alone that belongs to no pod. For convenience, the user can also send a direct message to **@Telli** in the current pod's chat area, and the agent replies in that same direct message. No other member sees it, and the pod it was sent from is the current pod the agent works on. Either way, only the *resulting* changes the agent makes in a pod (note edits, tool-graph revisions, new attachments) surface there, as the user's own.
+
+When a personal agent posts in a pod's group stream, the message appears under the user's name followed by an asterisk (e.g. "Alice Walker\*"), so members can tell it from something the user typed. Other members address it the same way, as "@Alice Walker\*"; only its own user calls it @Telli (see [Characteristics](#characteristics)).
 
 ### Inviting services
 
@@ -369,7 +374,7 @@ Two practical consequences for a module. First, results are scoped to its own me
 
 A user's **personal agent** (`s:PersonalAgent` — see README.md's [Service Ontology](README.md#service-ontology)) is an AI agent that works for that one user (`s:actsFor`) and no one else. To the user it is **Telli**; to everyone else it appears under the user's own name followed by an asterisk (e.g. "Alice Walker\*"). It is never invited into a pod and never becomes a member of one, so it adds nothing to any pod's member count and has no `pod:member` entry. Whatever it writes into a pod — a note edit, a revision of a tool graph, an attachment, a chat message — it writes *as its user*, through the [Pod Interface](#pod-interface) with that user's own access, and the user is that content's `pod:claimant`. The asterisk on its chat messages is how other members tell them from the user's own.
 
-The user talks with their agent in the **Telli chat** (see [Chat Area](#chat-area) above), a chat widget holding a private conversation between the user and their agent alone, which belongs to no pod. What the agent works on is the **current pod**: the pod the user is interacting with at the moment, e.g. in that pod's chat. The agent's replies come from a language model (`s:usesLLM`, an `s:LLMService` such as `s:ChatGPT`), which the user pays for and which a company or the user themselves may host (`s:hostedBy`). The app configures that model so that the user's interactions are never used to train it, and may constrain it further with system prompts. Everything else the agent may do is governed by the user's **Personal Agent Control Rules** (PACRs, see [below](#personal-agent-control-rules)).
+The user talks with their agent in the **Telli chat** (see [Chat Area](#chat-area) above), a chat widget holding a private conversation between the user and their agent alone, which belongs to no pod. For convenience the user can instead send a direct message to @Telli in a pod's chat area, and the agent replies there in the same direct message. What the agent works on is the **current pod**: the pod the user is interacting with at the moment, e.g. in that pod's chat. The agent's replies come from a language model (`s:usesLLM`, an `s:LLMService` such as `s:ChatGPT`), which the user pays for and which a company or the user themselves may host (`s:hostedBy`). The app configures that model so that the user's interactions are never used to train it, and may constrain it further with system prompts. Everything else the agent may do is governed by the user's **Personal Agent Control Rules** (PACRs, see [below](#personal-agent-control-rules)).
 
 **Design note.** Tellipod has no shared agent that a pod's members address together: each member brings their own personal agent, which answers to them alone. One use case follows that this design does not serve. A member cannot use an agent another member pays for: the members of a trip-planning pod cannot all ask one agent questions and have it contribute ideas to the itinerary. Every other use case known so far is served by personal agents, including the ones below that need an agent able to reach across pods, which a shared agent confined to one pod never could.
 
@@ -391,8 +396,8 @@ None of the three use cases below can be implemented yet. Each depends on PACR c
 | Paid for by | the user |
 | Independence | a delegate of the user, bounded by the user's PACRs |
 | Accountable to | the user |
-| Where it writes in the UI | the Telli chat; and, as PACRs allow, any pod's chat under the user's name plus an asterisk |
-| Responds to | the user in the Telli chat; and, as PACRs allow, any pod member who addresses it in a pod's chat (e.g. "@Alice Walker\*") |
+| Where it writes in the UI | the Telli chat, and direct messages with its user in any pod's chat area; and, as PACRs allow, any pod's group stream under the user's name plus an asterisk |
+| Responds to | the user, in the Telli chat or in a direct message to @Telli in a pod's chat area; and, as PACRs allow, any pod member who addresses it in a pod's chat (e.g. "@Alice Walker\*") |
 | How it responds to a pod member | as PACRs define — e.g. with a reply the user has configured, such as "I am not permitted to reply to you; please chat with Alice Walker directly" |
 | Configuration and policy | the user's PACRs, plus the model's no-training configuration |
 
@@ -402,9 +407,9 @@ To keep the initial implementation simple, the PACRs allow no data to flow betwe
 
 | Can a personal agent… | Initial implementation | Future implementations |
 |---|---|---|
-| respond to the user in the Telli chat? | yes | yes |
+| respond to the user in the Telli chat, or in a direct message to @Telli in a pod's chat area? | yes | yes |
 | search and retrieve data from other pods while doing so? | no | yes, as the user's rules allow (e.g. pod A may retrieve from pod B but not C) |
-| respond to the user in a pod's chat? | no | yes |
+| respond to the user in a pod's group chat stream? | no | yes |
 | respond to another pod member? | no — it gives only the user's configured refusal (e.g. "I am not permitted to reply to you; please chat with Alice Walker directly") | yes |
 | convey credentials or PII to a member? | no | yes, with explicit one-time permission |
 | create new pods? | no | yes |
@@ -415,11 +420,11 @@ In the initial implementation, then, the agent works on the current pod only, an
 
 Each turn of a user's conversation with their personal agent proceeds as follows:
 
-1. The user sends a message in the Telli chat.
-2. The app assembles context from the current pod: the note's current text, every member's and every tool's graphs, and attachment metadata (filenames/captions), plus recent turns of the Telli chat.
+1. The user sends a message in the Telli chat, or as a direct message to @Telli in the current pod's chat area.
+2. The app assembles context from the current pod: the note's current text, every member's and every tool's graphs, and attachment metadata (filenames/captions), plus recent turns of the conversation the message arrived in.
 3. This context plus the new message is sent to the agent's language model (`s:usesLLM`).
 4. The response is applied as one atomic turn, all under the user's own write rights:
-   - a reply posted back into the Telli chat;
+   - a reply posted back where the message came from: the Telli chat, or the same direct message;
    - the user's own tool graph revised in place to fold in this turn's facts and decisions — a single evolving graph, not a new one per turn, mirroring how the note itself is one living document rather than a new copy per edit (e.g. Alice's draft itinerary, [graph 69](<example/Pods/Travel/Trips/Kyoto Trip 2027/Kyoto Trip 2027(trips).databook.md#graph-69>));
    - optionally, a direct edit to the shared note, and/or a new attachment (e.g. a fetched photo of a hotel) added to the pod's flat set of attachments.
 

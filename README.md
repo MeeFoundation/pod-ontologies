@@ -60,7 +60,7 @@ A pod is a secure container of information that can remain private to the user o
 A pod holds various kinds of information:
 
 - **Note** — a jointly writable rich-text document that may link to other pods and to the pod's own structured content.
-- **Chat** — a chat stream shared with all members (which also supports 1:1 messaging).
+- **Chat** — a chat stream shared with all members, which also supports direct messages between two members.
 - **Members** — information about the members. Usually just contact information, although some pods will add richness.
 - **Attachments** (📎) — an optional set of files shared with every member. A file the user adds to the pod without attaching it is private to them and never propagates, though both sets are shown in this same area. Some common file types (images, video, PDFs, Markdown) will show previews whereas others (Excel spreadsheets, Word documents, etc.) might not.
 - **Tags** — an optional set of short text labels for finding the pod again later. Tags cut across the tree rather than placing the pod in it, so they are independent of the pod's category; see [Tags](#tags) below, and [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag) in app-behavior.md.

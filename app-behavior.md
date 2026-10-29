@@ -221,10 +221,11 @@ Ideally it would have filed the pod shared by Alice's app under People > Immedia
 
 ### Organize
 
-There are two kinds of organizing that the app does when the user selects a pod and taps " Organize":
+There are three kinds of organizing that the app does when the user selects a pod and taps " Organize":
 
 * **Auto File**: It examines the selected pod and if it doesn't have a category, suggests one and then automatically files it there if the users wishes.
 * **Divide and Conquer**: It looks inside the pod (especially the pod's note) and does the following.
+* **Tidy**: It turns a chat message that carries structured information into a form.
 
 #### Auto File
 
@@ -237,6 +238,10 @@ The app looks at the Note, and moves chunks of content out it, leaving behind a 
 Here's an example. Imagine a pod that contained lots of notes about Alice's mother Paula. In that stream of notes was Paula's credit card info (name, number, expiration date, CVV, etc.). The app removes this chunk of content leaving behind a link called "Paula's Credit Card". If Alice taps this link it brings her to a new pod called "Paula's Credit Card" of type `podcat:BankingPayments` with a Form tool that contains the credit card info, but parsed into fields and values. It automatically files this new pod under Pods > Immediate Family > Paula Walker > Finances > Banking & Payments.
 
 It could then ask some questions, do you know the name of the bank that issued this card? (to which Alice answers "GiantBank"). Would you like me to rename this new pod "GiantBank - Mastercard"? etc. 
+
+#### Tidy
+
+The app uses entity recognition to turn a message in the pod's chat into a form tool in the same pod. Suppose a neighbor in a neighborhood pod asks whether anyone knows a good plumber, and Alice replies with the name and contact information of one she likes to use. Tidy turns her reply into a form holding the plumber's name, phone number and email, parsed into fields and values. A [personal agent](#personal-agent) can go further, creating a new pod about Alice's relationship with the plumber (see [Use Cases](#use-cases)).
 
 
 ### Finding Pods by Tag
@@ -296,7 +301,7 @@ The Note area is a rich-text editor for the pod's one note. Its formatting is Ma
 
 Chat is one feature with two visibility modes, not two separate concepts. By default, every message posts to the pod's one shared group stream, visible to every member. Any message can additionally be *directed* at a specific named member while staying in the shared stream (e.g. Alice @-mentions Dave; every member sees both her message and his reply).
 
-A member's conversation with their own [personal agent](#personal-agent) is not part of any pod's chat. It happens in a separate **Telli chat**, a private stream between the user and their agent alone, whose transcript no pod member sees — only the *resulting* changes the agent makes in a pod (note edits, tool-graph revisions, new attachments) surface there, as the user's own. When a personal agent does write into a pod's chat, the message appears under the user's name followed by an asterisk (e.g. "Alice Walker\*"), so members can tell it from something the user typed.
+A member's conversation with their own [personal agent](#personal-agent) is not part of any pod's chat. It happens in a separate **Telli chat**, a private stream between the user and their agent alone, whose transcript no pod member sees — only the *resulting* changes the agent makes in a pod (note edits, tool-graph revisions, new attachments) surface there, as the user's own. When a personal agent does write into a pod's chat, the message appears under the user's name followed by an asterisk (e.g. "Alice Walker\*"), so members can tell it from something the user typed. Members address it the same way, as "@Alice Walker\*" (see [Characteristics](#characteristics)).
 
 ### Inviting services
 
@@ -360,24 +365,51 @@ The interface scopes **every** service-tag operation — search, read, add, dele
 
 Two practical consequences for a module. First, results are scoped to its own member's tree, so a tag is only ever reachable in the instance that wrote it — consistent with its never being shared. Second, two identical tags are two separate tags, not one: nothing deduplicates them, so a module adding a tag checks whether the pod already carries that exact namespace/key/value combination before writing another.
 
-### Personal Agent
+## Personal Agent
 
-A user's **personal agent** (`s:PersonalAgent` — see README.md's [Service Ontology](README.md#service-ontology)) is an AI agent that works for that one user (`s:actsFor`) and no one else. In the app it is called **Telli**. It is never invited into a pod and never becomes a member of one, so it adds nothing to any pod's member count and has no `pod:member` entry. Whatever it writes into a pod — a note edit, a revision of a tool graph, an attachment, a chat message — it writes *as its user*, through the [Pod Interface](#pod-interface) with that user's own access, and the user is that content's `pod:claimant`. In a pod's chat its messages carry the user's name followed by an asterisk (e.g. "Alice Walker\*"), which is how other members tell them from the user's own.
+A user's **personal agent** (`s:PersonalAgent` — see README.md's [Service Ontology](README.md#service-ontology)) is an AI agent that works for that one user (`s:actsFor`) and no one else. To the user it is **Telli**; to everyone else it appears under the user's own name followed by an asterisk (e.g. "Alice Walker\*"). It is never invited into a pod and never becomes a member of one, so it adds nothing to any pod's member count and has no `pod:member` entry. Whatever it writes into a pod — a note edit, a revision of a tool graph, an attachment, a chat message — it writes *as its user*, through the [Pod Interface](#pod-interface) with that user's own access, and the user is that content's `pod:claimant`. The asterisk on its chat messages is how other members tell them from the user's own.
 
-The user talks with their agent in the **Telli chat** (see [Chat Area](#chat-area) above), a private conversation that belongs to no pod. The agent's replies come from a language model (`s:usesLLM`, an `s:LLMService` such as `s:ChatGPT`), which a company or the user themselves may host (`s:hostedBy`).
+The user talks with their agent in the **Telli chat** (see [Chat Area](#chat-area) above), a chat widget holding a private conversation between the user and their agent alone, which belongs to no pod. What the agent works on is the **current pod**: the pod the user is interacting with at the moment, e.g. in that pod's chat. The agent's replies come from a language model (`s:usesLLM`, an `s:LLMService` such as `s:ChatGPT`), which the user pays for and which a company or the user themselves may host (`s:hostedBy`). The app configures that model so that the user's interactions are never used to train it, and may constrain it further with system prompts. Everything else the agent may do is governed by the user's **Personal Agent Control Rules** (PACRs, see [below](#personal-agent-control-rules)).
 
-What the agent may do is governed by the user's **Personal Agent Control Rules** (PACRs). The initial implementation allows no data to flow between pods:
+**Design note.** Tellipod has no shared agent that a pod's members address together: each member brings their own personal agent, which answers to them alone. One use case follows that this design does not serve. A member cannot use an agent another member pays for: the members of a trip-planning pod cannot all ask one agent questions and have it contribute ideas to the itinerary. Every other use case known so far is served by personal agents, including the ones below that need an agent able to reach across pods, which a shared agent confined to one pod never could.
+
+### Use Cases
+
+None of the three use cases below can be implemented yet. Each depends on PACR capabilities that the initial implementation withholds, and those capabilities need further design and deliberation before they can be made safe (see [Personal Agent Control Rules](#personal-agent-control-rules)). They belong to some future release of the app, once the PACRs have matured.
+
+- **A lifelong conversation.** An ongoing conversation between the user and Telli that helps organize the user's personal information, not only for its own sake but so that portions of it can be shared with others. The agent knows the app's whole taxonomy of categories and ontologies, so it can start a conversation about many areas of the user's life and, over time, capture and organize what it learns. It might ask whether Alice owns a pet, then ask about that pet and put everything it learns in a new pod about it. Similarly: does she have a will? Any allergies? A mother? *Waits on:* creating new pods.
+- **Turning a recommendation into a relationship.** In a pod shared by Alice's neighborhood (say, the residents of Craftsland Road), a neighbor asks in the pod's chat whether anyone knows a good plumber, and Alice replies with the name and contact information of one she likes to use. The app's [Tidy](#tidy) function can turn her reply into a form in that pod. Her personal agent can go further: it creates a new pod about Alice's relationship with the plumber and puts a copy of the form there. *Waits on:* creating new pods.
+- **Answering on the user's behalf.** A member of the Craftsland pod types "Does anyone have the phone number of Tom from Automation?" Alice happens to have another pod about her relationship with the Automation car repair shop, a two-member pod of Alice and Tom. With Alice's approval, given either explicitly for this reply or by a standing rule, her personal agent replies in the Craftsland chat: "Tom's phone number is 617-555-1234", posted as "Alice Walker\*" so that members know the agent said it, not Alice. *Waits on:* responding to another pod member, retrieving data from another pod, and conveying PII to a member.
+
+### Characteristics
+
+| Characteristic | Personal agent |
+|---|---|
+| Read/write access to | the current pod; other pods only as PACRs allow |
+| Name in a pod's chat | the user's name plus an asterisk (e.g. "@Alice Walker\*") |
+| Works on behalf of | the user |
+| Paid for by | the user |
+| Independence | a delegate of the user, bounded by the user's PACRs |
+| Accountable to | the user |
+| Where it writes in the UI | the Telli chat; and, as PACRs allow, any pod's chat under the user's name plus an asterisk |
+| Responds to | the user in the Telli chat; and, as PACRs allow, any pod member who addresses it in a pod's chat (e.g. "@Alice Walker\*") |
+| How it responds to a pod member | as PACRs define — e.g. with a reply the user has configured, such as "I am not permitted to reply to you; please chat with Alice Walker directly" |
+| Configuration and policy | the user's PACRs, plus the model's no-training configuration |
+
+### Personal Agent Control Rules
+
+To keep the initial implementation simple, the PACRs allow no data to flow between pods. A "yes" under future implementations means the capability is possible in principle, but needs fine-grained controls to make it safe, and those will take time and experience to design and build.
 
 | Can a personal agent… | Initial implementation | Future implementations |
 |---|---|---|
 | respond to the user in the Telli chat? | yes | yes |
 | search and retrieve data from other pods while doing so? | no | yes, as the user's rules allow (e.g. pod A may retrieve from pod B but not C) |
 | respond to the user in a pod's chat? | no | yes |
-| respond to another pod member? | no — it replies only with a fixed message asking them to chat with the user directly | yes |
+| respond to another pod member? | no — it gives only the user's configured refusal (e.g. "I am not permitted to reply to you; please chat with Alice Walker directly") | yes |
 | convey credentials or PII to a member? | no | yes, with explicit one-time permission |
 | create new pods? | no | yes |
 
-In the initial implementation, then, the agent works on the **current pod** only — the pod the user has open — and its effect on that pod is what the user would have done by hand.
+In the initial implementation, then, the agent works on the current pod only, and its effect on that pod is what the user would have done by hand.
 
 ### The Iterative Prompt/Response Loop
 

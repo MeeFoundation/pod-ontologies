@@ -10,9 +10,9 @@
 @base <http://mee.foundation/ontologies/sources> .
 
 <http://mee.foundation/ontologies/sources> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.1> ;
-    dc:date "2026-10-17"^^xsd:date ;
-    owl:versionInfo "Version 1.1.1 - sources:TextBlob comment describes the pod note as a rich-text document"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.2> ;
+    dc:date "2026-10-28"^^xsd:date ;
+    owl:versionInfo "Version 1.1.2 - sources:extractedBy names the user, not their personal agent, for an extraction the personal agent performs"@en ;
     rdfs:label "Sources Ontology"@en ;
     rdfs:comment """A small other/ peer ontology (see other/pets.ttl's own rdfs:comment for the
                     general pattern) for content a person merely *has* in unstructured form — a
@@ -280,10 +280,12 @@ sources:extractedFrom rdf:type owl:ObjectProperty ;
 sources:extractedBy rdf:type owl:ObjectProperty ;
     rdfs:domain sources:Extraction ;
     rdfs:label "extracted by"@en ;
-    rdfs:comment """Who or what performed the extraction: a persona:Person who read the item and
-                    entered the data by hand, or a service:Service — typically the person's own
-                    AI agent (service:AgentService) — that did it automatically. Required, exactly
-                    one value. Deliberately left without an rdfs:range, since OWL would read two
+    rdfs:comment """Who or what performed the extraction: a persona:Person, or a service:Service
+                    that is a member of the pod and did it automatically. Required, exactly one
+                    value. A person's own personal agent (service:PersonalAgent) is never named
+                    here: it is not a service:Service and acts only as its user, so an extraction
+                    it performs names the user, with sources:extractionMethod "llm" recording
+                    that it was not entered by hand. Deliberately left without an rdfs:range, since OWL would read two
                     rdfs:range values as an intersection; the persona:Person/service:Service union
                     is enforced in other/shacl/sources-shacl.ttl instead, the same way
                     shacl/pod-shacl.ttl enforces pod:claimant's three-way union. Both classes are

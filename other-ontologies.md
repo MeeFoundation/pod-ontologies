@@ -384,7 +384,7 @@ Throughout this section, `sources:` is both the file's real Turtle prefix and it
 **Extraction properties** (domain `sources:Extraction`, except `sources:derivedBy`):
 
 - `sources:extractedFrom` — the source item(s) the extraction read, at least one: a license read from photos of its front and back is one extraction from two images.
-- `sources:extractedBy` — who or what performed it: a `p:Person` entering data by hand, or an `s:Service` (typically the person's own `s:AgentService`). Exactly one. The union is enforced in the shapes file rather than by `rdfs:range`, as `pod:claimant`'s is. Independent of the claimant of the graph the result sits in.
+- `sources:extractedBy` — who or what performed it: a `p:Person`, or an `s:Service` that is a member of the pod. Exactly one. A person's own personal agent (`s:PersonalAgent`) is never named: it acts only as its user, so an extraction it performs names the user, with `sources:extractionMethod` `"llm"` showing it was not entered by hand. The union is enforced in the shapes file rather than by `rdfs:range`, as `pod:claimant`'s is. Independent of the claimant of the graph the result sits in.
 - `sources:extractionMethod` — how: `"manual"`, `"ocr"`, `"llm"` or `"parser"` (a deterministic reader of a known format, such as a vCard). A controlled vocabulary enumerated in the shapes file, the same pattern `education:educationLevel` uses.
 - `sources:extractedAt` — when, an `xsd:dateTime`. Required.
 - `sources:confidence` — how sure the extractor was of the result as a whole, an `xsd:decimal` from 0 to 1. Normally present only for `"ocr"` and `"llm"`.

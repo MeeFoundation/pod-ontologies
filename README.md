@@ -53,11 +53,18 @@ See [**other-ontologies.md**](other-ontologies.md) for the `other/` domain ontol
 
 ### Introduction to Pods
 
-A pod is a secure container of information that can remain private to the user or be shared with other users and services (e.g. a pod backup service or an organization's service provider). It enables these members to share context, communicate, and collaborate toward a common purpose.
+A pod is a secure container of information that can remain private to the user or be shared with other users and services (e.g. a pod backup service or an organization's service provider). It enables these members to share context, communicate, and collaborate toward a common goal.
 
 <p align="center"><img src="images/pod-ontology/pod-dimensions.png" alt="Pod dimensions"></p>
 
-A pod holds various kinds of information:
+- Common goal is the point, for example looking after a friend's pet.
+- Shared context is what members SCARE so they can achieve that goal.
+- Messaging is how they coordinate.
+- Membership is the small group of people, agents, and organizations involved.
+
+Organizing is the structure that makes it work, with one small pod per goal.
+
+A pod has:
 
 - **Note** — a jointly writable rich-text document that may link to other pods and to the pod's own structured content.
 - **Chat** — a chat stream shared with all members, which also supports direct messages between two members.

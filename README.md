@@ -58,7 +58,7 @@ A pod is a secure container of information that can remain private to the user o
 <p align="center"><img src="images/pod-ontology/pod-dimensions.png" alt="Pod dimensions"></p>
 
 - Common goal is the point, for example looking after a friend's pet.
-- Shared context is what members SCARE so they can achieve that goal.
+- Shared context is what members share so they can achieve that goal.
 - Messaging is how they coordinate.
 - Membership is the small group of people, agents, and organizations involved.
 

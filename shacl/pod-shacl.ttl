@@ -14,8 +14,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/9.7.0> ;
-    dc:date "2026-10-17"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.0.0> ;
+    dc:date "2026-11-07"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — in the Pod Ontology."@en .
 
@@ -23,9 +23,10 @@
 #################################################################
 #  Pod
 #  pod:Pod carries only what's common to every pod regardless of
-#  kind: category and attachment. A pod records no tree position of its own — its
-#  parent is per-member state in that member's own store, never a
-#  stored path — so there's nothing to constrain here for that. Graph links (pod:member/
+#  kind: attachment. Pods do not nest, so there is no tree position
+#  to constrain. Classification is kind-specific: pod:category is
+#  constrained on :TemplatePodShape, pod:categoryTag on
+#  :InstancePodShape. Graph links (pod:member/
 #  pod:tool) live on :InstancePodShape below — since pod:TemplatePod
 #  and pod:InstancePod are disjoint (pod.ttl), that shape fires only
 #  on the InstancePod branch, not on template pods. The tool nodes
@@ -38,46 +39,6 @@
     a sh:NodeShape ;
     sh:targetClass pod:Pod ;
     sh:message "Pod validation."@en ;
-
-    # pod:category — at most one value (0..1), on any pod:Pod
-    # regardless of kind. Absent exactly when the pod is of the
-    # UserDefined category — identified precisely by that absence
-    # itself, not a vague "no canonical counterpart" judgment call.
-    # This repo's scaffolding mirrors it in the pod-databook's
-    # filename, which carries the literal "(custom)" disambiguator;
-    # SHACL can't see filenames, so that absence/filename pairing is
-    # checked in integrity.md's PNG-9, not here. Now
-    # constrained via sh:class skos:Concept — pod-categories.ttl's tree is a
-    # SKOS concept scheme, not an OWL class hierarchy, so a legal value
-    # really is rdf:type skos:Concept, no class-value punning involved
-    # (contrast vehicles:hasVehicleType, other/vehicles.ttl, which still
-    # does pun a real class hierarchy). The nested skos:inScheme check
-    # requires a legal value to belong to some concept scheme — sh:class
-    # skos:Concept alone would accept a free-floating SKOS concept from
-    # anywhere. It deliberately does *not* pin that scheme to
-    # podcat:PodCategoryScheme: a category extension (pod-category-ext/) publishes
-    # its concepts in its own scheme and links them to the app's taxonomy
-    # with skos:broadMatch, which is what SKOS provides for cross-scheme
-    # mapping (skos:broader being reserved for hierarchy within one
-    # scheme). Requiring podcat:PodCategoryScheme here would make every such
-    # concept illegal as a pod:category value. What SHACL cannot check
-    # is the other half — that an extension concept really does carry
-    # exactly one skos:broadMatch into a podcat:PodCategoryScheme concept, so
-    # the recipient's app always knows where to file an incoming pod;
-    # that is integrity.md's TTL-8, which needs to dereference across
-    # two files at once.
-    sh:property [
-        sh:path pod:category ;
-        sh:maxCount 1 ;
-        sh:class skos:Concept ;
-        sh:property [
-            sh:path skos:inScheme ;
-            sh:minCount 1 ;
-            sh:class skos:ConceptScheme ;
-            sh:message "A pod:category value must be a concept in some skos:ConceptScheme — podcat:PodCategoryScheme (pod-categories.ttl) for a core category, or an extension's own scheme (pod-category-ext/), which must skos:broadMatch a core concept."@en
-        ] ;
-        sh:message "A pod may have at most one pod:category value: the category concept its content is filed under, if any."@en
-    ] ;
 
     # pod:attachment — zero or more values, no upper bound, on any
     # pod:Pod regardless of kind. Each value is a source item
@@ -98,12 +59,11 @@
     # both and never neither, mirroring pod.ttl's owl:disjointWith
     # pod:TemplatePod pod:InstancePod. A reusable class-level template
     # (pod-category-templates.ttl) is typed pod:TemplatePod only; every pod
-    # in a user's own tree is typed pod:InstancePod only — there is no
-    # legal bare tree-position-only pod with no member content in the
-    # InstancePod branch (a category node with nothing substantive to
-    # say still carries a minimal stub pod:member entry, see
-    # integrity.md's YAML-6) and no pod legally carries both kinds at
-    # once.
+    # a user holds is typed pod:InstancePod only — there is no legal
+    # InstancePod with no member content (a pod with nothing
+    # substantive to say still carries a minimal stub pod:member entry,
+    # see integrity.md's YAML-6) and no pod legally carries both kinds
+    # at once.
     sh:xone (
         [ sh:property [ sh:path rdf:type ; sh:hasValue pod:TemplatePod ] ]
         [ sh:property [ sh:path rdf:type ; sh:hasValue pod:InstancePod ] ]
@@ -123,6 +83,24 @@
     sh:targetClass pod:TemplatePod ;
     sh:message "Template Pod validation."@en ;
 
+    # pod:category — at most one value, on a pod:TemplatePod only: the
+    # concept the template is for. Every template but
+    # ctpl:UserDefinedTemplatePod carries exactly one; that one carries
+    # none, being what a pod with no category tags is created from.
+    # sh:class skos:Concept — pod-categories.ttl's hierarchy is a SKOS
+    # concept scheme, not an OWL class hierarchy, so no class-value
+    # punning is involved. The nested skos:inScheme check requires the
+    # concept to belong to some scheme without pinning it to
+    # podcat:PodCategoryScheme, since a category extension
+    # (pod-category-ext/) publishes its concepts in its own scheme.
+    sh:property [
+        sh:path pod:category ;
+        sh:maxCount 1 ;
+        sh:class skos:Concept ;
+        sh:node :InSchemeConceptShape ;
+        sh:message "A pod:TemplatePod may have at most one pod:category value: the category concept it is a template for."@en
+    ] ;
+
     # pod:memberShape — zero or more values, no maxCount. Not
     # constrained to sh:class
     # sh:NodeShape here: the individuals they point at (e.g.
@@ -136,7 +114,7 @@
     ] ;
 
     # pod:declaresTool — zero or more pod:Tool nodes naming the tools a
-    # pod of this category is created with. Most templates declare none.
+    # pod tagged with this category gains. Most templates declare none.
     # There is no boolean flag saying whether such a pod holds structured
     # content: declaring the tool already says it, and a second statement
     # could only ever disagree with the first.
@@ -151,8 +129,8 @@
 #  InstancePod
 #  pod:InstancePod is the actual/instantiated facet of a pod — real,
 #  member-classified content. :InstancePodShape constrains
-#  pod:creator/pod:owner/pod:member, plus the two tag properties
-#  pod:userTag/pod:serviceTag (see their own comment below; the
+#  pod:creator/pod:owner/pod:member, plus the three tag properties
+#  pod:categoryTag/pod:userTag/pod:serviceTag (see their own comment below; the
 #  pod:ServiceTag value nodes pod:serviceTag points at are
 #  constrained by :ServiceTagShape, further below) — pod:owner and pod:member are
 #  each required, one or more values, no fixed upper bound (pod:creator
@@ -168,10 +146,9 @@
 #  from its pod:member graphs' own pod:subject values, rather than
 #  asserted directly (see pod.ttl's pod:tool comment; :LiveToolShape and
 #  :MemberGraphShape below constrain those properties instead). There is likewise no
-#  pod-level shape to constrain — an InstancePod's validation shape is derived
-#  from its own pod:category value (reverse-lookup the pod:TemplatePod
-#  with the same pod:category, pod-category-templates.ttl) rather than stored on
-#  the InstancePod itself.
+#  pod-level shape to constrain — each graph records its own pod:shape,
+#  set from the template of whichever category tag supplied it (a pod
+#  may carry several, so there is no single template to derive it from).
 #################################################################
 
 :InstancePodShape
@@ -216,8 +193,9 @@
 
     # pod:tool — zero or more values, no minCount and no maxCount. A pod
     # carrying no tool is the ordinary case, not a lesser kind of pod, and
-    # nothing caps how many it may carry: a pod gets one per tool its
-    # category's template declares and the user may add more at any time.
+    # nothing caps how many it may carry: a pod gets one per tool the
+    # template of each of its category tags declares, and the user may
+    # add more at any time.
     # The tool nodes' own contents are constrained by :LiveToolShape below.
     sh:property [
         sh:path pod:tool ;
@@ -225,10 +203,27 @@
         sh:message "A pod:InstancePod's pod:tool values must each be a pod:Tool."@en
     ] ;
 
+    # pod:categoryTag — zero or more values, no maxCount: a pod may carry
+    # several category concepts, even from unrelated branches, and one
+    # with none is of the UserDefined category. Only the concepts the
+    # member chose are stored; broader concepts are implied and derived,
+    # never asserted. Same concept-in-some-scheme test as pod:category
+    # on :TemplatePodShape. What SHACL cannot check is that an
+    # extension concept really carries exactly one skos:broadMatch into
+    # podcat:PodCategoryScheme, so that a broader-category search and a
+    # recipient without the extension both still reach it; that is
+    # integrity.md's TTL-8, which dereferences across two files.
+    sh:property [
+        sh:path pod:categoryTag ;
+        sh:class skos:Concept ;
+        sh:node :InSchemeConceptShape ;
+        sh:message "Each pod:categoryTag value must be a skos:Concept in some concept scheme."@en
+    ] ;
+
     # pod:userTag/pod:serviceTag — each zero or more values, no
     # minCount and no maxCount: a pod need carry no tags at all, and nothing
-    # caps how many it may carry. Neither has an sh:in list, since a tag
-    # belongs to no vocabulary at all (contrast vehicles:fuelType and
+    # caps how many it may carry. Neither has an sh:in list, since neither
+    # belongs to any vocabulary (contrast vehicles:fuelType and
     # pets:sex, whose small closed vocabularies really are frozen that way).
     #
     # They are constrained to different depths, because they are different
@@ -506,4 +501,25 @@
         sh:path pod:subject ;
         sh:maxCount 0 ;
         sh:message "A pod:FormGraph must not carry pod:subject — that property belongs to pod:MemberGraph, its disjoint sibling."@en
+    ] .
+
+
+#################################################################
+#  InSchemeConceptShape
+#  Shared by pod:category (:TemplatePodShape) and pod:categoryTag
+#  (:InstancePodShape): a category value must belong to some concept
+#  scheme — podcat:PodCategoryScheme (pod-categories.ttl) for a core
+#  category, or an extension's own scheme (pod-category-ext/), which
+#  must skos:broadMatch a core concept (integrity.md's TTL-8).
+#  sh:class skos:Concept alone would accept a free-floating SKOS
+#  concept from anywhere.
+#################################################################
+
+:InSchemeConceptShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path skos:inScheme ;
+        sh:minCount 1 ;
+        sh:class skos:ConceptScheme ;
+        sh:message "A category value must be a concept in some skos:ConceptScheme — podcat:PodCategoryScheme (pod-categories.ttl) for a core category, or an extension's own scheme (pod-category-ext/), which must skos:broadMatch a core concept."@en
     ] .

@@ -19,12 +19,12 @@
 @base <http://mee.foundation/ontologies/pod-templates> .
 
 <http://mee.foundation/ontologies/pod-templates> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod-templates/4.4.0> ;
-    dc:date "2026-09-26"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod-templates/5.0.0> ;
+    dc:date "2026-11-07"^^xsd:date ;
     owl:imports <http://mee.foundation/ontologies/pod> ;
-    owl:versionInfo "Version 4.4.0 - added ctpl:IdVerificationTemplatePod, the first template to declare a pod:Browser tool"@en ;
+    owl:versionInfo "Version 5.0.0 - templates now apply when a member adds a category tag, since a pod may carry several; no user tree"@en ;
     rdfs:label "Pod Templates"@en ;
-    rdfs:comment """Class-level pod:Pod templates for category concepts (pod-categories.ttl's podcat:PodCategoryScheme). Each individual here is what the app clones into a new pod when a pod of its own pod:category concept is first instantiated into a user's tree (Lazy Instantiation) — finding the template for a given category is a reverse lookup (?tc pod:category podcat:X), since pod-categories.ttl carries no forward pointer of its own. Each is typed solely pod:TemplatePod, and carries pod:memberShape for the member baseline plus zero or more pod:declaresTool nodes naming the tools — a pod:Form and its governing pod:formShape — a pod of that category is created with. Most declare none: most categories have nothing structured to say beyond their member baseline, and a pod cloned from such a template can still gain tools later, chosen by the user."""@en .
+    rdfs:comment """Class-level pod:Pod templates for category concepts (pod-categories.ttl's podcat:PodCategoryScheme). Each individual here is what the app applies to a pod when a member gives it a category tag (pod:categoryTag) naming the template's own pod:category concept (Lazy Instantiation). A pod may carry several category tags, and so be reached by several templates; each contributes the tools it declares that the pod does not already carry — finding the template for a given category is a reverse lookup (?tc pod:category podcat:X), since pod-categories.ttl carries no forward pointer of its own. Each is typed solely pod:TemplatePod, and carries pod:memberShape for the member baseline plus zero or more pod:declaresTool nodes naming the tools — a pod:Form and its governing pod:formShape — a pod tagged with that category gains. Most declare none: most categories have nothing structured to say beyond their member baseline, and a pod tagged with such a category can still gain tools later, chosen by the user."""@en .
 
 #################################################################
 #  podcat:Person  (SKOS top concept)
@@ -33,9 +33,8 @@
 ctpl:PersonTemplatePod rdf:type pod:Pod, pod:TemplatePod ;
     rdfs:label "Person Template Pod"@en ;
     rdfs:comment """The template for podcat:Person, one of the scheme's two SKOS top concepts. A pod
-                    instantiated directly as bare "Person" is the root of a user's own tree of
-                    pods — purely organizational, with no document, account or third party of its
-                    own — so it carries only the contact-info member view every template shares,
+                    tagged with bare "Person" is about the user themselves in general, with no
+                    document, account or third party of its own, so this template carries only the contact-info member view every template shares,
                     and declares no tool."""@en ;
     pod:category podcat:Person ;
     pod:memberShape pshapes:ContactInfoShape .
@@ -107,15 +106,13 @@ ctpl:TripsTemplatePod rdf:type pod:Pod, pod:TemplatePod ;
 ctpl:UserDefinedTemplatePod rdf:type pod:Pod, pod:TemplatePod ;
     rdfs:label "User-Defined (No Category) Template Pod"@en ;
     rdfs:comment """The one pod:TemplatePod with no pod:category value at all — for a pod the
-                    user creates without picking any existing category concept (the Custom/
-                    UserDefined case, identified by the pod carrying no category value
-                    at all; this repo's scaffolding mirrors it in the pod-databook
-                    filename's (custom) disambiguator). Since it has no
+                    user creates without giving it any category tag (the Custom/UserDefined
+                    case, identified by the pod carrying no pod:categoryTag value at all).
+                    Since it has no
                     pod:category, it isn't reachable by the usual ?tc pod:category podcat:X
                     reverse lookup every other template pod uses — it's found instead as the
-                    unique pod:TemplatePod carrying no pod:category value, and Lazy
-                    Instantiation falls back to cloning it whenever a new pod is created with no
-                    category selected. Carries only pod:memberShape
+                    unique pod:TemplatePod carrying no pod:category value, and a new pod
+                    created with no category tag takes its member baseline from it. Carries only pod:memberShape
                     pshapes:ContactInfoShape — a Custom pod has no document type and no
                     tool content of its own, only ever a contact-info view of its member(s)."""@en ;
     pod:memberShape pshapes:ContactInfoShape .

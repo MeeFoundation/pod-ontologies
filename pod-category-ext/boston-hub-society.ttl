@@ -12,13 +12,13 @@
 @base <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society> .
 
 <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society/1.2.1> ;
-    dc:date "2026-09-26"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society/1.3.0> ;
+    dc:date "2026-11-07"^^xsd:date ;
     owl:imports <http://mee.foundation/ontologies/pod> ;
-    owl:versionInfo "Version 1.2.1 - template count in the member-shape comment updated to 107"@en ;
+    owl:versionInfo "Version 1.3.0 - broadMatch now read for tag-search broadening and as a suggestion fallback, not tree filing"@en ;
     rdfs:label "Boston Hub Society Category Extension"@en ;
     rdfs:comment """The first **category extension** — a self-contained bundle an organization
-                    publishes so that other instances of the app can file and validate pods of a
+                    publishes so that other instances of the app can find and validate pods of a
                     category the app's own taxonomy does not define. One file carries the whole
                     bundle: the publisher's skos:ConceptScheme, the concepts in it, and the
                     pod:TemplatePod for each. Its member shape lives beside it in
@@ -36,14 +36,16 @@
                     scheme and provides the skos:mappingRelation family — of which skos:broadMatch is
                     one — for links *between* schemes. An extension concept is by definition in
                     another scheme, so skos:broadMatch is the correct predicate and skos:broader
-                    would be a misuse. The recipient's app reads the broadMatch to know where in its
-                    own tree an incoming pod of this category should be filed — podcat:Groups, here —
-                    without having to know anything else about the publisher.
+                    would be a misuse. The app reads the broadMatch in two places, without having to know anything
+                    else about the publisher: a search for the core concept (podcat:Groups, here,
+                    or anything above it) matches a pod tagged with the extension concept; and a
+                    recipient whose app lacks the extension is offered the core concept as the
+                    suggested category tag in its place.
 
                     Every extension concept must carry exactly one skos:broadMatch into a concept of
                     podcat:PodCategoryScheme; see integrity.md's TTL-8, which enforces it, and
-                    shacl/pod-shacl.ttl's :PodShape, which no longer pins a pod:category value to
-                    podcat:PodCategoryScheme itself but still requires it to be a concept in some
+                    shacl/pod-shacl.ttl's :InSchemeConceptShape, which does not pin a pod:category or
+                    pod:categoryTag value to podcat:PodCategoryScheme itself but still requires it to be a concept in some
                     skos:ConceptScheme."""@en .
 
 

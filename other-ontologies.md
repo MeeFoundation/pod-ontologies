@@ -116,7 +116,7 @@ This section describes the classes and properties, defined in `other/vehicles.tt
 
 - `v:Vehicle` — template label for a graph that identifies a vehicle, and also the actual `rdf:type` of the vehicle individual itself (a vehicle has no `p:Person` individual of its own — see `p:hasVehicle` above).
 - `v:VehicleType` (abstract) — parent of the four concrete vehicle-kind classes below; never itself instantiated.
-- `v:Car`, `v:BusOrCoach`, `v:Motorcycle`, `v:MotorizedBicycle` — the four vehicle kinds, each a concrete subclass of `v:VehicleType` with no properties of its own; used solely as `v:hasVehicleType` values (class-value-punning, the same style `pod:category` and `pets:hasSpecies`/`pets:hasBreed` already use).
+- `v:Car`, `v:BusOrCoach`, `v:Motorcycle`, `v:MotorizedBicycle` — the four vehicle kinds, each a concrete subclass of `v:VehicleType` with no properties of its own; used solely as `v:hasVehicleType` values (class-value-punning, the same style `pets:hasSpecies`/`pets:hasBreed` already use).
 - `v:Make` — the type of every individual vendored in `project_files/wikidata-vehicle-makes-subset.ttl`, a real vehicle manufacturer.
 - `v:Model` — the type of every individual vendored in `project_files/wikidata-vehicle-models-subset.ttl`, a real vehicle model.
 - `v:OdometerReading` — a vehicle's current odometer reading; a CCO Ratio Measurement Information Content Entity (`cco:ont00001022`); the decimal value and unit sit on a separate Information Bearing Entity (`cco:ont00000253`) that is carrier of it (`obo:BFO_0000101`), the same two-individual style `pets:BodyWeight` uses.

@@ -32,17 +32,17 @@ This display truncation limit is not publicly documented by Apple and likely var
 
 ## Level 2: Groups ↔ Hidden Service Tags
 
-An Apple Contacts **group** is not a category, not a topic, and not a member, so it does not map onto the pod tree at all. The module records it instead as a [hidden service tag](../README.md#tags) on the contact's own pod — `pod:serviceTag`, namespace `foundation.mee.applecontacts`, key `group`, value the group's name verbatim.
+An Apple Contacts **group** is not one of the user's own category tags or user tags, not a topic, and not a member, so it does not map onto anything the user sees in the app at all. The module records it instead as a [hidden service tag](../README.md#tags) on the contact's own pod — `pod:serviceTag`, namespace `foundation.mee.applecontacts`, key `group`, value the group's name verbatim.
 
-**Import (Apple Contacts → the app):** for each group a contact belongs to, write one tag. A contact in three groups gets three tags sharing one namespace and one key, differing only in value — which is exactly what a namespace/key pair is allowed to repeat for. Where the contact's pod is filed is decided independently, by the ordinary auto-filing heuristic; no pod is created, moved, or reclassified on account of a group.
+**Import (Apple Contacts → the app):** for each group a contact belongs to, write one tag. A contact in three groups gets three tags sharing one namespace and one key, differing only in value — which is exactly what a namespace/key pair is allowed to repeat for. Which category tags the contact's pod carries is decided independently, by the ordinary Auto File suggestions; no pod is created, tagged, or retagged on account of a group.
 
 **Export (the app → Apple Contacts):** read back every tag in this module's namespace with key `group` and re-create the contact's group membership from the values.
 
-There is no flattening to do in either direction. Because a group never corresponds to a position in the pod tree, no hierarchy has to be encoded on the way out or reconstructed on the way back in — the group name round-trips verbatim, and a group name that happens to contain a `/` is just a group name, since the tag's structure lives in its sibling properties rather than inside the value.
+There is no flattening to do in either direction. Because a group never corresponds to a category concept, no hierarchy has to be encoded on the way out or reconstructed on the way back in — the group name round-trips verbatim, and a group name that happens to contain a `/` is just a group name, since the tag's structure lives in its sibling properties rather than inside the value.
 
 **Rename safety:** matching is by name, so a group renamed on the Apple side reads as a new group, leaving the old tag stale. A module that wants to survive renames stores the group's own identifier alongside the name under a second key — `groupID` — which is precisely what having a key rather than one opaque string buys.
 
-Note that these tags never propagate when a pod is shared: they are one member's own module's bookkeeping, and a member running a different servicn, or none, could not interpret them.
+Note that these tags never propagate when a pod is shared: they are one member's own module's bookkeeping, and a member running a different service, or none, could not interpret them.
 
 ---
 

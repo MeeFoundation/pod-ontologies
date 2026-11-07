@@ -210,7 +210,7 @@ BASE_ONTOLOGY_FILES = [
 # real person, and not what a pod-databook's own validation is about.
 # Category extensions (pod-category-ext/) are bundles: each file carries a
 # publisher's own skos:ConceptScheme *and* its pod:TemplatePod individuals.
-# The scheme half has to reach the pod pass, so that a pod:category value
+# The scheme half has to reach the pod pass, so that a pod:categoryTag value
 # naming an extension concept resolves against pod-shacl's sh:class
 # skos:Concept / skos:ConceptScheme checks; the template half is harmless
 # there, being a single well-formed pod:TemplatePod rather than

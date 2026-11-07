@@ -2,12 +2,13 @@
 id: http://www.example.org/tpod/pods/pod-11
 title: "Things"
 type: pod-databook
-version: 1.1.0
+version: 1.2.0
 created: 2026-07-10
 description: >
-  Pod DataBook for folder "Things" (pod:category: podcat:Things). It is a one-member pod with one member entry about :Self.
+  Pod DataBook for the "Things" pod (category tag: podcat:Things). It is a one-member pod with one member entry about :Self.
 tpod:
-  category: "podcat:Things"
+  categoryTag:
+    - "podcat:Things"
   creator: ":Self"
   owner: ":Self"
   member:

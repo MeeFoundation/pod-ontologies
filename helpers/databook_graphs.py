@@ -18,7 +18,7 @@ Also carries `resolve()`/`as_list()` — needed wherever a `tpod.*` YAML value
 (a CURIE or a bare `:X` local name) must become the same full IRI — and the
 `pod:` triple synthesis (`process_pod_databook()`/`process_embedded_graph()`)
 that turns one pod-databook's frontmatter into Turtle. Both `yaml-to-rdf.py`
-(whole-tree dump) and `validate.py` (one pod at a time) call that synthesis,
+(whole-example dump) and `validate.py` (one pod at a time) call that synthesis,
 so it lives here rather than in either script; `yaml-to-rdf.py`'s hyphenated
 filename is not an importable module name in any case.
 """
@@ -35,9 +35,9 @@ PREFIXES = {
     "persona": "http://mee.foundation/ontologies/persona#",
     "pets": "http://mee.foundation/ontologies/pets#",
     "vehicles": "http://mee.foundation/ontologies/vehicles#",
-    # A category extension's own namespace (pod-category-ext/). A tpod.category
+    # A category extension's own namespace (pod-category-ext/). A tpod.categoryTag
     # value may name a concept in an extension's scheme rather than in
-    # podcat:PodCategoryScheme — see pod.ttl's pod:category comment. One entry
+    # podcat:PodCategoryScheme — see pod.ttl's pod:categoryTag comment. One entry
     # per published extension.
     "bhscat": "http://mee.foundation/ontologies/pod-category-ext/boston-hub-society#",
     # Shape namespaces — a tpod.member[]/tpod.tool[].graph[].shape value is a
@@ -249,15 +249,10 @@ def process_pod_databook(fm, triples):
 
     emit_type(triples, subj, POD + "Pod")
 
-    if tpod.get("category"):
-        # pod:category — domain pod:Pod, so asserted on every pod
-        # regardless of facet (pod.ttl 3.45.0, renamed from pod:origin).
-        emit_obj(triples, subj, POD + "category", resolve(tpod["category"]))
-
     # Every real pod-databook is always also typed pod:InstancePod — no
-    # bare tree-position-only pod with no member content; a category node
-    # with nothing substantive to say still carries a minimal stub
-    # pod:member entry rather than omitting member content. Member count
+    # pod with no member content; a pod with nothing substantive to say
+    # yet still carries a minimal stub pod:member entry rather than
+    # omitting member content. Member count
     # itself is never stored — it's simply the number of distinct
     # subject values among tpod.member, derivable by counting whenever
     # needed. There is no second pod type to emit: a pod that carries
@@ -271,6 +266,15 @@ def process_pod_databook(fm, triples):
     # pod:creator (never a bare graph-local-name).
     for owner_iri in as_list(tpod.get("owner")):
         emit_obj(triples, subj, POD + "owner", resolve(owner_iri))
+
+    # pod:categoryTag — 0..N skos:Concept CURIEs, domain pod:InstancePod
+    # (pod.ttl's Pod Tags section). Only the concepts written are emitted;
+    # broader concepts are implied tags, derived at search time and never
+    # asserted. as_list() lets a single bare string stand in for a
+    # one-element list. pod:category is never emitted here — it belongs to
+    # pod:TemplatePod alone.
+    for cat in as_list(tpod.get("categoryTag")):
+        emit_obj(triples, subj, POD + "categoryTag", resolve(cat))
 
     # pod:userTag — 0..N plain xsd:string values, domain pod:InstancePod
     # (pod.ttl's Pod Tags section), so emitted after the pod:InstancePod
@@ -332,9 +336,9 @@ def process_pod_databook(fm, triples):
     # comment) — rather than an independently-asserted fact, so it is
     # never stored as its own triple.
 
-    # No pod-level shape synthesis either: a pod:InstancePod's validation
-    # shape is derivable from its own pod:category value via a reverse
-    # lookup on pod-category-templates.ttl rather than stored per-instance.
+    # No pod-level shape synthesis either: each graph carries its own
+    # pod:shape (emitted with the graph below); a pod may carry several
+    # category tags, so there is no single template to derive one from.
 
 
 def process_embedded_graph(graph, triples, kind):

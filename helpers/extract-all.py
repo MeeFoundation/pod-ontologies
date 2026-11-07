@@ -7,7 +7,7 @@ Why this exists: validation never merges the whole tree — `helpers/validate.py
 works one pod at a time on purpose — but a few things legitimately need the
 union: integrity.md's TTL-1 ("no orphan Persons"), whose reachability question
 only makes sense across every pod at once, and loading the example into a
-triplestore for ad-hoc SPARQL. See example.md's "Merged whole-tree dump".
+triplestore for ad-hoc SPARQL. See example.md's "Merged whole-example dump".
 
 Do NOT run the general SHACL shapes against this output: merging every pod
 unions facts the self-containment convention deliberately keeps per-graph,

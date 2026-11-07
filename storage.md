@@ -11,7 +11,7 @@ point here rather than restating any of this.
 
 ## The decision
 
-A pod's entire content is app-internal: its members, tools, graphs, category, tags, name and id,
+A pod's entire content is app-internal: its members, tools, graphs, tags, name and id,
 together with its note, its attachments, its chat, and a member's own private files. None of it is
 written to the filesystem, in any form, at any point. There is no folder representing a pod, no
 file representing its note, and no directory holding its attachments.
@@ -46,18 +46,21 @@ The model is unaffected. What changes is where it lives and how some of its rule
 - **What a pod is.** A pod is a unit the app manages, identified by its own stable id. Nothing
   marks it in a filesystem, because it is not in one. The reserved `_pod-attachments` folder that
   once served as that marker is a scaffolding convention only (see below).
-- **Tree position.** `pod:Pod` still asserts no tree position, exactly as before — but the reason is
-  now that a pod's parent is per-member state in that member's own store, never shared content.
-  This is what lets two members of a shared pod each file it wherever they like without touching
-  what the other sees.
+- **Per-member state.** Pods do not nest, so there is no position to store at all. What each
+  member keeps for themselves is their tags — category tags, user tags, and the service tags their
+  own modules write — held in that member's own store and never shared content. This is what lets
+  two members of a shared pod each classify it however they like without touching what the other
+  sees; a sender's category tags cross a share only as suggestions the recipient may adopt (see
+  [Tags](README.md#tags) in README.md).
 - **A pod's name.** The app's own record of the name is authoritative outright; there is no folder
-  for it to mirror. The rules around it are unchanged — sibling uniqueness with auto-suffixing, and
-  which pods share a name across members versus keeping one per member (see
+  for it to mirror. The rules around it are unchanged — a name need not be unique, a pod being
+  resolved by its stable id, and some pods share a name across members while others keep one per
+  member (see
   [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
 - **Attachments versus private files.** The distinction survives in full, as a rule about
   *propagation* rather than about directories: an attachment is content every member receives, and a
   private file stays in one member's copy and reaches no one else. What changes is only that the two
-  are told apart by how the member filed them in the app, not by which directory they sit in.
+  are told apart by how the member added them in the app, not by which directory they sit in.
 - **The note.** Still exactly one per pod, still supporting links to other pods that resolve by
   target pod id, and now also links to the pod's own tools, graphs and attachments. It is a
   rich-text document with Markdown-like formatting, held in the app's own internal format — one
@@ -80,9 +83,9 @@ them too.
 | Ships as Tellipod | Development scaffolding |
 |---|---|
 | Every `*.ttl` ontology — `persona.ttl`, `pod.ttl`, `pod-categories.ttl`, `pod-category-templates.ttl`, `service.ttl`, `organization.ttl`, and every `other/`, `persona-ext/` and `pod-category-ext/` peer file (possibly expressed differently in the app) | Every `*.databook.md` file, and the whole format specified in [pod-databook.md](pod-databook.md) |
-| Every `**/shacl/*.ttl` shapes file | The `example/Pods/` tree, and every folder in it |
-| The concepts the ontologies model — pods, members, owners, tools, graphs, categories, tags, notes, attachments, chat | Pods as folders; the `_pod-attachments` marker; folder notes named after their folder; private files as loose files; pass-through directories; the filename convention |
-| The app-level rules in [app-behavior.md](app-behavior.md) — lifecycle, sharing, permissions, naming, filing | The `helpers/` scripts, and the [integrity.md](integrity.md) checks that walk the tree on disk |
+| Every `**/shacl/*.ttl` shapes file | The `example/Pods/` directory, and every folder in it |
+| The concepts the ontologies model — pods, members, owners, tools, graphs, categories, tags, notes, attachments, chat | Pods as flat folders, one per pod, none inside another; the `_pod-attachments` marker; folder notes named after their folder; private files as loose files; the filename convention |
+| The app-level rules in [app-behavior.md](app-behavior.md) — lifecycle, sharing, permissions, naming, tagging | The `helpers/` scripts, and the [integrity.md](integrity.md) checks that read the files and folders on disk |
 
 The scaffolding is genuinely useful and is not going away before the app arrives: it is how the
 ontologies get exercised, validated and diagrammed against real content, and it is a diagnostic

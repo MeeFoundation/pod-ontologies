@@ -15,13 +15,10 @@ documented in pod-databook.md's "The `tpod` Block" section.
 There is no category-side synthesis here at all — pod-categories.ttl 1.31.0
 deleted podcat:Folder and its subclasses podcat:CategoryDefined/podcat:UserDefined
 outright, along with podcat:child/podcat:pod/podcat:category/podcat:catType/podcat:label.
-A pod's tree position is not modelled at all: at runtime it is per-member
-state in that member's own store, and in this repo's scaffolding it is simply
-which folder the pod-databook physically lives in, with no RDF individual
-representing either. The only remaining RDF-level record of a pod's
-classification is
-pod:category (pod.ttl 3.20.0), read directly from the explicit `tpod.category`
-YAML field below — never derived from filename-parsing.
+Pods do not nest, so there is no tree position to model. A pod's
+classification is its pod:categoryTag values (pod.ttl), read directly from the
+explicit `tpod.categoryTag` YAML list below — never derived from the filename
+or the folder.
 
 Since graph-databooks were merged into their owning pod-databooks (each
 graph's Turtle content and Overview now live in that pod file's body; its

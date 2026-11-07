@@ -17,28 +17,29 @@ scaffolding**: three helpers read those files (`helpers/validate.py`, `helpers/y
 app ships, all of that has to move to whatever the app exposes instead.
 
 The scaffolding is not only the file. The folder around it is scaffolding too, and so is everything
-in that folder:
+in that folder. The layout is flat: every pod is one folder directly under `example/Pods/`,
+`example/Pods/<Name>/`, and no pod's folder ever sits inside another's, matching a model in which
+pods do not nest.
 
 - **A folder stands for a pod, and the reserved `_pod-attachments` folder directly inside it is
   what marks the folder as one.** This gives the repo a pod/not-a-pod test decidable from a single
-  folder's immediate contents, with no tree walk — which is what [integrity.md](integrity.md)'s
-  FS-5 relies on. Both markers are present here, the folder's and the file's, and FS-5
-  requires them to agree; that is what keeps the scaffolding from drifting away from the tree it
-  represents. At runtime nothing marks a pod, because there is no folder to mark.
+  folder's immediate contents — which is what [integrity.md](integrity.md)'s FS-5 relies on. Both
+  markers are present here, the folder's and the file's, and FS-5 requires them to agree; that is
+  what keeps the scaffolding from drifting away from the pods it represents. At runtime nothing
+  marks a pod, because there is no folder to mark.
 - **A pod's note is a file named after its folder** (`X.md` inside the folder `X`), the folder-note
   convention PKM tools such as Obsidian use. The file is plain Markdown, a stand-in approximating
   what the app's Markdown export of the note would write. At runtime the note is app-internal, held
   in the app's own format rather than as Markdown, and has no name of its own.
 - **A pod's attachments are the plain files inside its `_pod-attachments` folder, and the member's
   own private files are the ones loose beside it.** At runtime the same distinction is a rule about
-  what propagates on a share, decided by how the member filed the file in the app, not by which
+  what propagates on a share, decided by how the member added the file in the app, not by which
   directory it sits in.
 - **The [Filename Convention](#filename-convention) below is scaffolding-only.** At runtime there is
   no file, so there is no filename, and nothing depends on one.
-- **Nothing records a pod's position in the tree.** Here that is because the position is simply
-  wherever the folder currently sits; at runtime it is because a pod's parent is per-member state
-  in that member's own store. The invariant holds either way, and `pod:Pod` asserts no tree position
-  in either case.
+- **Nothing records a pod's position, because a pod has none.** Pods do not nest, here or at
+  runtime: a user's pods are a flat set, gathered by their tags rather than by where they sit (see
+  [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag) in app-behavior.md).
 
 Everything below therefore describes the repo's filesystem, not a user's. Where this repo's layout
 and the model appear to disagree, this document is the one to read; [storage.md](storage.md) draws
@@ -57,7 +58,7 @@ above for why it is a folder here and nothing at all at runtime.
 One pod DataBook carries three things:
 
 - **document fields** — six YAML keys describing the file itself, above the `tpod:` block;
-- **the `tpod:` block** — the pod's category, its creator and owners, its tags, and its links to the
+- **the `tpod:` block** — the pod's creator and owners, the member's own tags, and its links to the
   graphs below, whose keys map onto properties defined in `pod.ttl`. See
   [Pod Ontology](README.md#pod-ontology) in README.md for what each property *means*; this
   document says how each is *written*;
@@ -67,35 +68,29 @@ One pod DataBook carries three things:
 A graph has no file of its own: it lives inside the pod DataBook that links it, as one
 `tpod.member`/`tpod.tool[].graph` entry plus one body section.
 
-**Nothing in the file records where the pod sits.** There is no tree-position field, no parent
-link, and no back-pointer from a graph to the pod that links it — a pod asserts `tpod.member` and
-`tpod.tool`, and that is the only direction the link runs. In this repo a pod's position is simply
-wherever its folder currently sits, and a graph's containing pod is simply wherever its entry
-physically lives, so moving or renaming a folder is a pure filesystem operation with nothing in any
-file to update. The invariant is the same one the model asserts for its own reason — a pod's parent
-is per-member state in that member's own store, never shared content — which is what lets two members
-of a shared pod each file it wherever they like without touching content the other sees. It is also
-why two pods can never share a folder here: a file sitting in it would be ambiguously part of both,
-and the marker being a folder of one fixed reserved name, of which a directory can hold only one,
-makes that structurally impossible rather than merely forbidden.
+**Nothing in the file records where the pod sits, because a pod sits nowhere.** Pods do not nest,
+so there is no position field and no parent link, and there is no back-pointer from a graph to the
+pod that links it either — a pod asserts `tpod.member` and `tpod.tool`, and that is the only
+direction the link runs. A graph's containing pod is simply wherever its entry physically lives.
+Two pods can never share a folder here: a file sitting in it would be ambiguously part of both, and
+the marker being a folder of one fixed reserved name, of which a directory can hold only one, makes
+that structurally impossible rather than merely forbidden.
 
 **The rest of a pod's content is not in this file.** The DataBook holds the structured content and
 the metadata about the pod itself; a pod's unstructured content sits beside it:
 
 - **the note** — one Markdown file named after the folder (`X.md` inside the folder `X`), shown in
   the app's Note area. Naming it after its folder is the folder-note convention PKM tools such as
-  Obsidian use, which is what lets this repo's tree be browsed in one. It is Markdown because that
+  Obsidian use, which is what lets this repo's example pods be browsed in one. It is Markdown because that
   is what the app's export of a note writes, not because the note is Markdown: a link to another
   pod is written in the export's `[[id|text]]` form, and a link to a block inside the pod has no
   syntax here at all (see [Where the note's format and block links go](#where-the-notes-format-and-block-links-go));
 - **the attachments** — the plain files inside the folder's own `_pod-attachments` subfolder, flat,
   like email attachments. Every pod has that subfolder, empty or not, and its contents are the part
   of a pod's folder that travels when the pod is shared;
-- **the member's own private files** — every other plain file loose in the folder, and any subfolder
-  with no pod anywhere beneath it. These stay in that member's copy of the pod and never reach
-  another member. The remaining two kinds of subfolder are not the pod's content at all: a
-  descendant pod, holding its own `_pod-attachments` folder, and a bare pass-through directory on
-  the way to one (integrity.md's FS-5);
+- **the member's own private files** — every other plain file loose in the folder, and every
+  subfolder other than `_pod-attachments`, with whatever it holds. These stay in that member's copy
+  of the pod and never reach another member. No subfolder is ever another pod (integrity.md's FS-5);
 - **the chat** — a stream shared by the pod's members, not a file in the folder at all; like this
   file's own content, it lives inside the app.
 
@@ -124,7 +119,7 @@ format the right shape for that job.
 
 **It is human-readable.** A pod DataBook is Markdown with YAML frontmatter, so a pod's content can
 be navigated, inspected, and edited with ordinary tools, which is the only way it can be worked on
-before there is an app. Maintaining this repo's own example tree in VS Code and Claude Code is the
+before there is an app. Maintaining this repo's own example pods in VS Code and Claude Code is the
 demonstration: everything the format carries is legible as text, and anything wrong with it is
 visible in a diff. That property belongs to the scaffolding rather than to Tellipod, and it is worth being
 clear about what it does not buy: a format made of ordinary files in ordinary folders was once also
@@ -141,95 +136,37 @@ with.
 The format will change, though. It has so far been exercised by one worked example and the
 validation pipeline around it, not by an implementation, and the Tellipod implementation team will find
 requirements it does not yet meet — a field that has to be added, a convention that holds across the
-example tree but not across a real user's, a distinction that only matters once pods are syncing
+example pods but not across a real user's, a distinction that only matters once pods are syncing
 between real instances. The largest known gap is tools: four of the six kinds have no data format
 at all yet. See [Open Questions](#open-questions) at the end for that and the rest of what is
 still unsettled. This document tracks the format as it stands rather than freezing it; what
-keeps a proposed change honest is that [integrity.md](integrity.md)'s checks and the tree under
+keeps a proposed change honest is that [integrity.md](integrity.md)'s checks and the pods under
 `example/Pods/` make its blast radius visible before it is made.
 
 ## Filename Convention
 
 **Scaffolding only.** At runtime there is no file and so no filename; nothing in a running Tellipod
 depends on any of this section. It governs the DataBooks in this repo, and it is what integrity.md's
-FS-5, YAML-5 and PNG-9 read.
+FS-5 and YAML-5 read.
 
-Pod-databook filenames follow (there is no separate category-databook file — a folder's sole
-DataBook is its pod-databook, see [Pod/Category split](CLAUDE.md#key-architectural-patterns)):
+Every pod is one folder directly under `example/Pods/`, and its DataBook sits inside that folder
+under the same name:
 
 ```
-<local>(<catType>).databook.md  — pod-databook
+example/Pods/<Name>/<Name>.databook.md
 ```
 
-`<local>` is an **exact copy of the folder's own name** — verbatim, no kebab-casing, no lowercasing,
-whatever case/spacing/punctuation the folder itself has (e.g. `Acme`, `Paula Walker`, `ATT`). There
-is no `-pod` token: pod-databook is the sole DataBook type in a user's instance tree, so nothing
-needs to be disambiguated by it. There is also no numeric disambiguator of any kind (no `-2`, `-N`,
-etc.): a folder holds **at most one** pod-databook, ever. (What marks a folder as a pod
-in this repo is its `_pod-attachments` folder, not this file; FS-5 requires the two markers to
-agree, so in practice a pod folder carries exactly one matching pod-databook and a folder with
-neither marker is simply a plain filesystem folder.) `<catType>` is the folder's own category classification,
-kebab-cased (e.g. `Employees` → `employees`, `ImmediateFamily` → `immediate-family`, `SSN` → `ssn` —
-kebab-casing is acronym-aware: a hyphen is inserted only at a lowercase→uppercase boundary or an
-uppercase-run→lowercase boundary, so consecutive capitals stay together). If the matched category
-concept's own local name carries a literal `(org)` disambiguator (used only to distinguish it from a
-same-named Person-side sibling concept, e.g. `podcat:BankingPayments` vs. `podcat:BankingPayments(org)`),
-that suffix is dropped before kebab-casing — `<catType>` only ever needs to disambiguate a
-*recurring folder name* by role (e.g. were the same person to appear both as a leaf under
-`Employees` and as one under `ImmediateFamily`, both Person-side), never the Person/Organization
-split itself, which is already carried by the folder's own tree position and by `pod:category`'s
-actual asserted value, never by the filename. So a bank pod whose `pod:category` is
-`podcat:BankingPayments` (Person-side, since it's the person's own relationship with the bank, not
-company business filed under `Work`) is named `<local>(banking-payments).databook.md` with no `-org`
-marker, and the same bare `banking-payments` `<catType>` would apply identically if a pod's
-`pod:category` were instead the org-side `podcat:BankingPayments(org)`, since nothing in the filename
-needs to tell the two apart.
+`<Name>` is the pod's own name, exactly as the DataBook's `title:` field gives it — verbatim, same
+case, spacing and punctuation (e.g. `Acme`, `Paula Walker`, `Ginger Care & Feeding`) — and the
+folder carries the same name. Nothing else goes into the filename: not the pod's category tags,
+not a role, and no numeric disambiguator. A folder holds **at most one** DataBook, and FS-5 requires
+it to agree with the folder's `_pod-attachments` marker, so a pod folder carries exactly one.
 
-A pod-databook's `<catType>` parenthetical is purely a filename-level disambiguator — `podcat:catType`
-does not exist in RDF at all, so nothing in RDF records it, and nothing reverse-matches the filename
-to derive it. The one RDF-level echo of a folder's classification is `pod:category`, read directly
-from the pod-databook's own explicit `tpod.category` field (see [The `tpod` Block](#the-tpod-block)), not
-derived from the filename at all. Unlike the filename, a pod-databook's `id:` is deliberately *not*
-derived from the folder name either — see [`id`](#id) below.
-
-**UserDefined folders — `<catType>` is the literal `custom`**: a pod may legally carry no
-`pod:category` at all — this is the UserDefined category, for a pod the user created without picking
-any existing category concept. What identifies such a pod is simply that it carries no `category`
-value; the filename literal below is this repo's way of making that visible on disk, not the test
-itself. Since there is no category concept to kebab-case into `<catType>`, the filename uses the
-fixed literal string `custom` in its place, e.g. a folder named `Friends` with no category is
-`Friends(custom).databook.md`. The two must always agree — no `tpod.category` iff a `(custom)`
-filename — which is what integrity.md's PNG-9 enforces in both directions. The compression rule below still applies verbatim on
-top of this (a folder literally named "Custom" would compress to `Custom.databook.md`, though no
-real example does this) — `custom` is just an ordinary `<catType>` value from the filename's point
-of view, it just happens to never come from kebab-casing a `skos:prefLabel`.
-
-**Compression rule**: if `<local>`, normalized the same acronym-aware way `<catType>` already is, is
-identical to the kebab-cased `<catType>`, the parenthetical is dropped entirely, since it's pure
-redundancy — `<local>.databook.md` — rather than `<local>(<local>).databook.md`. For example
-`podcat:Work`'s folder is named `Work`, and its own `catType` (`Work`) also kebab-cases to `work` — the
-same string — so its file is `Work.databook.md`, not `Work(work).databook.md`. This applies on a
-normalized-equal match, not raw string identity (since `<local>` itself is never kebab-cased):
-folder `Health & Wellness`'s catType `HealthWellness` both normalize to `health-wellness`, so it
-compresses too, to `Health & Wellness.databook.md`. `Acme(organization).databook.md` keeps its
-parenthetical since normalized `Acme` (`acme`) ≠ `organization`. Most of a tree's top-level scaffold
-compresses this way, since these folders' own name simply *is* their category.
-`Banking & Payments Firms(banking-payments).databook.md` is a further example of the
-non-compressing case: normalized `Banking & Payments Firms` (`banking-payments-firms`) ≠
-`banking-payments`, since the folder's own name matches `podcat:BankingPayments`'s full
-`skos:prefLabel` ("Banking & Payments Firms") rather than a shortened form.
-
-Folder naming is standardized as the category's own display label (the OS folder name is used
-verbatim, with no override field anywhere — the pod-databook's own `title:` field mirrors this name
-exactly rather than overriding it, see integrity.md's YAML-5), but a folder's own name alone can't
-disambiguate a repeated name's *role* — the same person can legitimately appear at two different
-tree positions, e.g. as a leaf under `Immediate Family` and again as a leaf under an employer's
-`Employees`, both folders literally named after them — so `catType` carries that role encoding in
-the filename instead, not derived from folder position. Such a pair never collides: one would be
-`<name>(immediate-family).databook.md` and the other `<name>(employees).databook.md` (an employee
-pod reuses the "Employees" scaffold's own category directly, the same "child folder reuses its
-parent's category" pattern a pet's own pod under `Pets` already uses — there is no separate
-narrower "Employee" category).
+Pod names need not be unique in the app, which resolves every reference to a pod by its id (see
+[Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
+Folders here must differ, though, so two example pods that would share a name are given
+distinguishing ones instead — `Ginger Medical` rather than a bare `Medical`, for instance. A pod's `id:` is deliberately *not* derived from its name — see [`id`](#id)
+below.
 
 ## Frontmatter
 
@@ -247,12 +184,10 @@ The pod's own id, and the RDF subject every triple synthesized from this DataBoo
 `helpers/databook_graphs.py` reads it directly as the subject IRI of the `pod:Pod` individual. It is
 the one frontmatter field with ontology weight, and the one field a DataBook cannot omit. It is
 deliberately *not* derived from the folder name or the filename (see
-[Filename Convention](#filename-convention)): encoding a name into it would risk a collision the
-moment two folders elsewhere in the tree shared both a name and a category, and nothing depends on
-the id's string structure.
+[Filename Convention](#filename-convention)): pod names need not be unique, so encoding one into it
+would risk a collision, and nothing depends on the id's string structure.
 
-A pod's id is globally unique across every user's independent tree, not merely within one person's
-own. It is flat and opaque, never derived from the pod's own name or category, and no registry or
+A pod's id is globally unique across every user's pods, not merely within one person's own. It is flat and opaque, never derived from the pod's own name or category, and no registry or
 central coordination assigns it — consistent with no pod, and nothing about it, ever being held by
 a cloud provider or third party (see [Pod Storage](app-behavior.md#pod-storage)), and with
 `:Self`'s purely-local identifier (see
@@ -285,9 +220,9 @@ to many different users' independent instances.
 
 ### `title`
 
-The pod's own name, and always exactly the name of the filesystem folder holding the DataBook —
-verbatim, same case, spacing and punctuation. Within this scaffolding the folder is authoritative:
-renaming the folder means updating `title:` to match, never the reverse, and `title:` is never an
+The pod's own name, and always exactly the name of the filesystem folder holding the DataBook, and
+of the DataBook file itself — verbatim, same case, spacing and punctuation. Within this scaffolding the folder is authoritative:
+renaming the folder means renaming the DataBook file and updating `title:` to match, never the reverse, and `title:` is never an
 independent display-name override (integrity.md's YAML-5, which also treats it as authoritative
 for what a pod "is called" when matching diagram box labels). At runtime the app's own record of
 the name is authoritative outright, there being no folder to mirror. It is shared, synced pod content, kept identical across every
@@ -297,7 +232,7 @@ the one exception, a bare two-member pod, whose name is instead independent per 
 
 ### `type`
 
-Always the literal `pod-databook` — the only DataBook type in this repo's instance tree, so no
+Always the literal `pod-databook` — the only DataBook type in this repo's example pods, so no
 `-pod` token is needed to tell one DataBook kind from another. It does not identify a pod: that is
 the `_pod-attachments` folder's job (see [Pod Contents](app-behavior.md#pod-contents)
 in app-behavior.md). It is also the tooling's file filter: both
@@ -309,8 +244,7 @@ raising. No integrity check asserts the value.
 
 A hand-maintained [semantic version](https://semver.org/) for this one DataBook's own content. No
 integrity check enforces it and the repo defines no bump rule, so it carries whatever meaning its
-author gave it; in the example tree the values run from `1.0.0` to `2.2.0`, always with a zero patch
-component. It is not synthesized into RDF. JSContact's `updated` property maps onto this field
+author gave it; in the example pods the values always carry a zero patch component. It is not synthesized into RDF. JSContact's `updated` property maps onto this field
 rather than onto any ontology property — see the JSContact mapping table under
 [Contact-Related Classes and Properties](README.md#contact-related-classes-and-properties) in
 README.md.
@@ -324,29 +258,28 @@ into RDF.
 ### `description`
 
 A prose summary of the pod, written as a folded block scalar (`description: >`). Not used by any
-tooling and not synthesized into RDF. Throughout the example tree it follows one house style: it
-opens `Pod DataBook for folder "<title>" (pod:category: podcat:<Concept>)`, optionally noting where
-the pod is nested or whose category it reuses, then characterizes the pod's own shape — how many
-members it has, and what its tool is about if it carries one.
+tooling and not synthesized into RDF. Throughout the example pods it follows one house style: it
+opens `Pod DataBook for folder "<title>"`, naming the pod's category tags, then characterizes the
+pod's own shape — how many members it has, and what its tool is about if it carries one.
 
 ## The `tpod` Block
 
-Below the six document fields sits a single `tpod:` mapping carrying the pod's own content. Its
-scalar-valued keys map one-for-one onto properties defined in `pod.ttl`:
+Below the six document fields sits a single `tpod:` mapping carrying the pod's own content and the
+member's own tags on it. Its non-graph keys map one-for-one onto properties defined in `pod.ttl`:
 
 | YAML field | Ontology property | Cardinality | Meaning |
 |------------|-------------------|-------------|---------|
-| `tpod.category` | `pod:category` | 0..1 | The category concept this pod was originally instantiated as — a `skos:Concept` individual in `podcat:PodCategoryScheme` (e.g. `"podcat:Others"`) or in a [category extension](README.md#category-extensions)'s own scheme (e.g. `"bhscat:BostonHubSociety"`); absent otherwise. Fixed at creation, not re-derived from the folder's current name. A hint for a recipient's app when this pod is shared with another member |
 | `tpod.creator` | `pod:creator` | 1 | Who created this pod's content — a `p:Person` |
 | `tpod.owner` | `pod:owner` | 1+ (required, no upper bound) | Which of the pod's members hold the owner role — always includes `tpod.creator`'s own value; a `p:Person`, never an `s:Service` |
-| `tpod.userTag` | `pod:userTag` | 0..N | A free-text tag the user minted (e.g. a pet's name, to gather every pod about that pet). Shared pod content |
+| `tpod.categoryTag` | `pod:categoryTag` | 0..N, always a list | A category concept the member has tagged this pod with — a `skos:Concept` individual in `podcat:PodCategoryScheme` (e.g. `"podcat:Others"`) or in a [category extension](README.md#category-extensions)'s own scheme (e.g. `"bhscat:BostonHubSociety"`). Most pods carry one; a pod may carry several, even unrelated ones; a pod with none is of the UserDefined (Custom) category. Only the tags the member chose are written — implied broader concepts never are. The member's own, never shared; offered as suggestions when the pod is shared (see [Joining a Pod](app-behavior.md#joining-a-pod)) |
+| `tpod.userTag` | `pod:userTag` | 0..N | A free-text tag the member minted (e.g. a pet's name, to gather every pod about that pet). The member's own private tag: never shared, never propagated, and never sent as a suggestion |
 | `tpod.serviceTag` | `pod:serviceTag` | 0..N | A tag written by this member's own service module for its own bookkeeping. Each entry is a mapping of three sub-keys — `namespace`, `key`, `value` (`pod:tagNamespace`/`pod:tagKey`/`pod:tagValue`), e.g. `namespace: "foundation.mee.applecontacts"`, `key: "group"`, `value: "Christmas List"` — not a single string. Never displayed and never findable by the user — reachable only by the writing module, within its own namespace — and **local to this member's copy** — the one piece of pod content that does not propagate on a share |
 
 Values are written as quoted CURIEs (`"podcat:Pets"`) or bare local names (`":Self"`); both are
 resolved to full IRIs by `helpers/databook_graphs.py`. **Any key whose cardinality allows more than
 one value may be written either as a YAML list or, when it holds a single value, as a bare scalar** —
 `owner: ":Self"` and a one-item list are equivalent, and the same latitude applies to `member`
-below.
+below. `categoryTag` is the exception: it is always written as a list, even with one value.
 
 There is no *pod-level* `tpod.subject` field — who or what a pod's content is about is derived from
 `tpod.member`/`tpod.tool` rather than asserted independently (see integrity.md's YAML-4); the
@@ -385,7 +318,7 @@ One entry per tool the pod carries; zero is the ordinary case. Always written as
 | Sub-key | Required | Value |
 |---------|----------|-------|
 | `id` | yes | The tool's full IRI — see [Tool Ids](#tool-ids) |
-| `type` | yes | Which tool class this is: `form`, `calendar`, `canvas`, `contacts`, `map` or `browser`, mapping to `pod:Form`/`pod:Calendar`/`pod:Canvas`/`pod:Contacts`/`pod:Map`/`pod:Browser`. Only `form` has a content model today. `form` and `browser` are the two that appear in the example tree, `browser` only in the PRIVO and Facenook pods |
+| `type` | yes | Which tool class this is: `form`, `calendar`, `canvas`, `contacts`, `map` or `browser`, mapping to `pod:Form`/`pod:Calendar`/`pod:Canvas`/`pod:Contacts`/`pod:Map`/`pod:Browser`. Only `form` has a content model today. `form` and `browser` are the two that appear in the example pods, `browser` only in the PRIVO and Facenook pods |
 | `formTopic` | yes on a form | What the tool's content is about (`pod:formTopic`) — any resource IRI, stated once by the tool rather than repeated on each graph beneath it |
 | `graph` | yes on a form | A list of that tool's own graph entries, at least one |
 
@@ -450,7 +383,7 @@ http://www.example.org/tpod/tools/tool-<NN>
 ```
 
 padded the way graph ids are — two digits up to `tool-99`, three from `tool-100` — and numbered in
-one sequence across the whole tree (integrity.md's YAML-10). As with a pod or graph id, an existing
+one sequence across all the example pods (integrity.md's YAML-10). As with a pod or graph id, an existing
 tool id is never renumbered.
 
 ### `:Self` and Locally-Minted IRIs
@@ -466,7 +399,7 @@ that arrives from a peer, where that peer was `:Self` in their own instance, is 
 so `:Self` still means the receiving user; the peer is assigned a locally-minted identifier of the
 receiver's own, which resolves to or is replaced by their PDN ID once a connection is established.
 
-This is why the example tree can be read as one user's instance throughout even though some of its
+This is why the example pods can be read as one user's instance throughout even though some of its
 graphs were authored by other people: `:Self` is Alice's everywhere in it, whoever wrote the claim.
 
 ### `claimant` Vocabulary
@@ -511,10 +444,10 @@ same `tpod.member`/`tpod.tool[].graph` entry), drawn from the worked example in
 
 | Id local-name | List | About (`subject`/`formTopic`) | Claimed by | Containing pod |
 |----------|------|---------|-------------|---------------------|
-| `graph-76` | `tool` | Self (Alice) | Citibank | Citibank(banking-payments) |
-| `graph-07` | `tool` | Sophia Walker | Self (Alice) | Sophia Walker(immediate-family) |
+| `graph-76` | `tool` | Self (Alice) | Citibank | Citibank |
+| `graph-07` | `tool` | Sophia Walker | Self (Alice) | Sophia Walker |
 | `graph-92` | `tool` | BHS | BHS | Boston Hub Society |
-| `graph-08` | `member` | Self (Alice) | Bob Johnson | Bob Johnson(others) |
+| `graph-08` | `member` | Self (Alice) | Bob Johnson | Bob Johnson |
 | `graph-03` | `member` | Bob Johnson | Bob Johnson | Boston Hub Society |
 | `graph-01` | `member` | BHS's service | BHS | Boston Hub Society |
 
@@ -559,7 +492,7 @@ named individual.
 
 The repeated type declarations look redundant and are not. A graph is the unit that gets extracted,
 validated, signed, and shared: one graph's Turtle pulled out on its own has to be complete RDF that
-validates against its shape without the rest of the tree present. Nothing else in the format
+validates against its shape without the rest of the example present. Nothing else in the format
 guarantees that, and a single borrowed declaration would break it silently — the graph would validate
 in a merged dataset and fail alone.
 
@@ -568,20 +501,22 @@ own type declaration. Every substantive fact lives in the graph it belongs to.
 
 ## Skeleton
 
-A complete, minimal pod DataBook — one member entry and one form tool with one graph:
+A complete, minimal pod DataBook — one member entry and one form tool with one graph — saved as
+`example/Pods/Pod Name/Pod Name.databook.md`:
 
 ````markdown
 ---
 id: http://www.example.org/tpod/pods/pod-NN
-title: "Folder Name"
+title: "Pod Name"
 type: pod-databook
 version: 1.0.0
 created: 2026-01-31
 description: >
-  Pod DataBook for folder "Folder Name" (pod:category: podcat:Concept). One-member pod with
-  one member entry about :Self and one tool graph about :Topic.
+  Pod DataBook for folder "Pod Name", tagged podcat:Concept. One-member pod with one member
+  entry about :Self and one tool graph about :Topic.
 tpod:
-  category: "podcat:Concept"
+  categoryTag:
+    - "podcat:Concept"
   creator: ":Self"
   owner: ":Self"
   userTag:
@@ -648,7 +583,7 @@ No single tool checks the whole format. It is enforced in three places:
   YAML-1 (`graph-<NN>` id pattern), YAML-2 (entry well-formedness: which sub-keys each kind of
   entry carries), YAML-3 (`pod-<NN>` id pattern), FS-5 (folder ↔ pod-databook structure),
   YAML-5 (`title:` matches the folder's OS name), TTL-3/TTL-4 (a `shape:` value against the
-  graph's own content, and against the pod's category's own template), YAML-9
+  graph's own content, and against the templates of the pod's category tags), YAML-9
   (`tpod.userTag`/`tpod.serviceTag` well-formedness), and YAML-10 (`tool-<NN>` id pattern and
   uniqueness).
 - **`helpers/validate.py`** — synthesizes `pod:` triples from the frontmatter and runs SHACL
@@ -656,7 +591,7 @@ No single tool checks the whole format. It is enforced in three places:
   entry's `shape:` value. See [Validation](example.md#validation) in example.md for the commands.
 - **`helpers/databook_graphs.py`** — the parser, and the de facto machine-readable spec for which
   keys are actually consumed. It reads exactly: top-level `id` and `type`;
-  `tpod.category`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.serviceTag[].{namespace,key,value}`;
+  `tpod.categoryTag`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.serviceTag[].{namespace,key,value}`;
   `tpod.member[].{id,claimant,subject,shape}`; and
   `tpod.tool[].{id,type,formTopic,graph[].{id,claimant,shape}}`. No other key is consumed anywhere; an
   unrecognized key is silently ignored.
@@ -713,7 +648,7 @@ block-link syntax of its own, so that an example note can exercise one; nothing 
 ### Where a non-form tool's content goes
 
 Only `pod:Form` has a data format today. Its content is graphs, and a graph is Turtle, which is why
-every one of the 101 fences across this repo's example tree is a ```` ```turtle ```` one.
+every fence across this repo's example pods is a ```` ```turtle ```` one.
 `pod:Calendar`, `pod:Canvas`, `pod:Contacts` and `pod:Map` are declared with no content model at all, so this document has
 nothing to say about what a calendar's entries or a canvas's drawing surface look like on disk.
 `pod:Browser` has none by design: the credentials it handles are pod attachments, not tool content.
@@ -728,7 +663,7 @@ drawing surface is plausibly not, which runs into the next question.
 
 A drawing surface, a scanned document, a map's cached tiles — some of what a tool holds will not be
 text. At runtime it is a blob in the app's own store like everything else, **referenced from the
-graph rather than encoded into it**. The example tree already works this way for the one binary-ish
+graph rather than encoded into it**. The example pods already work this way for the one binary-ish
 thing it carries: a passport photo and a driver's license photo, each an `xsd:anyURI` value on
 `p:hasPhoto` rather than image data. In this repo's scaffolding such a blob is a file in the pod's
 folder, so that git, a diff and the tooling all get to treat a PNG as a PNG.
@@ -751,7 +686,8 @@ stops applying is itself unset.
 
 What stays open is the reference rather than the storage. A graph is claim content that propagates
 between members on a share, so whatever it holds has to still resolve in a recipient's own copy of
-the pod — after the pod has been renamed, refiled, or received under a collision-suffixed name (see
+the pod — after the pod has been renamed, retagged, or received under a name the recipient's other
+pods already use (see
 [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
 An identifier scoped to the pod itself survives all three; anything anchored outside it does not. In
 this repo a path relative to the pod's own folder is the scaffolding form of exactly that.

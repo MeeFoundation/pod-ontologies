@@ -606,8 +606,8 @@ pod:FormGraph rdf:type owl:Class ;
 #    Pod Graph and Tool Links
 #
 #    pod:member has domain pod:InstancePod; pod:tool has the same
-#    domain. A pod not yet typed pod:InstancePod (no real content
-#    filed under it yet) carries neither; a pod:InstancePod with no
+#    domain. A pod:TemplatePod carries neither (it declares tools
+#    with pod:declaresTool instead); a pod:InstancePod with no
 #    tool is simply a pod with nothing structured to hold, which is
 #    the ordinary case and not a distinct kind of pod.
 #

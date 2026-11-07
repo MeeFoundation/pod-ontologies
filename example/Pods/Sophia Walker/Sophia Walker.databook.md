@@ -7,8 +7,7 @@ created: 2026-07-10
 description: >
   Pod DataBook for the "Sophia Walker" pod (category tag: podcat:ImmediateFamily; user tag: "Sophia"). It is a two-member pod — Alice (:Self) and her husband Dave — that also carries a form tool about :Sophia_Walker, Alice's daughter. Sophia has no instance of the app, so she is the pod's subject rather than one of its members: Alice added the tool manually and chose the Contact Info template (pshapes:ContactInfoShape) for it, even though podcat:ImmediateFamily's own template pod declares no tool.
 tpod:
-  categoryTag:
-    - "podcat:ImmediateFamily"
+  categoryTag: "podcat:ImmediateFamily"
   creator: ":Self"
   owner: ":Self"
   userTag:

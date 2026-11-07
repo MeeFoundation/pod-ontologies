@@ -158,7 +158,7 @@ example/Pods/<Name>/<Name>.databook.md
 
 `<Name>` is the pod's own name, exactly as the DataBook's `title:` field gives it — verbatim, same
 case, spacing and punctuation (e.g. `Acme`, `Paula Walker`, `Ginger Care & Feeding`) — and the
-folder carries the same name. Nothing else goes into the filename: not the pod's category tags,
+folder carries the same name. Nothing else goes into the filename: not the pod's category tag,
 not a role, and no numeric disambiguator. A folder holds **at most one** DataBook, and FS-5 requires
 it to agree with the folder's `_pod-attachments` marker, so a pod folder carries exactly one.
 
@@ -259,7 +259,7 @@ into RDF.
 
 A prose summary of the pod, written as a folded block scalar (`description: >`). Not used by any
 tooling and not synthesized into RDF. Throughout the example pods it follows one house style: it
-opens `Pod DataBook for folder "<title>"`, naming the pod's category tags, then characterizes the
+opens `Pod DataBook for folder "<title>"`, naming the pod's category tag, then characterizes the
 pod's own shape — how many members it has, and what its tool is about if it carries one.
 
 ## The `tpod` Block
@@ -271,7 +271,7 @@ member's own tags on it. Its non-graph keys map one-for-one onto properties defi
 |------------|-------------------|-------------|---------|
 | `tpod.creator` | `pod:creator` | 1 | Who created this pod's content — a `p:Person` |
 | `tpod.owner` | `pod:owner` | 1+ (required, no upper bound) | Which of the pod's members hold the owner role — always includes `tpod.creator`'s own value; a `p:Person`, never an `s:Service` |
-| `tpod.categoryTag` | `pod:categoryTag` | 0..N, always a list | A category concept the member has tagged this pod with — a `skos:Concept` individual in `podcat:PodCategoryScheme` (e.g. `"podcat:Others"`) or in a [category extension](README.md#category-extensions)'s own scheme (e.g. `"bhscat:BostonHubSociety"`). Most pods carry one; a pod may carry several, even unrelated ones; a pod with none is of the UserDefined (Custom) category. Only the tags the member chose are written — implied broader concepts never are. The member's own, never shared; offered as suggestions when the pod is shared (see [Joining a Pod](app-behavior.md#joining-a-pod)) |
+| `tpod.categoryTag` | `pod:categoryTag` | 0..1, a scalar | The category concept the member has tagged this pod with — a `skos:Concept` individual in `podcat:PodCategoryScheme` (e.g. `"podcat:Others"`) or in a [category extension](README.md#category-extensions)'s own scheme (e.g. `"bhscat:BostonHubSociety"`). At most one value: changing the tag replaces it, and a pod with none is of the UserDefined (Custom) category. Only the concept the member chose is written — implied broader concepts never are. The member's own, never shared; offered as a suggestion when the pod is shared (see [Joining a Pod](app-behavior.md#joining-a-pod)) |
 | `tpod.userTag` | `pod:userTag` | 0..N | A free-text tag the member minted (e.g. a pet's name, to gather every pod about that pet). The member's own private tag: never shared, never propagated, and never sent as a suggestion |
 | `tpod.serviceTag` | `pod:serviceTag` | 0..N | A tag written by this member's own service module for its own bookkeeping. Each entry is a mapping of three sub-keys — `namespace`, `key`, `value` (`pod:tagNamespace`/`pod:tagKey`/`pod:tagValue`), e.g. `namespace: "foundation.mee.applecontacts"`, `key: "group"`, `value: "Christmas List"` — not a single string. Never displayed and never findable by the user — reachable only by the writing module, within its own namespace — and **local to this member's copy** — the one piece of pod content that does not propagate on a share |
 
@@ -279,7 +279,8 @@ Values are written as quoted CURIEs (`"podcat:Pets"`) or bare local names (`":Se
 resolved to full IRIs by `helpers/databook_graphs.py`. **Any key whose cardinality allows more than
 one value may be written either as a YAML list or, when it holds a single value, as a bare scalar** —
 `owner: ":Self"` and a one-item list are equivalent, and the same latitude applies to `member`
-below. `categoryTag` is the exception: it is always written as a list, even with one value.
+below. `categoryTag`, which holds at most one value, is always written as a bare scalar
+(`categoryTag: "podcat:Pets"`).
 
 There is no *pod-level* `tpod.subject` field — who or what a pod's content is about is derived from
 `tpod.member`/`tpod.tool` rather than asserted independently (see integrity.md's YAML-4); the
@@ -515,8 +516,7 @@ description: >
   Pod DataBook for folder "Pod Name", tagged podcat:Concept. One-member pod with one member
   entry about :Self and one tool graph about :Topic.
 tpod:
-  categoryTag:
-    - "podcat:Concept"
+  categoryTag: "podcat:Concept"
   creator: ":Self"
   owner: ":Self"
   userTag:
@@ -583,7 +583,7 @@ No single tool checks the whole format. It is enforced in three places:
   YAML-1 (`graph-<NN>` id pattern), YAML-2 (entry well-formedness: which sub-keys each kind of
   entry carries), YAML-3 (`pod-<NN>` id pattern), FS-5 (folder ↔ pod-databook structure),
   YAML-5 (`title:` matches the folder's OS name), TTL-3/TTL-4 (a `shape:` value against the
-  graph's own content, and against the templates of the pod's category tags), YAML-9
+  graph's own content, and against the template of the pod's category tag), YAML-9
   (`tpod.userTag`/`tpod.serviceTag` well-formedness), and YAML-10 (`tool-<NN>` id pattern and
   uniqueness).
 - **`helpers/validate.py`** — synthesizes `pod:` triples from the frontmatter and runs SHACL

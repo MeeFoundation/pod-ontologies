@@ -14,8 +14,7 @@ description: >
   The pod carries no user tag: what makes it findable beyond its category tag is the loyaltyProgramID in its
   own tool graph, which a search for that property returns directly.
 tpod:
-  categoryTag:
-    - "podcat:TravelProvider"
+  categoryTag: "podcat:TravelProvider"
   creator: ":Self"
   owner: ":Self"
   member:

@@ -7,8 +7,7 @@ created: 2026-08-03
 description: >
   Pod DataBook for the "Fred Flintstone" pod (category tag: podcat:Others). It is a two-member pod with two members about :Fred_Flintstone and :Self.
 tpod:
-  categoryTag:
-    - "podcat:Others"
+  categoryTag: "podcat:Others"
   creator: ":Self"
   owner: ":Self"
   serviceTag:

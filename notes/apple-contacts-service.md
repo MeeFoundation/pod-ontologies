@@ -34,7 +34,7 @@ This display truncation limit is not publicly documented by Apple and likely var
 
 An Apple Contacts **group** is not one of the user's own category tags or user tags, not a topic, and not a member, so it does not map onto anything the user sees in the app at all. The module records it instead as a [hidden service tag](../README.md#tags) on the contact's own pod — `pod:serviceTag`, namespace `foundation.mee.applecontacts`, key `group`, value the group's name verbatim.
 
-**Import (Apple Contacts → the app):** for each group a contact belongs to, write one tag. A contact in three groups gets three tags sharing one namespace and one key, differing only in value — which is exactly what a namespace/key pair is allowed to repeat for. Which category tags the contact's pod carries is decided independently, by the ordinary Auto File suggestions; no pod is created, tagged, or retagged on account of a group.
+**Import (Apple Contacts → the app):** for each group a contact belongs to, write one tag. A contact in three groups gets three tags sharing one namespace and one key, differing only in value — which is exactly what a namespace/key pair is allowed to repeat for. Which category tag the contact's pod carries is decided independently, by the ordinary Auto File suggestion; no pod is created, tagged, or retagged on account of a group.
 
 **Export (the app → Apple Contacts):** read back every tag in this module's namespace with key `group` and re-create the contact's group membership from the values.
 

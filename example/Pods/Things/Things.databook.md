@@ -7,8 +7,7 @@ created: 2026-07-10
 description: >
   Pod DataBook for the "Things" pod (category tag: podcat:Things). It is a one-member pod with one member entry about :Self.
 tpod:
-  categoryTag:
-    - "podcat:Things"
+  categoryTag: "podcat:Things"
   creator: ":Self"
   owner: ":Self"
   member:

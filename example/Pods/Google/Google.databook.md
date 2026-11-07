@@ -10,8 +10,7 @@ description: >
   serviceaccounts:ServiceAccount and cco:ent00000033 (Online Service Account), carrying the service name,
   account username, and password for Alice's Google account.
 tpod:
-  categoryTag:
-    - "podcat:Companies"
+  categoryTag: "podcat:Companies"
   creator: ":Self"
   owner: ":Self"
   member:

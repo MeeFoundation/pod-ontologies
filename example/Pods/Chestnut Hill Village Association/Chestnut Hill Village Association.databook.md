@@ -12,8 +12,7 @@ description: >
   node of its own, so it joins the pod through no service:ServiceProvider of its own and Alice
   self-enters its profile: every one of this pod's graphs is claimed by one of its three human members.
 tpod:
-  categoryTag:
-    - "podcat:Groups"
+  categoryTag: "podcat:Groups"
   creator: ":Self"
   owner: ":Self"
   member:

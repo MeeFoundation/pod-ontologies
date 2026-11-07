@@ -13,8 +13,7 @@ description: >
   it provides; both that member graph and the tool graph are claimed by :Citibank itself, the
   party really making those claims.
 tpod:
-  categoryTag:
-    - "podcat:BankingPayments"
+  categoryTag: "podcat:BankingPayments"
   creator: ":Self"
   owner: ":Self"
   member:

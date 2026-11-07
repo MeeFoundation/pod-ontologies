@@ -7,8 +7,7 @@ created: 2026-07-10
 description: >
   Pod DataBook for the "Jane Starostina" pod (category tag: podcat:PrimaryCarePhysician; user tag: "Sophia"). It is a one-member pod with one member entry about :Self and one graph about :Jane_Starostina (the pod's subject).
 tpod:
-  categoryTag:
-    - "podcat:PrimaryCarePhysician"
+  categoryTag: "podcat:PrimaryCarePhysician"
   creator: ":Self"
   owner: ":Self"
   userTag:

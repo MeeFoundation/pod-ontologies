@@ -15,8 +15,7 @@ description: >
   (see the Medical Appointment pod's two "Med. Appt mt." squares in README.md's Representative
   Pods diagram).
 tpod:
-  categoryTag:
-    - "podcat:Trips"
+  categoryTag: "podcat:Trips"
   creator: ":Self"
   owner: ":Self"
   member:

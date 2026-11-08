@@ -229,6 +229,9 @@ the name is authoritative outright, there being no folder to mirror. It is share
 member's copy, and any member may rename the pod — see
 [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md for
 the one exception, a bare two-member pod, whose name is instead independent per member.
+`title:` is always present, because a pod always has a name: one its creator left unnamed carries
+the `Untitled-N` the app assigned it, so its folder here would be `example/Pods/Untitled-1/`, and
+YAML-5 applies to it unchanged.
 
 ### `type`
 

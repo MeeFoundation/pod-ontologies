@@ -76,7 +76,7 @@ Pods may include **Form** elements. These contain editable data structured accor
 
 The app contains two pre-defined, non-user-editable taxonomies of **categories**. One is focused on helping organize the information in a person's personal life (Family, Home, Pets, etc.), and the other on their work life (Customers, Employees, etc.). Every category has a *template pod*, which may contain some starter content (or may be empty) and/or may have a schema for the structured fields and values that a pod of this category might contain.
 
-A pod has a **name**. Sometimes this name is just a copy of the name of one of its categories, but usually the user gives the pod a name of their own choosing. A name need not be unique: a pod is always resolved by its stable id, never by its name.
+A pod has a **name**. Sometimes this name is just a copy of the name of one of its categories, but usually the user gives the pod a name of their own choosing. The user may also leave it unnamed, in which case the app assigns `Untitled-N`, the lowest number not already used among their own pods (see [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md). A name need not be unique: a pod is always resolved by its stable id, never by its name.
 
 A pod may carry one **category tag** — a `skos:Concept` individual in one of the app's pre-defined schemes that categorizes the pod's main topic (e.g. "Immediate Family", "Pets", "Things"). It carries at most one; changing it replaces it, and a pod with none is of the Custom (user-defined) category. Each category comes with a pre-defined template pod that supplies its starter content, and may include one or more pre-defined form types.
 

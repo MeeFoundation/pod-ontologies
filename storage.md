@@ -54,8 +54,8 @@ The model is unaffected. What changes is where it lives and how some of its rule
   [Tags](README.md#tags) in README.md).
 - **A pod's name.** The app's own record of the name is authoritative outright; there is no folder
   for it to mirror. The rules around it are unchanged — a name need not be unique, a pod being
-  resolved by its stable id, and some pods share a name across members while others keep one per
-  member (see
+  resolved by its stable id, a pod the user left unnamed being given `Untitled-N` by the app, and
+  some pods share a name across members while others keep one per member (see
   [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
 - **Attachments versus private files.** The distinction survives in full, as a rule about
   *propagation* rather than about directories: an attachment is content every member receives, and a

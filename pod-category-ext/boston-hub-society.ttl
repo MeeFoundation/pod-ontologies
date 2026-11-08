@@ -12,10 +12,10 @@
 @base <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society> .
 
 <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society/1.3.0> ;
-    dc:date "2026-11-07"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod-category-ext/boston-hub-society/1.3.1> ;
+    dc:date "2026-11-08"^^xsd:date ;
     owl:imports <http://mee.foundation/ontologies/pod> ;
-    owl:versionInfo "Version 1.3.0 - broadMatch now read for tag-search broadening and as a suggestion fallback, not tree filing"@en ;
+    owl:versionInfo "Version 1.3.1 - BostonHubSociety comment describes broadMatch as tag-search broadening"@en ;
     rdfs:label "Boston Hub Society Category Extension"@en ;
     rdfs:comment """The first **category extension** — a self-contained bundle an organization
                     publishes so that other instances of the app can find and validate pods of a
@@ -72,9 +72,9 @@ bhscat:BostonHubSociety rdf:type skos:Concept ;
     skos:inScheme bhscat:BostonHubSocietyScheme ;
     rdfs:comment """A person's membership of the Boston Hub Society — the society's own directory
                     entry for them, alongside the society's organizational profile. Narrower than
-                    podcat:Groups, the app's catch-all for clubs and societies, which is what an app
-                    with this extension uninstalled would file such a pod under; the skos:broadMatch
-                    above says exactly that."""@en .
+                    podcat:Groups, the app's catch-all for clubs and societies. A search for podcat:Groups
+                    finds a pod tagged with this concept, and an app without this extension installed
+                    treats the tag as podcat:Groups; the skos:broadMatch above says exactly that."""@en .
 
 
 #################################################################

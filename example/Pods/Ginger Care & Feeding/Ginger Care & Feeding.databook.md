@@ -2,7 +2,7 @@
 id: http://www.example.org/tpod/pods/pod-42
 title: "Ginger Care & Feeding"
 type: pod-databook
-version: 1.2.0
+version: 1.3.0
 created: 2026-08-29
 description: >
   Pod DataBook for the "Ginger Care & Feeding" pod (category tag: podcat:PetsCareAndFeeding; user tag: "Ginger"). It is a two-member pod, shared by Alice with Paula, with two members (about :Self and :Paula_Walker) and one graph about :Ginger, Alice's cat (the pod's subject) — the day-to-day instructions for looking after Ginger, alongside the Ginger Medical pod's record of her medical care.
@@ -28,6 +28,7 @@ tpod:
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-60"
           claimant: ":Self"
+          shape: "petshapes:PetsCareAndFeedingShape"
 ---
 
 ## Graphs
@@ -89,7 +90,7 @@ This pod was created by Alice and later shared with Paula, making the pod a two-
 
 #### Overview
 
-This graph captures Alice's day-to-day care and feeding instructions for her cat Ginger — what to feed her and when, and where she sleeps — so that Paula (or anyone else looking after Ginger) knows how to care for her. Alice is the claimant; Ginger is the pod's `subject` but, since she has no `p:Person` individual of her own, her graph is held by the pod's form tool rather than being one of the required `member` entries (graphs 58 and 59, above, fill those slots instead). No formal template governs this content (unlike the Ginger Medical pod's `pets:PetMedicationRecord`, or her own basic identifying claim in graph 37, governed by `pets:Pet`) — no `pod:TemplatePod` points its `pod:category` at `podcat:PetsCareAndFeeding` — so it is asserted directly as a plain comment.
+This graph captures Alice's day-to-day care and feeding instructions for her cat Ginger — what to feed her and when, and where she sleeps — so that Paula (or anyone else looking after Ginger) knows how to care for her. Alice is the claimant; Ginger is the pod's `subject` but, since she has no `p:Person` individual of her own, her graph is held by the pod's form tool rather than being one of the required `member` entries (graphs 58 and 59, above, fill those slots instead). The pod's form tool comes from `ctpl:PetsCareAndFeedingTemplatePod`, whose declared tool carries `pod:formShape petshapes:PetsCareAndFeedingShape`, so this graph records that shape. The shape targets `pets:Pet` with the same fields as `petshapes:PetShape`, every one optional: the graph identifies Ginger by name only, and carries the instructions themselves as a comment on her, since no pet property models them.
 
 #### Graph
 
@@ -100,8 +101,10 @@ This graph captures Alice's day-to-day care and feeding instructions for her cat
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pets: <http://mee.foundation/ontologies/pets#> .
 
-:Ginger_CareAndFeeding rdf:type owl:NamedIndividual ;
-    rdfs:label "Ginger's Care & Feeding Instructions"@en ;
+:Ginger rdf:type owl:NamedIndividual ,
+               pets:Pet ;
+    pets:name "Ginger" ;
     rdfs:comment "Fed twice daily, 7am and 6pm: half a cup of dry food (Purina Pro Plan) plus a spoonful of wet food. Fresh water bowl refilled daily. Sleeps in a cat bed in Alice's bedroom. Litter box is in the laundry room and is scooped daily."@en .
 ```

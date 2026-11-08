@@ -7,7 +7,10 @@ flowchart TD
 
     subgraph ctx["Graph"]
         direction LR
-        ctx_meta["claimant: :Self\ntoolTopic: :Ginger"]:::meta
+        ctx_meta["claimant: :Self\nformTopic: :Ginger\nshape: petshapes:PetsCareAndFeedingShape"]:::meta
     end
 
-    n0385002b28d9[":Ginger_CareAndFeeding"]
+    n43c9cc44a97c[":Ginger\n(Pet)"]
+    nda7dea760404("Ginger"):::lit
+
+    n43c9cc44a97c -->|"name"| nda7dea760404

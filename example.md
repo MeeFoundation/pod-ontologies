@@ -419,7 +419,7 @@ OK       example/Pods/Passport/Passport.databook.md [pod]
 OK       example/Pods/Passport/Passport.databook.md graph-81 [idocshapes:PassportShape]
 ...
 
-Pods: 30   Checked: 76   Skipped (no shape): 1   Violations: 0   Unresolved: 0
+Pods: 30   Checked: 77   Skipped (no shape): 0   Violations: 0   Unresolved: 0
 ```
 
 The script exits non-zero if any pod or checked graph reports a violation (or a `shape:` value's

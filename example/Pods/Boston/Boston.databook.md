@@ -2,14 +2,15 @@
 id: http://www.example.org/tpod/pods/pod-07
 title: "Boston"
 type: pod-databook
-version: 2.1.0
+version: 2.2.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Boston" pod (category tag: podcat:Home). It is a one-member pod with one
+  Pod DataBook for the "Boston" pod (category tag: podcat:Previous). It is a one-member pod with one
   member entry about :Self and one tool graph about :Self (the pod's subject), typed
-  residences:Residence, carrying Alice's previous Boston address.
+  residences:Residence, carrying Alice's previous Boston address. The tool dates from when the pod
+  was tagged podcat:Home; retagging it podcat:Previous after the move kept the tool.
 tpod:
-  categoryTag: "podcat:Home"
+  categoryTag: "podcat:Previous"
   creator: ":Self"
   owner: ":Self"
   member:

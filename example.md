@@ -10,7 +10,7 @@ This repo carries each pod as a folder directly under `example/Pods/`, holding i
 
 ### Tags and Views
 
-A search for a category tag matches pods tagged with that concept or with any concept narrower than it, transitively, along the taxonomy's `skos:broader` chains — and, for a category extension's concept, along its `skos:broadMatch` into the core scheme (see app-behavior.md's [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag)). Alice's views lean on that heavily. None of them is stored as RDF, and none is shared with anyone:
+Alice keeps seven persistent views. The four category-tag views lean on broader-concept matching (see app-behavior.md's [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag)), as the table's "via" notes show:
 
 | View | Query | Pods it gathers |
 |---|---|---|

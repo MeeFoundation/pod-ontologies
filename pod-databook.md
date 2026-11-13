@@ -27,7 +27,8 @@ in that folder. The layout is flat: every pod is one folder directly under `exam
   what keeps the scaffolding from drifting away from the pods it represents. At runtime nothing
   marks a pod, because there is no folder to mark.
 - **A pod's note is a file named after its folder** (`X.md` inside the folder `X`), the folder-note
-  convention PKM tools such as Obsidian use. The file is plain Markdown, a stand-in approximating
+  convention PKM tools such as Obsidian use. An empty note has no file: a pod whose note has no
+  content simply has no `X.md`. The file is plain Markdown, a stand-in approximating
   what the app's Markdown export of the note would write. At runtime the note is app-internal, held
   in the app's own format rather than as Markdown, and has no name of its own.
 - **A pod's attachments are the plain files inside its `_pod-attachments` folder, and the member's
@@ -77,7 +78,7 @@ that structurally impossible rather than merely forbidden.
 the metadata about the pod itself; a pod's unstructured content sits beside it:
 
 - **the note** — one Markdown file named after the folder (`X.md` inside the folder `X`), shown in
-  the app's Note area. Naming it after its folder is the folder-note convention PKM tools such as
+  the app's Note area, and absent when the note is empty. Naming it after its folder is the folder-note convention PKM tools such as
   Obsidian use, which is what lets this repo's example pods be browsed in one. It is Markdown because that
   is what the app's export of a note writes, not because the note is Markdown: a link to another
   pod is written in the export's `[[id|text]]` form, and a link to a block inside the pod has no
@@ -634,7 +635,7 @@ an append-only, mostly-read-at-the-tail stream with several propagation rules in
 A pod's note is a rich-text document held in the app's own internal format, not Markdown (see
 [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md). Like chat's storage format, that
 format is an app-internal question this document does not reach; what reaches it is the
-scaffolding's stand-in. The `X.md` file beside each DataBook is plain Markdown approximating the
+scaffolding's stand-in. The `X.md` file beside a DataBook is plain Markdown approximating the
 app's Markdown export, and that export is lossy in exactly one place that matters here: a **block
 link** — a link from the note to one of the pod's own tools, graphs or attachments — has no
 Markdown equivalent and exports as its display text. So the scaffolding has no way to write one, and

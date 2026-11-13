@@ -16,12 +16,12 @@
 @base <http://mee.foundation/ontologies/persona> .
 
 <http://mee.foundation/ontologies/persona> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/persona/4.26.0> ;
+    owl:versionIRI <http://mee.foundation/ontologies/persona/4.27.0> ;
     owl:imports <https://w3id.org/cco-domains/domains/PersonOntology> ;
     owl:imports <https://w3id.org/cco-domains/domains/AddressOntology> ;
     owl:imports <https://w3id.org/cco-domains/domains/StagingOntology> ;
-    dc:date "2026-09-19"^^xsd:date ;
-    owl:versionInfo "Version 4.26.0 - the app renamed to Tellipod, with the v4 token becoming tpod"@en ;
+    dc:date "2026-11-13"^^xsd:date ;
+    owl:versionInfo "Version 4.27.0 - documents the CCO kinship properties has mother, is mother of, has daughter and is daughter of as used"@en ;
     rdfs:label "Persona Ontology"@en ;
     rdfs:comment """Persona Ontology for the Tellipod App.
 
@@ -89,7 +89,11 @@
                             <https://w3id.org/cco-domains/cco/ent00000034> ,            # has service name
                             <https://w3id.org/cco-domains/cco/ent00000035> ,            # has user handle
                             <https://w3id.org/cco-domains/cco/ent00000036> ,            # has service URI
-                            <http://purl.obolibrary.org/obo/BFO_0000101> .  # is carrier of (PhysicalCard → Person)
+                            <http://purl.obolibrary.org/obo/BFO_0000101> ,  # is carrier of (PhysicalCard → Person)
+                            <https://w3id.org/cco-domains/cco/ont00001780> ,            # has mother
+                            <https://w3id.org/cco-domains/cco/ont00001786> ,            # is mother of
+                            <https://w3id.org/cco-domains/cco/ont00001987> ,            # has daughter
+                            <https://w3id.org/cco-domains/cco/ont00001858> .            # is daughter of
 
 
 #################################################################

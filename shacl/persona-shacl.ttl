@@ -13,8 +13,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/persona/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/persona/shapes/4.20.0> ;
-    dc:date "2026-10-16"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/persona/shapes/4.21.0> ;
+    dc:date "2026-11-13"^^xsd:date ;
     rdfs:label "Tellipod's SHACL Validation Shapes"@en ;
     rdfs:comment """SHACL validation shapes for Tellipod, a free, open-source application under development at The Mee Foundation.
 
@@ -63,6 +63,20 @@
         sh:class persona:Person ;
         sh:maxCount 1 ;
         sh:message "The object of 'has mother' must be a Person."@en
+    ] ;
+
+    # Optional: daughter relationship (0..many)
+    sh:property [
+        sh:path cco:ont00001987 ;  # has daughter
+        sh:class persona:Person ;
+        sh:message "The object of 'has daughter' must be a Person."@en
+    ] ;
+
+    # Optional: is daughter of (0..many)
+    sh:property [
+        sh:path cco:ont00001858 ;  # is daughter of
+        sh:class persona:Person ;
+        sh:message "The object of 'is daughter of' must be a Person."@en
     ] ;
 
     # Optional: SSN (0..1); validity enforced by :SSNShape

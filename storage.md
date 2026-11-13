@@ -3,22 +3,21 @@
 Tellipod persists **no data in the user's filesystem**. Every pod and everything in it lives in a
 protected, app-managed store, encrypted at rest.
 
-This document is the canonical statement of that decision and of what follows from it — in
+This document is the canonical statement of where pod content lives and of what follows from it — in
 particular, which parts of this repository are real Tellipod and which are development scaffolding. It is
 linked from [README.md](README.md), [app-behavior.md](app-behavior.md),
 [pod-databook.md](pod-databook.md) and [CLAUDE.md](CLAUDE.md), which describe the model itself and
 point here rather than restating any of this.
 
-## The decision
+## Where pod content lives
 
 A pod's entire content is app-internal: its members, tools, graphs, tags, name and id,
 together with its note, its attachments, its chat, and a member's own private files. None of it is
 written to the filesystem, in any form, at any point. There is no folder representing a pod, no
 file representing its note, and no directory holding its attachments.
 
-The store sits alongside the pod's membership store — the append-only event log whose first entry
-is the pod's founding event (see [Pod Id](pod-databook.md#id) in pod-databook.md) — rather
-than parallel to it. As before, no pod is ever stored by any cloud provider, or any third party of
+The store sits alongside the pod's membership store, the append-only event log whose first entry
+is the pod's founding event (see [Pod Id](pod-databook.md#id) in pod-databook.md). No pod is ever stored by any cloud provider, or any third party of
 any kind, including The Mee Foundation; it is held on the user's own device(s), or, for an
 organization's own `s:ServiceProvider`, on Personal Data Network (PDN) nodes hosted by that
 organization.
@@ -32,16 +31,14 @@ bugs](https://danluu.com/file-consistency/) collects the evidence. A single stor
 end to end is the tractable version of the problem.
 
 **Security, which is the product's whole point.** Tellipod exists so that two people can share information
-directly, end-to-end encrypted, with no corporate intermediary in the middle. Data transmission was
-already built to that standard. Leaving the same content sitting as plaintext files in the user's
+directly, end-to-end encrypted, with no corporate intermediary in the middle. Data transmission is
+built to that standard. Leaving the same content sitting as plaintext files in the user's
 filesystem — where any other process, sync client, backup agent or indexer on the machine can read
 it — undercuts exactly the guarantee the transport layer provides. The risk is not acceptable for
 notes, and it is not acceptable for attachments either. Encryption at rest is therefore a property
 of *all* Tellipod data, with no carve-out for the unstructured parts.
 
-## What this changes, and what it does not
-
-The model is unaffected. What changes is where it lives and how some of its rules are justified.
+## What follows from it
 
 - **What a pod is.** A pod is a unit the app manages, identified by its own stable id. Nothing
   marks it in a filesystem, because it is not in one. The reserved `_pod-attachments` folder that
@@ -51,25 +48,19 @@ The model is unaffected. What changes is where it lives and how some of its rule
   two members of a shared pod each classify it however they like without touching what the other
   sees; a sender's category tags cross a share only as suggestions the recipient may adopt (see
   [Tags](README.md#tags) in README.md).
-- **A pod's name.** The app's own record of the name is authoritative outright; there is no folder
-  for it to mirror. The rules around it are unchanged — a name need not be unique, a pod being
-  resolved by its stable id, a pod the user left unnamed being given `Untitled-N` by the app, and
-  some pods share a name across members while others keep one per member (see
+- **A pod's name.** The app's own record of the name is authoritative. A name need not be unique,
+  since a pod is resolved by its stable id; a pod the user left unnamed is given `Untitled-N` by the
+  app; and some pods share a name across members while others keep one per member (see
   [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
-- **Attachments versus private files.** The distinction survives in full, as a rule about
-  *propagation* rather than about directories: an attachment is content every member receives, and a
-  private file stays in one member's copy and reaches no one else. What changes is only that the two
-  are told apart by how the member added them in the app, not by which directory they sit in.
-- **The note.** Still exactly one per pod, still supporting links to other pods that resolve by
-  target pod id, and now also links to the pod's own tools, graphs and attachments. It is a
-  rich-text document with Markdown-like formatting, held in the app's own internal format — one
-  suited to those links and to merging concurrent edits by several members — rather than as
-  Markdown, and it is no longer a file, so the folder-note convention that once tied it to a
-  filename is gone. A member can export it as a Markdown file.
-- **PKM vault interoperability is retired.** Running Tellipod's storage as, or alongside, an Obsidian-style
-  vault was a consequence of keeping notes and attachments as ordinary files in ordinary folders.
-  With the files gone, so is the property. Wikilink-style linking remains, for its own reasons, and
-  the note's Markdown export is what is left of the bridge to PKM tools.
+- **Attachments versus private files.** The distinction is a rule about *propagation*: an
+  attachment is content every member receives, and a private file stays in one member's copy and
+  reaches no one else. The two are told apart by how the member added them in the app.
+- **The note.** Exactly one per pod. It supports links to other pods, resolved by target pod id,
+  and to the pod's own tools, graphs and attachments. It is a rich-text document with Markdown-like
+  formatting, held in the app's own internal format — one suited to those links and to merging
+  concurrent edits by several members. A member can export it as a Markdown file.
+- **PKM tools.** Tellipod's store is not a PKM vault, and no Obsidian-style tool reads it directly.
+  The note's wikilink-style links and its Markdown export are the bridge to such tools.
 
 ## What is real Tellipod, and what is scaffolding
 

@@ -2,10 +2,10 @@
 id: http://www.example.org/tpod/pods/pod-19
 title: "Paula Walker"
 type: pod-databook
-version: 1.5.0
+version: 1.6.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Paula Walker" pod (category tags: podcat:Employees, podcat:ImmediateFamily; user tag: "Acme"). Paula is both Alice's Acme colleague and her mother, so Alice gives the pod two category tags — the example's multi-tag case. Since podcat:Employees reaches the podcat:Organization top concept and podcat:ImmediateFamily reaches podcat:Person, a search for either podcat:Person or podcat:Organization finds the pod, and its type is Mixed. It is a two-member pod with member entries about :Self and :Paula_Walker.
+  Pod DataBook for the "Paula Walker" pod (category tags: podcat:Employees, podcat:ImmediateFamily; user tag: "Acme"). Paula is both Alice's Acme colleague and her mother, so Alice gives the pod two category tags — the example's multi-tag case. Since podcat:Employees reaches the podcat:Organization top concept and podcat:ImmediateFamily reaches podcat:Person, a search for either podcat:Person or podcat:Organization finds the pod, and its type is Mixed. Alice has not shared the pod with Paula, so it is a single-member pod: its one member entry is about :Self, and Alice's record of Paula is held by a form tool she added by hand, whose topic is :Paula_Walker.
 tpod:
   categoryTag:
     - "podcat:Employees"
@@ -15,14 +15,18 @@ tpod:
   userTag:
     - "Acme"
   member:
-    - id: "http://www.example.org/tpod/graphs/graph-20"
-      claimant: ":Self"
-      subject: ":Self"
-      shape: "pshapes:ContactInfoShape"
-    - id: "http://www.example.org/tpod/graphs/graph-06"
-      claimant: ":Self"
-      subject: ":Paula_Walker"
-      shape: "pshapes:ContactInfoShape"
+    id: "http://www.example.org/tpod/graphs/graph-20"
+    claimant: ":Self"
+    subject: ":Self"
+    shape: "pshapes:ContactInfoShape"
+  tool:
+    - id: "http://www.example.org/tpod/tools/tool-36"
+      type: "form"
+      formTopic: ":Paula_Walker"
+      graph:
+        - id: "http://www.example.org/tpod/graphs/graph-06"
+          claimant: ":Self"
+          shape: "pshapes:ContactInfoShape"
 ---
 
 ## Graphs
@@ -32,7 +36,7 @@ tpod:
 
 #### Overview
 
-This graph captures Alice's record of Paula Walker, her Acme colleague and her mother — one of the pod's two required `member` entries, satisfying `ContactInfoShape`'s required GivenName alongside her existing `rdfs:label` (neither of this pod's category tags has a template that declares a tool, so its content belongs in the member graph). Alice is the claimant.
+This graph captures Alice's record of Paula Walker, her Acme colleague and her mother. Alice has not shared the pod with Paula, so Paula is not one of its members: Alice added this graph in a form tool she added herself, choosing the Contact Info template (`pshapes:ContactInfoShape`), since neither of this pod's category tags has a template that declares a tool. Paula is therefore the pod's derived subject rather than a member. The graph satisfies `ContactInfoShape`'s required GivenName alongside her existing `rdfs:label`. Alice is the claimant.
 
 #### Graph
 

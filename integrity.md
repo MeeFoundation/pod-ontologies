@@ -12,7 +12,7 @@ Checks are grouped by **what the check reads**, and numbered from 1 within each 
 
 | Kind | Reads | Count |
 |---|---|---|
-| **PNG-n** | a diagram image — its pixels, or the drawing compared by eye against the data | 11 (+8 sub-checks, 2 of them retired) |
+| **PNG-n** | a diagram image — its pixels, or the drawing compared by eye against the data | 11 (+9 sub-checks, 2 of them retired) |
 | **TTL-n** | a `.ttl` file, asking about triples; parses with `rdflib` | 8 |
 | **YAML-n** | a pod DataBook's YAML frontmatter and Markdown body, as written | 10 |
 | **FS-n** | the filesystem, and the documentation prose that refers to it | 6 |
@@ -21,7 +21,7 @@ A check that reads two kinds is filed under its **primary** input — the one th
 
 ## Running the checks
 
-Run them **kind by kind**, announcing the kind and then working through its checks in order: PNG-1, PNG-2, … then TTL-1, TTL-2, … and so on. Reporting follows the same shape, so a result reads `TTL-3 PASS` and a failure is located by its kind before its number. Within PNG-1, the sub-checks run in letter order (PNG-1a … PNG-1h).
+Run them **kind by kind**, announcing the kind and then working through its checks in order: PNG-1, PNG-2, … then TTL-1, TTL-2, … and so on. Reporting follows the same shape, so a result reads `TTL-3 PASS` and a failure is located by its kind before its number. Within PNG-1, the sub-checks run in letter order (PNG-1a … PNG-1i).
 
 Not every check is automatable. Every PNG check except PNG-10 and PNG-11 is visual — the script under it prints the correct values for cross-reference rather than comparing the image — as are PNG-2's diagram direction and a few others that say so in their own text. Run the scripts; read the rest.
 
@@ -631,8 +631,9 @@ If a violation is found, rename the offending file's `owl:Ontology`/`id:` IRI to
 **TTL-3 — `pod:shape`'s declared shape must resolve to an `rdf:type` actually asserted in the graph's own embedded Turtle body**: `pod:shape` (`pod.ttl`) is a real `owl:AnnotationProperty` (domain `pod:Graph`, range `sh:NodeShape`, cardinality 0..N), synthesized into RDF from each `tpod.member[]`/`tpod.tool[].graph[].shape` YAML value by `helpers/yaml-to-rdf.py`. But SHACL validation of a templated graph never actually reads this synthesized triple — each per-template shape (e.g. `:PassportShape`) fires purely via its own `sh:targetClass`, matching whatever `rdf:type` is asserted directly in the graph's body (e.g. `:Alice_US_Passport rdf:type identitydocuments:Passport`), completely independent of `shape:`. So nothing else cross-checks that a graph's declared `shape:` shape's own `sh:targetClass` actually names a class asserted on an individual in its own body — a typo'd or stale `shape:` value would go undetected, silently decoupled from what SHACL is actually validating. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8 — it requires dereferencing the graph's own embedded Turtle content, not just its YAML frontmatter), so it's checked here instead. For every pod-databook under `example/Pods/` (excluding `under-development/`) with a `tpod.member[]`/`tpod.tool[].graph[].shape` value, resolve that shape CURIE to its own `sh:targetClass` (scanning `shacl/persona-shacl.ttl`/`shacl/contactinfo-shacl.ttl` and every `other/shacl/`, `persona-ext/shacl/`, and `pod-category-ext/shacl/` shapes file for the matching shape — the recursive `**/shacl/*.ttl` glob TTL-2 already describes, and the same scan TTL-4 runs), then verify that same graph's own embedded Turtle body asserts `rdf:type` (directly, on some individual) to that resolved class. **Exempt**: `pshapes:ContactInfoShape` and `bhsshapes:MemberShape` — per `helpers/validate.py`'s own module docstring, these are the broad, class-wide shapes (`sh:targetClass persona:Person`) that `helpers/validate.py` re-targets, at actual validation time, at only the *substantive* `persona:Person` individual(s) present in a graph, precisely because it's legitimate for a `pod:member`-list graph (required to carry this shape unconditionally, per TTL-7) to contain none at all — e.g. graph-01 (`Boston Hub Society.databook.md`, whose member shape is `bhsshapes:MemberShape` rather than `ContactInfoShape` — the exemption covers both for exactly the same reason) is the society's own member stub, typing `:BHS_Service` as `service:ServiceProvider` and `:BHS` as `o:Organization`, never `persona:Person`; graph-27 (`Citibank.databook.md`) is the bank's own member stub, carrying its name, website, and institutional self-description, typing `:Citibank_Service`/`:Citibank` the same way; and graph-96 (`Arca.databook.md`) is a backup service's own member stub, typing `:Arca_Backup` as `service:ArcaBackup` and `:Arca` as `o:Organization` — both correctly, vacuously satisfy `ContactInfoShape` in real SHACL validation with zero `persona:Person` individuals present. Every other shape (e.g. `idocshapes:PassportShape`, `bankingshapes:DebitCardShape`) targets a narrow, specific document/account class that a declaring graph always does instantiate for real (e.g. the real Citibank debit-card graph asserts `rdf:type cco:ent00000051` directly, alongside `banking:DebitCard`), so no other exemption is needed. Run:
 
 ```python
-import yaml, glob
+import yaml, glob, sys
 import rdflib
+sys.path.insert(0, 'helpers')
 from databook_graphs import as_list, split_frontmatter, extract_graph_block
 
 SH = rdflib.Namespace('http://www.w3.org/ns/shacl#')

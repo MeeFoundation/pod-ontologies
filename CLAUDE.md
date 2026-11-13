@@ -61,7 +61,7 @@ Every graph below is an embedded section (a `tpod.member`/`tpod.tool[].graph` en
 
 | Graph — File | Purpose |
 |------|---------|
-| Graph 06 — `example/Pods/Paula Walker/Paula Walker.databook.md` | Paula Walker as Alice's Acme colleague — claimed by Alice |
+| Graph 06 — `example/Pods/Paula Walker/Paula Walker.databook.md` | Paula Walker as Alice's Acme colleague and her mother — claimed by Alice |
 | Graph 07 — `example/Pods/Sophia Walker/Sophia Walker.databook.md` | Sophia Walker as Alice's daughter — claimed by Alice; the pod's manually-added tool graph |
 | Graph 05 — `example/Pods/Sophia Walker/Sophia Walker.databook.md` | Dave's own self-claimed family persona — the pod's second `member` entry |
 | Graph 08 — `example/Pods/Bob Johnson/Bob Johnson.databook.md` | Alice Walker as seen by Bob Johnson — claimed by Bob |

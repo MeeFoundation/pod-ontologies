@@ -32,7 +32,7 @@ tpod:
 
 #### Overview
 
-This graph captures Alice's record of her colleague Paula Walker in their shared Acme employment graph — one of the pod's two required `member` entries, satisfying `ContactInfoShape`'s required GivenName alongside her existing `rdfs:label` (neither of this pod's category tags has a template that declares a tool, so its content belongs in the member graph). Alice is the claimant.
+This graph captures Alice's record of Paula Walker, her Acme colleague and her mother — one of the pod's two required `member` entries, satisfying `ContactInfoShape`'s required GivenName alongside her existing `rdfs:label` (neither of this pod's category tags has a template that declares a tool, so its content belongs in the member graph). Alice is the claimant.
 
 #### Graph
 
@@ -46,6 +46,9 @@ This graph captures Alice's record of her colleague Paula Walker in their shared
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+:Self rdf:type owl:NamedIndividual ,
+               persona:Person .
+
 :Paula_Walker rdf:type owl:NamedIndividual ,
                persona:Person ;
     rdfs:label "Paula Walker (Acme)"@en ;
@@ -53,7 +56,9 @@ This graph captures Alice's record of her colleague Paula Walker in their shared
     <https://w3id.org/cco-domains/cco/ont00001879> [  # designated by → GivenName (ContactInfoShape)
         rdf:type cco:ent00000002 ;
         <https://w3id.org/cco-domains/cco/ont00001765> "Paula"
-    ] .
+    ] ;
+
+    cco:ont00001786 :Self .  # is mother of
 ```
 
 <a id="graph-20"></a>

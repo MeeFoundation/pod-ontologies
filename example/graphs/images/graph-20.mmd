@@ -10,15 +10,15 @@ flowchart TD
         ctx_meta["claimant: :Self\nsubject: :Self\nshape: pshapes:ContactInfoShape"]:::meta
     end
 
-    n614c8153a57c[":Alice_Acme_Network\n(SocialNetwork)"]
-    n679aafec7a4b[":Paula_Walker\n(Person)"]:::person
-    n655e442e50be[":Self\n(Person)"]:::person
-    na9ae5ba16e65("Alice"):::lit
-    n1e6650b263cf("Alice Walker"):::lit
-    n51945ec79ee9("alice@acme.com"):::lit
+    nec933683354f[":Alice_Acme_Network\n(SocialNetwork)"]
+    n0a19bd2dbd74[":Paula_Walker\n(Person)"]:::person
+    n61a8e87382f0[":Self\n(Person)"]:::person
+    na2812d23cf41("Alice"):::lit
+    nbc3265ff0e00("Alice Walker"):::lit
+    n3a4815f5b3c5("alice@acme.com"):::lit
 
-    n614c8153a57c -->|"hasMemberPart"| n679aafec7a4b
-    n655e442e50be -->|"GivenName"| na9ae5ba16e65
-    n655e442e50be -->|"AlternateName"| n1e6650b263cf
-    n655e442e50be -->|"EmailAddress"| n51945ec79ee9
-    n655e442e50be -->|"hasSocialNetwork"| n614c8153a57c
+    nec933683354f -->|"hasMemberPart"| n0a19bd2dbd74
+    n61a8e87382f0 -->|"GivenName"| na2812d23cf41
+    n61a8e87382f0 -->|"AlternateName"| nbc3265ff0e00
+    n61a8e87382f0 -->|"EmailAddress"| n3a4815f5b3c5
+    n61a8e87382f0 -->|"hasSocialNetwork"| nec933683354f

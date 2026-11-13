@@ -10,7 +10,9 @@ flowchart TD
         ctx_meta["claimant: :Self\nsubject: :Paula_Walker\nshape: pshapes:ContactInfoShape"]:::meta
     end
 
-    n679aafec7a4b[":Paula_Walker\n(Person)"]:::person
-    n7d35a369676f("Paula"):::lit
+    n0a19bd2dbd74[":Paula_Walker\n(Person)"]:::person
+    ne0affd573d44("Paula"):::lit
+    n61a8e87382f0[":Self\n(Person)"]:::person
 
-    n679aafec7a4b -->|"GivenName"| n7d35a369676f
+    n0a19bd2dbd74 -->|"GivenName"| ne0affd573d44
+    n0a19bd2dbd74 -->|"isMotherOf"| n61a8e87382f0

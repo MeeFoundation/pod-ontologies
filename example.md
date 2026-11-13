@@ -4,7 +4,7 @@ This file continues [README.md](README.md), which describes the Category, Pod, G
 
 ## How Alice uses Tellipod
 
-Alice has been using the app for some time and has created a number of pods and been invited into others — thirty in all. She gathers them with category tags, user tags of her own, and persistent views (see README's [Tags](README.md#tags) and app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)). Every one of her pods carries at least one category tag, and one of them carries two.
+Alice has been using the app for some time and has created a number of pods and been invited into others — thirty in all. The Tellipod UI lets her find any of them by category tag, user tag or pod name, and open it to see its contents. Depending on her role in a pod, she may be able to edit its contents — including inserting links to other pods — and delete it for every member (see app-behavior.md's [Permissions](app-behavior.md#permissions)). She can also create new pods of her own, and keep the searches she returns to as persistent views (see README's [Tags](README.md#tags) and app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)). Every one of her pods carries at least one category tag, and one of them carries two.
 
 This repo carries each pod as a folder directly under `example/Pods/`, holding its pod DataBook at `example/Pods/<Name>/<Name>.databook.md` and a `_pod-attachments` folder — all of which is [development scaffolding](pod-databook.md#development-scaffolding) rather than anything a running Tellipod produces (see [storage.md](storage.md)). Every mention of "Self" in the following is a reference to the user, Alice.
 

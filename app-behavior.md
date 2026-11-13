@@ -256,6 +256,10 @@ It could then ask follow-up questions: "Do you know the name of the bank that is
 The app uses entity recognition to turn a message in the pod's chat into a form tool in the same pod. Suppose a neighbor in a neighborhood pod asks whether anyone knows a good plumber, and Alice replies with the name and contact information of one she likes to use. Tidy turns her reply into a form holding the plumber's name, phone number and email, parsed into fields and values. A [personal agent](#personal-agent) can go further, creating a new pod about Alice's relationship with the plumber (see [Use Cases](#use-cases)).
 
 
+### Finding Pods by Name
+
+The user can also search their pods by **name**. Typing part of a name returns every one of their pods whose name contains it, as the same flat list of id-linked results a tag search returns (see [Finding Pods by Tag](#finding-pods-by-tag) below). A pod's name is shared content, the same for every member (see [Naming, Renaming, and Sharing](#naming-renaming-and-sharing) above), so a name search on a shared pod finds it by the name every member sees. Names are not unique, so a search can return several pods of the same name; each result still opens the one pod it links to.
+
 ### Finding Pods by Tag
 
 The three kinds of tag a pod can carry, and what each is for, are described in [Tags](README.md#tags) in README.md. Tags are how a user gathers and finds their pods. The user can search their pods for a tag: the result is a flat list of links to pods — not the pods' contents — from which tapping an entry opens that pod. Searching the user tag **Ginger** returns links to all three of Alice's cat's pods at once.

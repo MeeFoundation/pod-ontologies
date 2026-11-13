@@ -151,17 +151,13 @@ A pod has **exactly one note** (see [Pod Contents](#pod-contents) above and [Not
 | Capability | Owner | Member | Service | 
 |---|---|---|---|
 | Read the note | yes | yes | yes | 
-| Create the note | yes | yes | yes | 
-| Create the note as if authored by another member | no | no | no | 
 | Edit the note | yes | yes | yes | 
-| Delete the note | yes | yes | yes | 
+| Clear the note | yes | yes | yes | 
 | Export the note as Markdown | yes | yes | yes | 
 
 - **Read the note** — retrieve the note's current content.
-- **Create the note** — bring the pod's note into existence, where it does not exist yet.
-- **Create the note as if authored by another member** — attribute a newly-created note to a member other than oneself. No role may do this.
 - **Edit the note** — change the note's content, with no review step. Members may edit at the same time: their concurrent changes merge into the one note rather than one overwriting another, which is what the note's internal format is for (see [Pod Contents](#pod-contents) above). Since a pod has one note that every member may write, there is no distinction between editing one's own text and editing another member's; Vladimir and Sergey's own two edit rows collapse into this one for the same reason.
-- **Delete the note** — remove the pod's note. Available to every member, since a member who may edit the note may in any case blank it.
+- **Clear the note** — remove the note's content, leaving it empty. Available to every member, since a member who may edit the note may in any case blank it.
 - **Export the note as Markdown** — save a Markdown rendering of the note outside the app. Available to every member, since a member who may read the note may in any case copy it. The export is lossy where Markdown has no equivalent: a block link becomes its display text.
 
 #### Tool & Member Info Permissions

@@ -18,8 +18,7 @@ app ships, all of that has to move to whatever the app exposes instead.
 
 The scaffolding is not only the file. The folder around it is scaffolding too, and so is everything
 in that folder. The layout is flat: every pod is one folder directly under `example/Pods/`,
-`example/Pods/<Name>/`, and no pod's folder ever sits inside another's, matching a model in which
-pods do not nest.
+`example/Pods/<Name>/`, matching the flat set of pods the app holds.
 
 - **A folder stands for a pod, and the reserved `_pod-attachments` folder directly inside it is
   what marks the folder as one.** This gives the repo a pod/not-a-pod test decidable from a single
@@ -37,8 +36,7 @@ pods do not nest.
   directory it sits in.
 - **The [Filename Convention](#filename-convention) below is scaffolding-only.** At runtime there is
   no file, so there is no filename, and nothing depends on one.
-- **Nothing records a pod's position, because a pod has none.** Pods do not nest, here or at
-  runtime: a user's pods are a flat set, gathered by their tags rather than by where they sit (see
+- **A user's pods are a flat set, here and at runtime,** gathered by their tags (see
   [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag) in app-behavior.md).
 
 Everything below therefore describes the repo's filesystem, not a user's. Where this repo's layout
@@ -68,10 +66,9 @@ One pod DataBook carries three things:
 A graph has no file of its own: it lives inside the pod DataBook that links it, as one
 `tpod.member`/`tpod.tool[].graph` entry plus one body section.
 
-**Nothing in the file records where the pod sits, because a pod sits nowhere.** Pods do not nest,
-so there is no position field and no parent link, and there is no back-pointer from a graph to the
-pod that links it either — a pod asserts `tpod.member` and `tpod.tool`, and that is the only
-direction the link runs. A graph's containing pod is simply wherever its entry physically lives.
+**A graph's containing pod is wherever its entry physically lives.** There is no back-pointer
+from a graph to the pod that links it — a pod asserts `tpod.member` and `tpod.tool`, and that is
+the only direction the link runs.
 Two pods can never share a folder here: a file sitting in it would be ambiguously part of both, and
 the marker being a folder of one fixed reserved name, of which a directory can hold only one, makes
 that structurally impossible rather than merely forbidden.

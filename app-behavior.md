@@ -344,7 +344,9 @@ A member may invite a service — a backup service or an organization's own serv
 
 #### Inviting Backup Services
 
-{to be written}
+A member backs a pod up by inviting a backup service into it as a member. The invitation is the whole of the setup: once the service has joined, it receives everything in the pod that the inviting member can reach — the note, the attachments, the claims behind every `pod:member` entry and every tool, and the inviting member's own private files in the pod. The private files are included because a backup service is an agent service acting for the member who invited it (its `s:actsFor` value), and an agent service's access is its principal's access; it never sees another member's private files.
+
+Coverage is per pod and opt-in, not account-wide. A pod is backed up exactly when a backup service is one of its members, and a member who wants several pods backed up invites the service into each. Whether a pod is backed up is therefore a fact the pod carries in its own member list rather than a setting held somewhere outside the pods, and it travels with the pod. That is why a backup service is modeled as a member at all, rather than as an external service the app merely talks to: membership is what scopes it.
 
 #### Inviting Service Providers
 

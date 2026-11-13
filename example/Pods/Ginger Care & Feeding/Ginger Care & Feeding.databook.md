@@ -7,7 +7,8 @@ created: 2026-08-29
 description: >
   Pod DataBook for the "Ginger Care & Feeding" pod (category tag: podcat:PetsCareAndFeeding; user tag: "Ginger"). It is a two-member pod, shared by Alice with Paula, with two members (about :Self and :Paula_Walker) and one graph about :Ginger, Alice's cat (the pod's subject) — the day-to-day instructions for looking after Ginger, alongside the Ginger Medical pod's record of her medical care.
 tpod:
-  categoryTag: "podcat:PetsCareAndFeeding"
+  categoryTag:
+    - "podcat:PetsCareAndFeeding"
   creator: ":Self"
   owner: ":Self"
   userTag:

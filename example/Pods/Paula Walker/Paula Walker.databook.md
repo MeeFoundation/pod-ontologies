@@ -2,12 +2,14 @@
 id: http://www.example.org/tpod/pods/pod-19
 title: "Paula Walker"
 type: pod-databook
-version: 1.4.1
+version: 1.5.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Paula Walker" pod (category tag: podcat:Employees; user tag: "Acme"). Paula is both Alice's Acme colleague and her mother; this pod records the working relationship, so Alice tags it podcat:Employees, which reaches the podcat:Organization top concept: a search for podcat:Organization finds the pod, and its type is Organization. It is a two-member pod with member entries about :Self and :Paula_Walker.
+  Pod DataBook for the "Paula Walker" pod (category tags: podcat:Employees, podcat:ImmediateFamily; user tag: "Acme"). Paula is both Alice's Acme colleague and her mother, so Alice gives the pod two category tags — the example's multi-tag case. Since podcat:Employees reaches the podcat:Organization top concept and podcat:ImmediateFamily reaches podcat:Person, a search for either podcat:Person or podcat:Organization finds the pod, and its type is Mixed. It is a two-member pod with member entries about :Self and :Paula_Walker.
 tpod:
-  categoryTag: "podcat:Employees"
+  categoryTag:
+    - "podcat:Employees"
+    - "podcat:ImmediateFamily"
   creator: ":Self"
   owner: ":Self"
   userTag:
@@ -30,7 +32,7 @@ tpod:
 
 #### Overview
 
-This graph captures Alice's record of her colleague Paula Walker in their shared Acme employment graph — one of the pod's two required `member` entries, satisfying `ContactInfoShape`'s required GivenName alongside her existing `rdfs:label` (this pod's category tag has no template that declares a tool, so its content belongs in the member graph). Alice is the claimant.
+This graph captures Alice's record of her colleague Paula Walker in their shared Acme employment graph — one of the pod's two required `member` entries, satisfying `ContactInfoShape`'s required GivenName alongside her existing `rdfs:label` (neither of this pod's category tags has a template that declares a tool, so its content belongs in the member graph). Alice is the claimant.
 
 #### Graph
 

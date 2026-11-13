@@ -9,7 +9,8 @@ description: >
   member entry about :Self and one tool graph about :Self (the pod's subject), carrying
   Alice's Social Security number.
 tpod:
-  categoryTag: "podcat:SSN"
+  categoryTag:
+    - "podcat:SSN"
   creator: ":Self"
   owner: ":Self"
   member:

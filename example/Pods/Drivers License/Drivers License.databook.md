@@ -10,7 +10,8 @@ description: >
   subject), typed identitydocuments:DriversLicense, carrying Alice's California driver's license
   identity data.
 tpod:
-  categoryTag: "podcat:DriversLicense"
+  categoryTag:
+    - "podcat:DriversLicense"
   creator: ":Self"
   owner: ":Self"
   member:

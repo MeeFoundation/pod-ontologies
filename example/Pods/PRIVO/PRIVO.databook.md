@@ -17,7 +17,8 @@ description: >
   Inc. issued and signed it. The pod:Browser tool comes from podcat:IdVerification's template and holds no
   graph of its own.
 tpod:
-  categoryTag: "podcat:IdVerification"
+  categoryTag:
+    - "podcat:IdVerification"
   creator: ":Self"
   owner: ":Self"
   member:

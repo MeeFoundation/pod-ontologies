@@ -16,8 +16,8 @@ There is no category-side synthesis here at all — pod-categories.ttl 1.31.0
 deleted podcat:Folder and its subclasses podcat:CategoryDefined/podcat:UserDefined
 outright, along with podcat:child/podcat:pod/podcat:category/podcat:catType/podcat:label.
 Pods do not nest, so there is no tree position to model. A pod's
-classification is its pod:categoryTag value (pod.ttl), at most one, read
-directly from the explicit `tpod.categoryTag` YAML scalar below — never derived from the filename
+classification is its pod:categoryTag values (pod.ttl), zero or more, read
+directly from the explicit `tpod.categoryTag` YAML list below — never derived from the filename
 or the folder.
 
 Since graph-databooks were merged into their owning pod-databooks (each

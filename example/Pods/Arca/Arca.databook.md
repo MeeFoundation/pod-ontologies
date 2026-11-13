@@ -15,7 +15,8 @@ description: >
   organization behind them rather than for a member. The account Alice holds with Arca is the topic of the pod's tool (graph-97), the same
   sa:ServiceAccount pattern the Google and ATT pods already use.
 tpod:
-  categoryTag: "podcat:Companies"
+  categoryTag:
+    - "podcat:Companies"
   creator: ":Self"
   owner: ":Self"
   member:

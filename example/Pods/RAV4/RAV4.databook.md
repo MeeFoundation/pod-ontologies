@@ -11,7 +11,8 @@ description: >
   carrying its vehicle type, make, model, model year, VIN, color, body type, fuel type, drive wheel
   configuration, odometer reading, and engine specification.
 tpod:
-  categoryTag: "podcat:Vehicles"
+  categoryTag:
+    - "podcat:Vehicles"
   creator: ":Self"
   owner: ":Self"
   member:

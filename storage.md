@@ -47,10 +47,10 @@ The model is unaffected. What changes is where it lives and how some of its rule
   marks it in a filesystem, because it is not in one. The reserved `_pod-attachments` folder that
   once served as that marker is a scaffolding convention only (see below).
 - **Per-member state.** Pods do not nest, so there is no position to store at all. What each
-  member keeps for themselves is their tags — a category tag, user tags, and the service tags their
+  member keeps for themselves is their tags — category tags, user tags, and the service tags their
   own modules write — held in that member's own store and never shared content. This is what lets
   two members of a shared pod each classify it however they like without touching what the other
-  sees; a sender's category tag crosses a share only as a suggestion the recipient may adopt (see
+  sees; a sender's category tags cross a share only as suggestions the recipient may adopt (see
   [Tags](README.md#tags) in README.md).
 - **A pod's name.** The app's own record of the name is authoritative outright; there is no folder
   for it to mirror. The rules around it are unchanged — a name need not be unique, a pod being

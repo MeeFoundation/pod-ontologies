@@ -10,7 +10,8 @@ description: >
   subject), typed identitydocuments:BirthCertificate, carrying Alice's Texas birth certificate
   identity data.
 tpod:
-  categoryTag: "podcat:BirthCertificate"
+  categoryTag:
+    - "podcat:BirthCertificate"
   creator: ":Self"
   owner: ":Self"
   member:

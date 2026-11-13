@@ -9,7 +9,8 @@ description: >
   member entry about :Self and one tool graph about :Self (the pod's subject), typed
   residences:Residence, carrying Alice's current Paradise address.
 tpod:
-  categoryTag: "podcat:Home"
+  categoryTag:
+    - "podcat:Home"
   creator: ":Self"
   owner: ":Self"
   member:

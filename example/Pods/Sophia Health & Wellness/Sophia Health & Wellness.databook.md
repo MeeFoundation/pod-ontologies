@@ -7,7 +7,8 @@ created: 2026-07-10
 description: >
   Pod DataBook for the "Sophia Health & Wellness" pod (category tag: podcat:HealthWellness; user tag: "Sophia"). It is a one-member pod with one member entry about :Self and one graph about :Sophia_Walker (the pod's subject).
 tpod:
-  categoryTag: "podcat:HealthWellness"
+  categoryTag:
+    - "podcat:HealthWellness"
   creator: ":Self"
   owner: ":Self"
   userTag:

@@ -10,7 +10,8 @@ description: >
   :Acme itself — Alice's employer's own o:Organization profile, since
   podcat:Organization's own TemplatePod declares that tool.
 tpod:
-  categoryTag: "podcat:Organization"
+  categoryTag:
+    - "podcat:Organization"
   creator: ":Self"
   owner: ":Self"
   userTag:

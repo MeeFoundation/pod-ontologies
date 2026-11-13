@@ -7,7 +7,8 @@ created: 2026-08-21
 description: >
   Pod DataBook for the "Ginger Medical" pod (category tag: podcat:PetsMedical; user tag: "Ginger"). It is a two-member pod, shared by Alice with Paula, with two members (about :Self and :Paula_Walker) and one graph about :Ginger, Alice's cat (the pod's subject).
 tpod:
-  categoryTag: "podcat:PetsMedical"
+  categoryTag:
+    - "podcat:PetsMedical"
   creator: ":Self"
   owner: ":Self"
   userTag:

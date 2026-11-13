@@ -10,7 +10,8 @@ description: >
   residences:Residence, carrying Alice's previous Boston address. The tool dates from when the pod
   was tagged podcat:Home; retagging it podcat:Previous after the move kept the tool.
 tpod:
-  categoryTag: "podcat:Previous"
+  categoryTag:
+    - "podcat:Previous"
   creator: ":Self"
   owner: ":Self"
   member:

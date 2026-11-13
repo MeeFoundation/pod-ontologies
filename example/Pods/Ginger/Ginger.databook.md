@@ -7,7 +7,8 @@ created: 2026-08-22
 description: >
   Pod DataBook for the "Ginger" pod (category tag: podcat:Pets; user tag: "Ginger"). A pod for Alice's specific cat, Ginger, named by Alice but tagged with the generic Pets category rather than being Custom. It is a one-member pod with one member entry about :Self and one graph about :Ginger (the pod's subject), typed pets:Pet and carrying her name, species, breed, birth date, current body weight, sex, and spay/neuter status.
 tpod:
-  categoryTag: "podcat:Pets"
+  categoryTag:
+    - "podcat:Pets"
   creator: ":Self"
   owner: ":Self"
   userTag:

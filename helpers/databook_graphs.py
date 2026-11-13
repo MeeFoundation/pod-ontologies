@@ -267,14 +267,12 @@ def process_pod_databook(fm, triples):
     for owner_iri in as_list(tpod.get("owner")):
         emit_obj(triples, subj, POD + "owner", resolve(owner_iri))
 
-    # pod:categoryTag — 0..1 skos:Concept CURIE, domain pod:InstancePod
-    # (pod.ttl's Pod Tags section), written as a scalar string. Only the
-    # concept written is emitted; broader concepts are implied tags,
-    # derived at search time and never asserted. as_list() tolerates a
-    # one-element list; a longer one is emitted in full, so that
-    # :InstancePodShape's sh:maxCount 1 reports it rather than this
-    # loader silently dropping values. pod:category is never emitted
-    # here — it belongs to pod:TemplatePod alone.
+    # pod:categoryTag — 0..N skos:Concept CURIEs, domain pod:InstancePod
+    # (pod.ttl's Pod Tags section), written as a YAML list. Only the
+    # concepts written are emitted; broader concepts are implied tags,
+    # derived at search time and never asserted. as_list() lets a single
+    # bare string stand in for a one-element list. pod:category is never
+    # emitted here — it belongs to pod:TemplatePod alone.
     for cat in as_list(tpod.get("categoryTag")):
         emit_obj(triples, subj, POD + "categoryTag", resolve(cat))
 
@@ -339,9 +337,9 @@ def process_pod_databook(fm, triples):
     # never stored as its own triple.
 
     # No pod-level shape synthesis either: each graph carries its own
-    # pod:shape (emitted with the graph below); the category tag is
-    # per-member and can change over time, so the graph records the shape
-    # it was created with.
+    # pod:shape (emitted with the graph below); a pod may carry several
+    # category tags, each per-member and added or removed over time, so
+    # the graph records the shape it was created with.
 
 
 def process_embedded_graph(graph, triples, kind):

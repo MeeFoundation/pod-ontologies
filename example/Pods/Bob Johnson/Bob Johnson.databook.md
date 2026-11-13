@@ -7,7 +7,8 @@ created: 2026-07-10
 description: >
   Pod DataBook for the "Bob Johnson" pod (category tag: podcat:Others). It is a two-member pod with four member entries (two about :Bob_Johnson and two about :Self).
 tpod:
-  categoryTag: "podcat:Others"
+  categoryTag:
+    - "podcat:Others"
   creator: ":Self"
   owner: ":Self"
   serviceTag:

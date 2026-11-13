@@ -7,7 +7,8 @@ created: 2026-07-10
 description: >
   Pod DataBook for the "Alice Walker" pod (category tag: podcat:Employees; user tag: "Acme"). It is a one-member pod with one member entry about :Self.
 tpod:
-  categoryTag: "podcat:Employees"
+  categoryTag:
+    - "podcat:Employees"
   creator: ":Self"
   owner: ":Self"
   userTag:

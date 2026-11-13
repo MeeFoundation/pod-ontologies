@@ -9,7 +9,8 @@ description: >
   one member entry about :Self and one tool graph about :Self (the pod's subject), typed
   identitydocuments:Passport, carrying Alice's US passport identity data.
 tpod:
-  categoryTag: "podcat:Passport"
+  categoryTag:
+    - "podcat:Passport"
   creator: ":Self"
   owner: ":Self"
   member:

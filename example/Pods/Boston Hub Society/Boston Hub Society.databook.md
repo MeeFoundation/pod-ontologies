@@ -15,7 +15,8 @@ description: >
   pod names bhsshapes:MemberShape as its pod:memberShape — so each member graph here is validated
   against the society's own two-page directory form rather than against pshapes:ContactInfoShape.
 tpod:
-  categoryTag: "bhscat:BostonHubSociety"
+  categoryTag:
+    - "bhscat:BostonHubSociety"
   creator: ":Self"
   owner: ":Self"
   member:

@@ -53,7 +53,7 @@ These read a **PNG**: either its pixels, or the drawing itself compared by eye a
 **PNG-1 — Example pod diagrams**: Each of the 12 pod diagrams in `example/images/` draws one persistent view as the desktop app would display it: a flat list of pod boxes, plus display-only elements the app generates from the pods' tags. None of those elements is a pod, and none is stored anywhere. The diagrams draw no nesting, and none should ever be added: pods are a flat set. Each pod box corresponds to a pod in `example/Pods/`, the folder `example/Pods/<Name>/` holding its one pod-databook, `<Name>.databook.md`. The box's bold black first line is the pod's name, mirrored in its pod-databook's `title:`. A pod box reads, top to bottom:
 
 1. the pod's name, in bold black;
-2. its category tag as a green `#<prefLabel>` line, if it has one (PNG-1f);
+2. its category tags as green `#<prefLabel>` lines, one per tag, if it has any (PNG-1f);
 3. its user tags as grey `#<tag>` text, if it has any (PNG-1f);
 4. its `{NN}` pod number (PNG-1g).
 
@@ -96,7 +96,7 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
 
 - **PNG-1e — Retired.** It matched each diagram's child arrows to folder nesting under `example/Pods/`. Pods do not nest and `example/Pods/` is flat (FS-5), so there are no child links to match. The grey connectors the 12 diagrams draw join a group header to the pods listed under it (PNG-1i); they are display-only and say nothing about nesting.
 
-- **PNG-1f — Green category-tag line and grey user-tag text match the pod's tags**: Below the name, a pod box shows its own tags, with the hash the UI uses for a tag. The **category tag** is a green `#<prefLabel>` line, giving the `skos:prefLabel` of the pod's one `pod:categoryTag` concept, from `pod-categories.ttl` or from a category extension's own file under `pod-category-ext/`. The label must match its concept's `skos:prefLabel` verbatim, no more and no fewer words, and never abbreviated. The line is shown even when the label equals the pod's own name: `things.png`'s "Things" box shows `#Things`, and `gov-federal.png`'s "SSN" box shows `#SSN`. It is omitted only for a pod with no category tag. The **user tags** follow in grey, each as `#<tag>`, one per `tpod.userTag` value, and none for a pod with none: `pets.png`'s three boxes each show `#Ginger`, and `work.png`'s three each show `#Acme`. A box shows no implied (broader) tag. The broader concepts appear only as group headers (PNG-1i). This is a visual check. PNG-1i's script prints every pod's green and grey lines for cross-reference: for example, `home.png`'s "Paradise" box shows `#Home` and its "Boston" box `#Previous`, matching their tags `podcat:Home` and `podcat:Previous`, and `travel.png`'s "Kyoto Trip 2027" box shows `#Trips`.
+- **PNG-1f — Green category-tag lines and grey user-tag text match the pod's tags**: Below the name, a pod box shows its own tags, with the hash the UI uses for a tag. Each **category tag** is a green `#<prefLabel>` line, one per `pod:categoryTag` concept in `tpod.categoryTag` order, giving that concept's `skos:prefLabel`, from `pod-categories.ttl` or from a category extension's own file under `pod-category-ext/`. The label must match its concept's `skos:prefLabel` verbatim, no more and no fewer words, and never abbreviated. The line is shown even when the label equals the pod's own name: `things.png`'s "Things" box shows `#Things`, and `gov-federal.png`'s "SSN" box shows `#SSN`. No green line is drawn only for a pod with no category tags. The **user tags** follow in grey, each as `#<tag>`, one per `tpod.userTag` value, and none for a pod with none: `pets.png`'s three boxes each show `#Ginger`, and `work.png`'s three each show `#Acme`. A box shows no implied (broader) tag. The broader concepts appear only as group headers (PNG-1i). This is a visual check. PNG-1i's script prints every pod's green and grey lines for cross-reference: for example, `work.png`'s "Paula Walker" box shows two green lines, `#Employees` and `#Immediate Family`, `home.png`'s "Paradise" box shows `#Home` and its "Boston" box `#Previous`, matching their tags `podcat:Home` and `podcat:Previous`, and `travel.png`'s "Kyoto Trip 2027" box shows `#Trips`.
 
 - **PNG-1g — Black curly-brace `{NN}` label matches the pod's own `pod-<NN>` id**: Every pod box ends with a small black `{NN}` label in curly braces: the pod's own number. It sits on its own last line, or at the end of the last tag line (`#Ginger {41}`, `#Groups {27}`). It must equal the number in the pod-databook's own `id: http://www.example.org/tpod/pods/pod-<NN>` (see YAML-3), written without its zero padding. Group headers and the view header carry no `{NN}`, since they are not pods. Don't confuse this label with the `[NN]` labels on graph shapes (PNG-1d): those are graph numbers in square brackets on a circle, octagon or square, while this is the pod's own number in curly braces on the box itself. This is a visual check (no automated OCR), but the script below, and PNG-1i's, print every pod's actual `pod-<NN>` for cross-reference. For example, `people.png`'s "Bob Johnson" box shows `{16}` and its "Fred Flintstone" box `{17}`; `people2.png`'s "Sophia Walker" box shows `{12}`, "Sophia Health & Wellness" `{13}`, "Jane Starostina" `{14}` and "Medical Appointment" `{15}`; `pets.png`'s "Ginger" box shows `{41}`, "Ginger Medical" `{40}` and "Ginger Care & Feeding" `{42}`; and `travel.png`'s "Kyoto Trip 2027" box shows `{47}` and "Hilton" `{52}`. Run:
 
@@ -112,15 +112,15 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
         print(f'{m.group(1)}  {path}')
 ```
 
-- **PNG-1h — Fill color matches real data**: Every pod box's **fill** is set by its category type, matching the legend's "Category tags" box. The type comes from the top concept the pod's `pod:categoryTag` value reaches, following `skos:broader` upward, and for a category extension's concept its single `skos:broadMatch` into the core taxonomy first. The fill is tan/Person when the tag reaches `podcat:Person`, light blue/Organization when it reaches `podcat:Organization`, and purple/None when the pod carries no category tag at all. A pod's **name** is always bold black. These diagrams carry no green-name/black-name distinction, the category tag being shown on its own green line instead (PNG-1f). This is a visual check (no automated pixel/OCR comparison). Use PNG-9's script to compute the correct fill for every pod. For example, `people.png`'s "Bob Johnson" and "Fred Flintstone" are tan (tag `podcat:Others`), `work.png`'s three boxes are light blue (`podcat:Organization` itself, and `podcat:Employees`, which reaches it), and `groups.png`'s "Boston Hub Society" is tan (`bhscat:BostonHubSociety` reaches `podcat:Person` through its `skos:broadMatch` to `podcat:Groups`). Every example pod carries a category tag, so no example diagram box is expected to show purple fill.
+- **PNG-1h — Fill color matches real data**: Every pod box's **fill** is set by its category type, matching the legend's "Category tags" box. The type comes from the top concepts the pod's `pod:categoryTag` values reach, following `skos:broader` upward, and for a category extension's concept its single `skos:broadMatch` into the core taxonomy first. The fill is tan/Person when every tag reaches `podcat:Person`, light blue/Organization when every tag reaches `podcat:Organization`, split tan/light-blue (Mixed) when the tags reach both, and purple/None when the pod carries no category tag at all. A pod's **name** is always bold black. These diagrams carry no green-name/black-name distinction, the category tags being shown on their own green lines instead (PNG-1f). This is a visual check (no automated pixel/OCR comparison). Use PNG-9's script to compute the correct fill for every pod. For example, `people.png`'s "Bob Johnson" and "Fred Flintstone" are tan (tag `podcat:Others`), `work.png`'s "Acme" and "Alice Walker" are light blue (`podcat:Organization` itself, and `podcat:Employees`, which reaches it), its "Paula Walker" is split tan/light-blue (Mixed: `podcat:Employees` reaches `podcat:Organization`, `podcat:ImmediateFamily` reaches `podcat:Person`), and `groups.png`'s "Boston Hub Society" is tan (`bhscat:BostonHubSociety` reaches `podcat:Person` through its `skos:broadMatch` to `podcat:Groups`). Every example pod carries a category tag, so no example diagram box is expected to show purple fill.
 
 - **PNG-1i — The view header and group headers match the pods' tags**: These elements are display-only, and none of them is a pod. Each diagram carries one view header and zero or more group headers.
 
-  - **The view header** is an italic `View tags: #<tag>` at the top left. It names the persistent view's stored tag query, and every pod box drawn must match it. A pod matches when the tag is one of the pod's user tags (`#Ginger`, `#Sophia`, `#Acme`), when the tag is the pod's category tag, or when the tag is a concept the category tag reaches upward (`#Travel` matches `#Trips` and `#Provider`; `#Groups` matches `#Boston Hub Society` through its `skos:broadMatch`).
-  - **A group header** is a green `#<prefLabel>` with grey connectors to the pods listed under it. A pod's headers are the broader concepts its category tag reaches, outermost first, down to the tag's immediate broader concept. The top concept (`podcat:Person` or `podcat:Organization`) is never drawn as a header. A deeper header is drawn indented beneath the one above it: `people2.png`'s `#Health & Wellness`, then `#Medical`, then `#Provider`, above Jane Starostina and Medical Appointment. A header is never the pod's own category tag; that tag is on the box (PNG-1f).
-  - **Pods with no header** are those whose tag sits directly under a top concept, or is one, or which carry no tag. They are listed first, above every header: `things.png`'s "Things" (`#Things`, directly under Person) above `#Things` and RAV4, and `work.png`'s "Acme" (`#Organization`) above `#People (org)`.
+  - **The view header** is an italic `View tags: #<tag>` at the top left. It names the persistent view's stored tag query, and every pod box drawn must match it. A pod matches when the tag is one of the pod's user tags (`#Ginger`, `#Sophia`, `#Acme`), when the tag is one of the pod's category tags, or when the tag is a concept one of its category tags reaches upward (`#Travel` matches `#Trips` and `#Provider`; `#Groups` matches `#Boston Hub Society` through its `skos:broadMatch`).
+  - **A group header** is a green `#<prefLabel>` with grey connectors to the pods listed under it. A pod's headers are, for each of its category tags, the broader concepts that tag reaches, outermost first, down to the tag's immediate broader concept. A pod with several category tags is listed once under each of its tags' header chains, so it can appear more than once in one view: `work.png`'s "Paula Walker" sits under `#People (org)` for `podcat:Employees` and under `#People` for `podcat:ImmediateFamily`. The top concept (`podcat:Person` or `podcat:Organization`) is never drawn as a header. A deeper header is drawn indented beneath the one above it: `people2.png`'s `#Health & Wellness`, then `#Medical`, then `#Provider`, above Jane Starostina and Medical Appointment. A header is never the category tag it is drawn for; that tag is on the box (PNG-1f).
+  - **Pods with no header** are those listed for a tag that sits directly under a top concept, or is one, and those which carry no tag. They are listed first, above every header: `things.png`'s "Things" (`#Things`, directly under Person) above `#Things` and RAV4, and `work.png`'s "Acme" (`#Organization`) above `#People (org)`.
 
-  A header that stands for no concept the pod's tag reaches, or a header skipped in the chain, is an error. So is a header that duplicates the pod's own tag, or a top concept drawn as a header. The script below prints, for every pod, its header chain, its green category-tag line, its grey user-tags line, and its `{NN}`. Run:
+  A header that stands for no concept the tag it is drawn for reaches, or a header skipped in the chain, is an error. So is a header that duplicates that tag, or a top concept drawn as a header. The script below prints, for every pod and each of its category tags, the header chain, the green category-tag line, its grey user-tags line, and its `{NN}`. Run:
 
 ```python
 import glob, re, yaml
@@ -169,20 +169,17 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     if not fm:
         continue
     tpod = fm.get('tpod', {}) or {}
-    tags = as_list(tpod.get('categoryTag'))
-    if len(tags) > 1:
-        print(f'MULTIPLE: {path} carries more than one category tag: {tags}')
-        continue
-    tag = tags[0] if tags else None
     num = re.search(r'pod-0*(\d+)$', str(fm.get('id', '')))
-    hdr = headers(tag) if tag else []
-    if hdr is None:
-        print(f'UNRESOLVED: {path} has a category tag that reaches no top concept: {tag}')
-        continue
-    green = '#' + labels.get(tag, '???') if tag else '-'
     grey = ' '.join('#' + t for t in as_list(tpod.get('userTag'))) or '-'
-    print(f'{fm.get("title"):35s} headers={" > ".join("#" + h for h in hdr) or "-":40s} '
-          f'green={green:26s} grey={grey:10s} {{{num.group(1) if num else "?"}}}')
+    # One row per category tag: a multi-tag pod is listed under each tag's chain.
+    for tag in as_list(tpod.get('categoryTag')) or [None]:
+        hdr = headers(tag) if tag else []
+        if hdr is None:
+            print(f'UNRESOLVED: {path} has a category tag that reaches no top concept: {tag}')
+            continue
+        green = '#' + labels.get(tag, '???') if tag else '-'
+        print(f'{fm.get("title"):35s} headers={" > ".join("#" + h for h in hdr) or "-":40s} '
+              f'green={green:26s} grey={grey:10s} {{{num.group(1) if num else "?"}}}')
 ```
 
 The 12 diagrams are: `example/images/people.png`, `example/images/people2.png`, `example/images/work.png`, `example/images/companies.png`, `example/images/finances.png`, `example/images/gov-state.png`, `example/images/gov-federal.png`, `example/images/home.png`, `example/images/things.png`, `example/images/groups.png`, `example/images/pets.png`, `example/images/travel.png`. There is no `health.png`: Sophia's health pods (Sophia Health & Wellness, Jane Starostina, Medical Appointment) are drawn in `people2.png`, under the view `#Sophia`. Which pods each diagram draws is recorded in PNG-10's `DIAGRAM` table. A few boxes are worth noting for what they show:
@@ -194,7 +191,7 @@ The 12 diagrams are: `example/images/people.png`, `example/images/people2.png`, 
 
 **PNG-2 — Diagram ↔ files ↔ example.md coverage**: Every numbered graph circle in any of the 12 pod diagrams (`example/images/`) must have (a) a corresponding embedded graph section — a `tpod.member` or `tpod.tool[].graph` entry plus its `### Graph NN` body section — inside a pod-databook file under `example/Pods/`, and (b) a row in one of the tables in the **Graphs** section of `example.md`. Conversely, every row in those tables must correspond to an embedded graph that actually exists — and to that alone: a row does **not** need a numbered circle in any diagram. The 12 diagrams are not required to draw every graph; every graph is documented — a row in `example.md`'s **Graphs** section and a PNG in `example/graphs/images/` (FS-2 and FS-3) — whether or not any diagram draws it. If a circle exists in a diagram but has no embedded graph or `example.md` row, report it rather than creating a graph to match: the DataBooks are authoritative (PNG-1).
 
-**PNG-3 — `pod.ttl` matches `images/pod-ontology/pod.png`**: `Pod` shows `attachment` (to a `sources:SourceItem` box, drawn **0..N**, matching `pod:attachment`'s range — `other/sources.ttl`, referenced by name with no `owl:imports` — and its unbounded cardinality: the files every member of the pod receives, never a member's own private ones). The two classification properties, `pod:category` and `pod:categoryTag`, both range over the classificatory `skos:Concept` (a concept in `podcat:PodCategoryScheme`, pod-categories.ttl, or in a category extension's own scheme); pods do not nest, so there is no tree-position class for either to be confused with. Both record what kind of thing a pod is, and neither needs `owl:imports pod-categories.ttl` (referenced by name only, mirroring `pod:creator`'s identical pattern). The diagram shows two arrows off `Pod` with no counterpart in `pod.ttl` — `note` (to a placeholder box, `(note data object) 1..1` — the note is held in the app's own internal format, not as a Markdown file) and `chat` (to a placeholder box, `(a chat stream) 1..1` — every pod always has a chat stream, possibly empty, held inside the app rather than in the pod's folder) — this is a deliberate, accepted exception to 12a/12b below: README.md already describes both properties' intended semantics (see the Documentation-only Properties section) as planned, but `pod.ttl` itself has no `pod:note`/`pod:chat` declaration yet — neither is ever reified as a triple in any real graph. `Pod` (abstract, blue) carries `attachment` (plus the still-open `note`/`chat` arrows above). `Pod` splits into two disjoint kinds (`owl:disjointWith` — a pod is always exactly one, never both): `TemplatePod` (abstract, blue, a reusable class-level template) carries `category` (to a `skos:Concept` box, **0..1** — the one concept the template is for, carried by every template except `ctpl:UserDefinedTemplatePod`, which carries none), `memberShape` (to a `sh:NodeShape` box, 0..N) and `declaresTool` (to a `pod:Tool` box, 0..N); `InstancePod` (concrete, black, a pod a user actually has) carries `member` (to a `pod:MemberGraph` box, 1..N, no fixed upper bound), `tool` (to a `pod:Tool` box, 0..N), `creator` (to a `p:Person` box, 1..1), `owner` (to its own `p:Person` box, 1..N, no fixed upper bound — every arrow in this diagram carries its own target label, so `creator` and `owner` are drawn as two separate `p:Person` boxes rather than sharing one), and the three tag properties `categoryTag` (to a `skos:Concept` box, **0..1**), `userTag` (to an `xsd:string` box, 0..N) and `serviceTag` (to a `pod:ServiceTag` box, 0..N) — `pod.ttl`'s Pod Tags section. The three tag arrows hang off `InstancePod`, never off `Pod`: their domain is `pod:InstancePod` deliberately, since a `TemplatePod` seeds no tags. `category` and `categoryTag` hang off different boxes for the same reason: `category` names the one concept a template is for and never appears on an instance pod, while `categoryTag` is a member's own classification of a pod, at most one concept. The three tags point at different kinds of target because they are different shapes: a category tag is a concept, a user tag is a bare literal, and a service tag is a value node. `ServiceTag` and the `Tool` hierarchy are **not** drawn in this diagram: each has its own, `images/pod-ontology/tag.png` (PNG-6) and `images/pod-ontology/tool.png` (PNG-7). Here they appear only as arrow targets — a `pod:ServiceTag` box off `serviceTag`, and a `pod:Tool` box off both `tool` and `declaresTool` — never as members of the `Pod` hierarchy, which neither has an `rdfs:subClassOf` relation to. There is no `shape` arrow off `InstancePod` at all — a pod stores no shape of its own; the `shape` property that does exist has domain `pod:Graph` and is drawn in `graph.png` (PNG-4) (each graph's own `pod:shape`, set from the template that supplied the graph, is the validation authority for that graph; there is no single template of a pod to derive a pod-level shape from) — and no pod-level `subject` arrow off `InstancePod` either — there is no such property (a pod's own subject is derived from its tools' own `pod:formTopic` values, or failing those from `member`'s own `pod:subject` values, rather than stored on the pod itself; those two are real, surviving properties, scoped to `pod:Tool` and `pod:MemberGraph` rather than to `InstancePod` — see PNG-4). `TemplatePod` has no subclasses of its own, and no individual is ever typed both `TemplatePod` and `InstancePod` — every template individual in `pod-category-templates.ttl` is typed solely `TemplatePod`. No arrow points from `Pod`, `TemplatePod`, or `InstancePod` to any tree-position box at all — pods do not nest, and both classification arrows point to `skos:Concept`. This diagram is the ontology-level (not example-data) picture of `pod:Pod`'s structure — the member-composition hierarchy and its content-linking properties. A single "Key" box in the lower right carries three swatches, in this order — blue "Abstract", black "Concrete and visible", green "Concrete but hidden" — and the class-box colors track them exactly: blue is `pod:abstract true` in `pod.ttl` (`Pod` and `TemplatePod`, and nothing else here) and black is every remaining concrete class. The Key lists exactly the swatches this diagram actually uses — two here, since the one green ("concrete but hidden") class, `ServiceTag`, is drawn in `tag.png` instead. A concrete class may only be green where `pod.ttl` or `README.md` actually says the user never sees it; absent that, it is black. Unlike PNG-1 (example diagrams, where the diagram always wins), this check does not presume which side is authoritative when the two disagree — surface the discrepancy and ask:
+**PNG-3 — `pod.ttl` matches `images/pod-ontology/pod.png`**: `Pod` shows `attachment` (to a `sources:SourceItem` box, drawn **0..N**, matching `pod:attachment`'s range — `other/sources.ttl`, referenced by name with no `owl:imports` — and its unbounded cardinality: the files every member of the pod receives, never a member's own private ones). The two classification properties, `pod:category` and `pod:categoryTag`, both range over the classificatory `skos:Concept` (a concept in `podcat:PodCategoryScheme`, pod-categories.ttl, or in a category extension's own scheme); pods do not nest, so there is no tree-position class for either to be confused with. Both record what kind of thing a pod is, and neither needs `owl:imports pod-categories.ttl` (referenced by name only, mirroring `pod:creator`'s identical pattern). The diagram shows two arrows off `Pod` with no counterpart in `pod.ttl` — `note` (to a placeholder box, `(note data object) 1..1` — the note is held in the app's own internal format, not as a Markdown file) and `chat` (to a placeholder box, `(a chat stream) 1..1` — every pod always has a chat stream, possibly empty, held inside the app rather than in the pod's folder) — this is a deliberate, accepted exception to 12a/12b below: README.md already describes both properties' intended semantics (see the Documentation-only Properties section) as planned, but `pod.ttl` itself has no `pod:note`/`pod:chat` declaration yet — neither is ever reified as a triple in any real graph. `Pod` (abstract, blue) carries `attachment` (plus the still-open `note`/`chat` arrows above). `Pod` splits into two disjoint kinds (`owl:disjointWith` — a pod is always exactly one, never both): `TemplatePod` (abstract, blue, a reusable class-level template) carries `category` (to a `skos:Concept` box, **0..1** — the one concept the template is for, carried by every template except `ctpl:UserDefinedTemplatePod`, which carries none), `memberShape` (to a `sh:NodeShape` box, 0..N) and `declaresTool` (to a `pod:Tool` box, 0..N); `InstancePod` (concrete, black, a pod a user actually has) carries `member` (to a `pod:MemberGraph` box, 1..N, no fixed upper bound), `tool` (to a `pod:Tool` box, 0..N), `creator` (to a `p:Person` box, 1..1), `owner` (to its own `p:Person` box, 1..N, no fixed upper bound — every arrow in this diagram carries its own target label, so `creator` and `owner` are drawn as two separate `p:Person` boxes rather than sharing one), and the three tag properties `categoryTag` (to a `skos:Concept` box, **0..N**), `userTag` (to an `xsd:string` box, 0..N) and `serviceTag` (to a `pod:ServiceTag` box, 0..N) — `pod.ttl`'s Pod Tags section. The three tag arrows hang off `InstancePod`, never off `Pod`: their domain is `pod:InstancePod` deliberately, since a `TemplatePod` seeds no tags. `category` and `categoryTag` hang off different boxes for the same reason: `category` names the one concept a template is for and never appears on an instance pod, while `categoryTag` is a member's own classification of a pod, zero or more concepts. The three tags point at different kinds of target because they are different shapes: a category tag is a concept, a user tag is a bare literal, and a service tag is a value node. `ServiceTag` and the `Tool` hierarchy are **not** drawn in this diagram: each has its own, `images/pod-ontology/tag.png` (PNG-6) and `images/pod-ontology/tool.png` (PNG-7). Here they appear only as arrow targets — a `pod:ServiceTag` box off `serviceTag`, and a `pod:Tool` box off both `tool` and `declaresTool` — never as members of the `Pod` hierarchy, which neither has an `rdfs:subClassOf` relation to. There is no `shape` arrow off `InstancePod` at all — a pod stores no shape of its own; the `shape` property that does exist has domain `pod:Graph` and is drawn in `graph.png` (PNG-4) (each graph's own `pod:shape`, set from the template that supplied the graph, is the validation authority for that graph; there is no single template of a pod to derive a pod-level shape from, a pod carrying zero or more category tags) — and no pod-level `subject` arrow off `InstancePod` either — there is no such property (a pod's own subject is derived from its tools' own `pod:formTopic` values, or failing those from `member`'s own `pod:subject` values, rather than stored on the pod itself; those two are real, surviving properties, scoped to `pod:Tool` and `pod:MemberGraph` rather than to `InstancePod` — see PNG-4). `TemplatePod` has no subclasses of its own, and no individual is ever typed both `TemplatePod` and `InstancePod` — every template individual in `pod-category-templates.ttl` is typed solely `TemplatePod`. No arrow points from `Pod`, `TemplatePod`, or `InstancePod` to any tree-position box at all — pods do not nest, and both classification arrows point to `skos:Concept`. This diagram is the ontology-level (not example-data) picture of `pod:Pod`'s structure — the member-composition hierarchy and its content-linking properties. A single "Key" box in the lower right carries three swatches, in this order — blue "Abstract", black "Concrete and visible", green "Concrete but hidden" — and the class-box colors track them exactly: blue is `pod:abstract true` in `pod.ttl` (`Pod` and `TemplatePod`, and nothing else here) and black is every remaining concrete class. The Key lists exactly the swatches this diagram actually uses — two here, since the one green ("concrete but hidden") class, `ServiceTag`, is drawn in `tag.png` instead. A concrete class may only be green where `pod.ttl` or `README.md` actually says the user never sees it; absent that, it is black. Unlike PNG-1 (example diagrams, where the diagram always wins), this check does not presume which side is authoritative when the two disagree — surface the discrepancy and ask:
 
 - **12a** — every property arrow shown off `Pod` (`attachment`) has a corresponding `pod:` property in `pod.ttl` with `rdfs:domain pod:Pod` (the diagram's `note` and `chat` arrows are the two accepted exceptions — see above: both are planned properties, not yet added to `pod.ttl`). Every arrow off `TemplatePod` (`category`, `memberShape`, `declaresTool`) has `rdfs:domain pod:TemplatePod`, and every arrow off `InstancePod` (`creator`, `owner`, `member`, `tool`, `categoryTag`, `userTag`, `serviceTag`) has `rdfs:domain pod:InstancePod`. No arrow may appear off the `pod:Tool` or `pod:ServiceTag` target boxes here — those belong to PNG-7 and PNG-6. No `shape` arrow should appear off `InstancePod` at all — a pod stores no shape of its own, and `pod:shape`'s domain is `pod:Graph`, so it belongs in `graph.png` (PNG-4) (each graph carries its own; a pod stores none). No pod-level `subject` arrow should appear off `InstancePod` either — that property doesn't exist (see PNG-3's own note above); `pod:subject` is real, but scoped to `pod:MemberGraph`, not to `InstancePod` (see PNG-4). Each arrow's target type in the diagram must match the property's `rdfs:range` — `member`'s is `pod:MemberGraph` and `formGraph`'s is `pod:FormGraph` — deliberately *different* classes, one per list, `tool`'s and `declaresTool`'s are both `pod:Tool`, `creator`'s and `owner`'s are both `p:Person` (two separate arrows, each with its own target box — what must match is the range, not the box count), `categoryTag`'s is `skos:Concept`, `userTag`'s is `xsd:string` and `serviceTag`'s is `pod:ServiceTag` (three separate arrows, each 0..N — not one shared arrow, since a tag's kind is carried entirely by which property holds it, and no two share a target), `tagNamespace`'s, `tagKey`'s and `tagValue`'s are all `xsd:string` (three separate arrows, each 1..1), `attachment`'s is `sources:SourceItem` (0..N — a stale `(file)` placeholder target is a discrepancy), `category`'s is `skos:Concept` itself (value is a named category-concept individual, scoped via `skos:inScheme` to `podcat:PodCategoryScheme` or a category extension's own scheme — no class-value punning, since pod-categories.ttl's hierarchy is SKOS, not OWL classes), `memberShape`'s is `sh:NodeShape` (0..N, not 0..1). `formShape` does **not** appear in this diagram at all — its domain is `pod:Tool`, so it is drawn in `tool.png` (PNG-7).
 - **12b** — every `pod:` property defined in `pod.ttl` appears as an arrow in the diagram, under the box matching its domain — `Pod`, `TemplatePod`, `InstancePod`, `Tool` (or one of its `Form`/`Calendar`/`Canvas`/`Contacts`/`Map`/`Browser` subclasses), or `ServiceTag` (catches new properties added to the ttl but never drawn, or drawn under the wrong box).
@@ -235,13 +232,13 @@ The split into two leaves is the diagram's substantive claim, and it is a PDN-la
 - **38e** — the class-label colors match `pod.ttl`'s `pod:abstract` annotations: `Tool` blue (`pod:abstract true`), the six leaves black (none carries it). The Key lists exactly the swatches this diagram uses — two here, since nothing in it is the green "concrete but hidden" case.
 - **38f** — no `tool` or `declaresTool` arrow is drawn *into* `Tool` here; both belong to `pod.png` (PNG-3), which shows `pod:Tool` only as a target box.
 
-**PNG-8 — `images/representative-pods.png` matches example usage**: This diagram illustrates seven representative pods, drawn in the same pod-box style as the 12 example diagrams (PNG-1): a bold black name, the category tag as a green `#<prefLabel>` line (PNG-1f), and any user tags as grey `#<tag>` text. Unlike them, it is not a persistent view, so it carries no view header and no group headers, and its boxes carry no `{NN}` label, six of the seven being generic rather than real example pods.
+**PNG-8 — `images/representative-pods.png` matches example usage**: This diagram illustrates seven representative pods, drawn in the same pod-box style as the 12 example diagrams (PNG-1): a bold black name, each category tag as a green `#<prefLabel>` line (PNG-1f), and any user tags as grey `#<tag>` text. Unlike them, it is not a persistent view, so it carries no view header and no group headers, and its boxes carry no `{NN}` label, six of the seven being generic rather than real example pods.
 
 Its legend is the same six titled boxes the 12 example diagrams carry, stacked in this order: "UI View", "Pod name", "Category tags", "Claimant", "Other", "Members". The identical block appears in 13 diagrams, so a change to it has to be applied thirteen times by hand, the same fan-out PNG-11 warns about. Box by box:
 
 - **UI View** holds a green `#Heading` with a grey connector, standing for a group header (PNG-1i). This diagram draws none; the box is kept so that all 13 legends stay identical.
 - **Pod name** holds the three-line pod-box formula: bold black "Pod name", green "#Category tag", grey "#User tag(s)".
-- **Category tags** holds three fill-color swatches, Person (tan), Organization (light blue) and None (purple/lavender), following PNG-1h's rule over the pod's category tag. "None" is a pod carrying no `pod:categoryTag`, a display convention and not a class.
+- **Category tags** holds four fill-color swatches, Person (tan), Organization (light blue), Mixed (split tan/light-blue) and None (purple/lavender), following PNG-1h's rule over the pod's category tags. "Mixed" is a pod whose tags reach both top concepts. "None" is a pod carrying no `pod:categoryTag`, a display convention and not a class.
 - **Claimant** holds two claim-fill swatches, a green "Other" (claimed by someone other than the self) and a dashed "Self" (claimed by the user). Claim fill is a two-state fact; there is no third "Delegate" fill (see PNG-10 and PNG-11).
 - **Other** holds a document icon labeled "Attachment", a pod attachment drawn in a pod box (filled green when it is a credential signed by its issuer, per PNG-10, and never counted as a graph shape, per PNG-1c), and a square labeled "Form", the kind of tool a square stands for.
 - **Members** holds a circle labeled "Human" and an octagon labeled "Service".
@@ -260,7 +257,7 @@ Its legend is the same six titled boxes the 12 example diagrams carry, stacked i
 
   Each pod box shows no icon of any kind, no folder icon and no separate "note" or "chat" icon (see PNG-3's `pod:note`/`pod:chat` planned-property note, which concerns `pod.png` only), just the filled box itself. Re-verify each box's circles and squares remain a valid illustration of the properties and cardinalities described in the Pod and Graph Ontology sections of `README.md` after any change to those properties.
 
-**PNG-9 — a pod carries no category tag if and only if it is drawn with the Custom fill**: Every pod drawn in `images/folder-mapping.png`, `representative-pods.png` and the 12 example diagrams (PNG-1h) carries a **fill** set by its category type: tan/Person, light blue/Organization, or purple/None (Custom), from the top concept its `pod:categoryTag` value reaches. The Custom case is the one this check pins down: a pod is drawn purple **exactly when** its pod-databook carries no `tpod.categoryTag` value at all, the Custom category being identified by that absence and nothing else. A pod carrying any category tag is never purple, and a pod carrying none is never anything else. In `folder-mapping.png` the fill sits on the folder icon itself. That diagram pictures the repo's development scaffolding rather than a pod as the app holds it, which is also why it draws a Pod DataBook file, unlike the 12 example diagrams. It draws `example/Pods/` as a white folder holding two sibling pod folders, "Bob Johnson" and "Fred Flintstone" (both tag `podcat:Others`, so both tan). Fred Flintstone is expanded to show its DataBook, note file and `_pod-attachments` folder, with three attachments A, B and C. Only a folder that is a pod carries fill at all: `Pods` and `_pod-attachments` stay white, and the key names that distinction, the tan/white split being exactly the pod/not-a-pod test. Every folder name is black. The diagram carries no Custom or Organization pod, so its key lists only the tan swatch, labeled "Folder that is a pod (category tag under Person)". That is the rule for this diagram's key generally, matching PNG-3's for `pod.png`: the key lists exactly the swatches the drawing actually uses, so a swatch whose case is not drawn comes out rather than standing as an unexercised entry. This is a visual check (no automated pixel/OCR comparison), but the script below computes, for every real pod, its category tag and its label, its category type, and the fill the rule calls for, for direct cross-reference against whichever diagram box or folder is being checked. It reports `UNRESOLVED` for a tag it cannot follow to `podcat:Person` or `podcat:Organization`. Run:
+**PNG-9 — a pod carries no category tag if and only if it is drawn with the Custom fill**: Every pod drawn in `images/folder-mapping.png`, `representative-pods.png` and the 12 example diagrams (PNG-1h) carries a **fill** set by its category type: tan/Person, light blue/Organization, split tan/light-blue (Mixed), or purple/None (Custom), from the top concepts its `pod:categoryTag` values reach. The Custom case is the one this check pins down: a pod is drawn purple **exactly when** its pod-databook carries no `tpod.categoryTag` value at all, the Custom category being identified by that absence and nothing else. A pod carrying any category tag is never purple, and a pod carrying none is never anything else. In `folder-mapping.png` the fill sits on the folder icon itself. That diagram pictures the repo's development scaffolding rather than a pod as the app holds it, which is also why it draws a Pod DataBook file, unlike the 12 example diagrams. It draws `example/Pods/` as a white folder holding two sibling pod folders, "Bob Johnson" and "Fred Flintstone" (both tag `podcat:Others`, so both tan). Fred Flintstone is expanded to show its DataBook, note file and `_pod-attachments` folder, with three attachments A, B and C. Only a folder that is a pod carries fill at all: `Pods` and `_pod-attachments` stay white, and the key names that distinction, the tan/white split being exactly the pod/not-a-pod test. Every folder name is black. The diagram carries no Custom or Organization pod, so its key lists only the tan swatch, labeled "Folder that is a pod (category tag under Person)". That is the rule for this diagram's key generally, matching PNG-3's for `pod.png`: the key lists exactly the swatches the drawing actually uses, so a swatch whose case is not drawn comes out rather than standing as an unexercised entry. This is a visual check (no automated pixel/OCR comparison), but the script below computes, for every real pod, its category tags and their labels, its category type, and the fill the rule calls for, for direct cross-reference against whichever diagram box or folder is being checked. It reports `UNRESOLVED` for a tag it cannot follow to `podcat:Person` or `podcat:Organization`. Run:
 
 ```python
 import glob, re, yaml
@@ -297,7 +294,10 @@ def top_of(curie):
     return TOPS[curie]
 
 FILL = {'Person': 'tan/Person', 'Organization': 'light-blue/Organization',
-        'Custom': 'purple/None'}
+        'Mixed': 'split tan/light-blue/Mixed', 'Custom': 'purple/None'}
+
+def as_list(v):
+    return v if isinstance(v, list) else ([v] if v else [])
 
 for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
@@ -308,26 +308,23 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     if not fm:
         continue
     tpod = fm.get('tpod', {}) or {}
-    tag = tpod.get('categoryTag')       # a scalar, at most one per pod
-    if isinstance(tag, list):
-        if len(tag) > 1:
-            print(f'MULTIPLE: {path} carries more than one category tag: {tag}')
-            continue
-        tag = tag[0] if tag else None
+    tags = as_list(tpod.get('categoryTag'))   # zero or more per pod
     title = fm.get('title')
-    if not tag:
-        kind = 'Custom'                 # no category tag at all, and only then
+    tops = {top_of(t) for t in tags}
+    if None in tops:
+        bad = [t for t in tags if top_of(t) is None]
+        print(f'UNRESOLVED: {path} has a category tag that reaches no top concept: {bad}')
+        continue
+    if not tags:
+        kind = 'Custom'                       # no category tag at all, and only then
     else:
-        kind = top_of(tag)
-        if kind is None:
-            print(f'UNRESOLVED: {path} has a category tag that reaches no top concept: {tag}')
-            continue
-    tag_label = labels.get(tag, '???') if tag else None
-    print(f'{title:35s} tag={tag or "(none)":45s} '
-          f'label={"#" + tag_label if tag else "-":32s} fill={FILL[kind]}')
+        kind = tops.pop() if len(tops) == 1 else 'Mixed'
+    shown = ', '.join(tags) or '(none)'
+    label = ' '.join('#' + labels.get(t, '???') for t in tags) or '-'
+    print(f'{title:35s} tags={shown:50s} label={label:40s} fill={FILL[kind]}')
 ```
 
-If a diagram box's fill doesn't match this script's output for the corresponding pod, update `tpod.categoryTag` only if the *data* is actually wrong. Otherwise the box is what needs redrawing. No diagram colors a pod's name: every name is black, the category tag being shown on its own green line (PNG-1f), which the script's `label` column gives.
+If a diagram box's fill doesn't match this script's output for the corresponding pod, update `tpod.categoryTag` only if the *data* is actually wrong. Otherwise the box is what needs redrawing. No diagram colors a pod's name: every name is black, the category tags being shown on their own green lines (PNG-1f), which the script's `label` column gives.
 
 **PNG-10 — a graph shape's claim-fill color matches its graph's own `claimant`**: PNG-1c settles a pod box's graph *shapes* (a circle per `member` entry, a square per tool graph) and explicitly defers their **fill** to PNG-8's legend, as "a separate, independent fact showing who claimed that graph". PNG-1h then checks only the *pod box*'s own Person/Organization/Custom fill and its name-text color. So the claim-fill of the circles and squares themselves — the one color that encodes `pod:claimant` — was defined but verified nowhere, in any of the 12 diagrams. This check closes that gap. The rule, per PNG-8's legend, is a three-way partition of every drawn graph shape, decided entirely by that graph's own `claimant`:
 
@@ -722,7 +719,7 @@ print('All shape-declaring graphs assert a matching rdf:type.'
 
 If a violation is found: fix whichever side is wrong — either the `shape:` YAML value (if the graph's own asserted `rdf:type` is correct and `template:` names the wrong shape), or the body's `rdf:type` (if `template:` reflects the intended classification and the body was never updated to match).
 
-**TTL-4 — a `member` graph's `shape:` value, and a declared tool's graph's, must be among the shapes its category tag's template declares**: TTL-3 only compares a graph's `shape:` value against its own body content — this check goes one level higher, comparing it against what the pod's category tag declares as authoritative. For every pod-databook under `example/Pods/` (excluding `under-development/`), `tpod.categoryTag` is read as a scalar (at most one value), and the tag is looked up by the reverse lookup `?tc pod:category X` (README's Lazy Instantiation pattern) among the `pod:TemplatePod` individuals of `pod-category-templates.ttl` and every category extension bundle under `pod-category-ext/`. A pod carrying no category tag is looked up instead against `ctpl:UserDefinedTemplatePod`, the one template carrying no `pod:category`, which is what such a pod takes its member baseline from. Every `tpod.member`-list graph carrying a `shape:` value must have that value among that template's `pod:memberShape` values; and, **only when that template declares a tool**, every tool graph carrying a `shape:` value must be among its declared tools' `pod:formShape` values — direct CURIE-set membership, since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the same range `pod:memberShape`/`pod:formShape` already carry, so no `sh:targetClass` resolution and no named exemptions are needed. A tool on a pod whose template declares none is **not** checked against any shape at all: any pod may gain a tool no template declared, and the user picks that tool's shape themselves — from the app's full list of shapes — so no template has authority over it. A tag whose concept has no template contributes nothing — a defensive branch, not a live case, since TTL-6 and TTL-8's 39d guarantee every concept has one. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8/TTL-3 — it requires dereferencing values across the template files, not just pod-databook YAML), so it's checked here instead. Run:
+**TTL-4 — a `member` graph's `shape:` value, and a declared tool's graph's, must be among the shapes its category tags' templates declare**: TTL-3 only compares a graph's `shape:` value against its own body content — this check goes one level higher, comparing it against what the pod's category tags declare as authoritative. For every pod-databook under `example/Pods/` (excluding `under-development/`), `tpod.categoryTag` is read as a list (zero or more values), and each tag is looked up by the reverse lookup `?tc pod:category X` (README's Lazy Instantiation pattern) among the `pod:TemplatePod` individuals of `pod-category-templates.ttl` and every category extension bundle under `pod-category-ext/`. A pod carrying no category tag is looked up instead against `ctpl:UserDefinedTemplatePod`, the one template carrying no `pod:category`, which is what such a pod takes its member baseline from. The templates reached are pooled: every `tpod.member`-list graph carrying a `shape:` value must have that value among the union of their `pod:memberShape` values; and, **only when at least one of them declares a tool**, every tool graph carrying a `shape:` value must be among the union of their declared tools' `pod:formShape` values — direct CURIE-set membership, since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the same range `pod:memberShape`/`pod:formShape` already carry, so no `sh:targetClass` resolution and no named exemptions are needed. A tool on a pod none of whose templates declares one is **not** checked against any shape at all: any pod may gain a tool no template declared, and the user picks that tool's shape themselves — from the app's full list of shapes — so no template has authority over it. A tag whose concept has no template contributes nothing — a defensive branch, not a live case, since TTL-6 and TTL-8's 39d guarantee every concept has one. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8/TTL-3 — it requires dereferencing values across the template files, not just pod-databook YAML), so it's checked here instead. Run:
 
 ```python
 import glob, re, yaml
@@ -766,10 +763,13 @@ def frontmatter(path):
 def as_list(v):
     return [] if v is None else (v if isinstance(v, list) else [v])
 
-def category_tag(tpod):
-    # tpod.categoryTag is a scalar, at most one per pod; a one-item list is tolerated.
+def reached_templates(tpod):
+    # tpod.categoryTag is a list, zero or more per pod. Each tag reaches its own
+    # template; a pod with no tag at all reaches ctpl:UserDefinedTemplatePod's
+    # (keyed None). A tag whose concept has no template contributes nothing.
     tags = as_list(tpod.get('categoryTag'))
-    return tags[0] if tags else None
+    keys = [expand(c) for c in tags] if tags else [None]
+    return [templates[k] for k in keys if k in templates]
 
 violations = 0
 for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
@@ -779,13 +779,14 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     if not fm:
         continue
     tpod = fm.get('tpod') or {}
-    tag = category_tag(tpod)
-    # No category tag at all: the pod's baseline is ctpl:UserDefinedTemplatePod's.
-    template = templates.get(expand(tag) if tag else None)
-    if template is None:
-        continue  # no TemplatePod for this pod's tag — nothing to check
-    allowed = {'member': template['member'], 'tool': template['tool']}
-    declares_tool = template['declares_tool']
+    reached = reached_templates(tpod)
+    if not reached:
+        continue  # no TemplatePod for any of this pod's tags — nothing to check
+    allowed = {
+        'member': set().union(*(r['member'] for r in reached)),
+        'tool': set().union(*(r['tool'] for r in reached)),
+    }
+    declares_tool = any(r['declares_tool'] for r in reached)
 
     def entries_for(field):
         if field == 'member':
@@ -794,7 +795,7 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
                   for g in as_list(t.get('graph')) if isinstance(g, dict)]
 
     for field in ('member', 'tool'):
-        # A tool on a pod whose template declares none was added by
+        # A tool on a pod none of whose templates declares one was added by
         # hand — the user picks its shape freely, so no template has a say.
         if field == 'tool' and not declares_tool:
             continue
@@ -805,22 +806,22 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
                 if not allowed[field]:
                     violations += 1
                     print(f"VIOLATION {path}: {field} graph {gid} declares shape {shape!r} "
-                          f"but its category tag's template has no pod:{prop} value")
+                          f"but none of its category tags' templates has a pod:{prop} value")
                 elif shape not in allowed[field]:
                     violations += 1
                     print(f"VIOLATION {path}: {field} graph {gid} declares shape {shape!r}, "
-                          f"not among its category tag's template's pod:{prop} value(s) "
+                          f"not among its category tags' templates' pod:{prop} value(s) "
                           f"{sorted(allowed[field])}")
-print("All member/tool shape: values are among their category tag's template's shapes."
+print("All member/tool shape: values are among their category tags' templates' shapes."
       if violations == 0 else f'{violations} violation(s) found.')
 ```
 
-If a violation is found: either the graph's `shape:` value is wrong (fix it to a shape the pod's category tag's template declares), or the `pod:memberShape` value or the declared tool's `pod:formShape` value(s) on the corresponding template are wrong/missing (add the correct one), or — if the graph is genuinely a different kind of content than its tag's template expects — reconsider whether it belongs in `member` vs. under a tool, or whether the pod carries the right category tag.
+If a violation is found: either the graph's `shape:` value is wrong (fix it to a shape one of the pod's category tags' templates declares), or the `pod:memberShape` value or the declared tool's `pod:formShape` value(s) on the corresponding template are wrong/missing (add the correct one), or — if the graph is genuinely a different kind of content than its tag's template expects — reconsider whether it belongs in `member` vs. under a tool, or whether the pod carries the right category tags.
 
-**TTL-5 — a pod carries everything its category tag's template requires**: TTL-4 only checks a `shape:` value once one is already present — it never flags a `tpod.member`-list graph that is missing one outright, nor a declared tool that is missing from the pod altogether. This check closes both gaps, against the same template TTL-4 reaches from the pod's `tpod.categoryTag` value (or `ctpl:UserDefinedTemplatePod`, for a pod carrying no category tag):
+**TTL-5 — a pod carries everything its category tags' templates require**: TTL-4 only checks a `shape:` value once one is already present — it never flags a `tpod.member`-list graph that is missing one outright, nor a declared tool that is missing from the pod altogether. This check closes both gaps, against the same templates TTL-4 reaches from the pod's `tpod.categoryTag` values (or `ctpl:UserDefinedTemplatePod`, for a pod carrying no category tag):
 
-- **Member shapes** — every `tpod.member`-list graph must carry, among its `shape:` value(s), every `pod:memberShape` value of that template. The mapping is unconditional, with no exception for which shape it happens to be (see `app-behavior.md`'s Lazy Instantiation section).
-- **Declared tools** — every tool that template declares must be present on the pod. When a member sets or changes the category tag to a concept that has a template, Lazy Instantiation gives the pod each tool that template declares and the pod does not already carry; changing or removing the tag never removes a tool, and tools are shared content, so the tool reaches every member even though the tag does not. So for every declared form tool, some `tpod.tool` graph must carry each of its `pod:formShape` values; and for every declared tool of another kind (`ctpl:IdVerificationTemplatePod`'s `pod:Browser`, say), the pod must carry a `tpod.tool` entry of that `type`. A pod may carry more tools than its template declares — a previous tag's among them; only a missing one is a violation.
+- **Member shapes** — every `tpod.member`-list graph must carry, among its `shape:` value(s), every `pod:memberShape` value of every template reached. The mapping is unconditional, with no exception for which shape it happens to be (see `app-behavior.md`'s Lazy Instantiation section).
+- **Declared tools** — every tool any reached template declares must be present on the pod. When a member adds a category tag naming a concept that has a template, Lazy Instantiation gives the pod each tool that template declares and the pod does not already carry; removing a tag never removes a tool, and tools are shared content, so the tool reaches every member even though the tag does not. So for every declared form tool, some `tpod.tool` graph must carry each of its `pod:formShape` values; and for every declared tool of another kind (`ctpl:IdVerificationTemplatePod`'s `pod:Browser`, say), the pod must carry a `tpod.tool` entry of that `type`. A pod may carry more tools than its templates declare — a removed tag's among them; only a missing one is a violation.
 
 Both are direct CURIE-set membership, since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the same range `pod:memberShape`/`pod:formShape` already carry, so no label resolution and no named exceptions are needed. A tag whose concept has no template contributes nothing — the same defensive branch as TTL-4. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8/TTL-3/TTL-4 — it requires dereferencing values across the template files, not just pod-databook YAML), so it's checked here instead. Run:
 
@@ -867,10 +868,13 @@ def frontmatter(path):
 def as_list(v):
     return [] if v is None else (v if isinstance(v, list) else [v])
 
-def category_tag(tpod):
-    # tpod.categoryTag is a scalar, at most one per pod; a one-item list is tolerated.
+def reached_templates(tpod):
+    # tpod.categoryTag is a list, zero or more per pod. Each tag reaches its own
+    # template; a pod with no tag at all reaches ctpl:UserDefinedTemplatePod's
+    # (keyed None). A tag whose concept has no template contributes nothing.
     tags = as_list(tpod.get('categoryTag'))
-    return tags[0] if tags else None
+    keys = [expand(c) for c in tags] if tags else [None]
+    return [templates[k] for k in keys if k in templates]
 
 violations = 0
 for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
@@ -880,13 +884,12 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     if not fm:
         continue
     tpod = fm.get('tpod') or {}
-    tag = category_tag(tpod)
-    r = templates.get(expand(tag) if tag else None)
-    if r is None:
-        continue  # no TemplatePod for this pod's tag
+    reached = reached_templates(tpod)
+    if not reached:
+        continue  # no TemplatePod for any of this pod's tags
 
-    # Member shapes: every pod:memberShape of the reached template.
-    required = r['member']
+    # Member shapes: the union of every reached template's pod:memberShape.
+    required = set().union(*(r['member'] for r in reached))
     for entry in as_list(tpod.get('member')):
         if not isinstance(entry, dict):
             continue
@@ -896,23 +899,24 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
             print(f"VIOLATION {path}: member graph {entry.get('id')} is missing "
                   f"required pod:shape value(s) {sorted(missing)}")
 
-    # Declared tools: Lazy Instantiation added each one when the tag was set.
+    # Declared tools: Lazy Instantiation added each one when its tag was added.
     live = [t for t in as_list(tpod.get('tool')) if isinstance(t, dict)]
     live_types = {t.get('type', 'form') for t in live}
     live_shapes = {s for t in live for g in as_list(t.get('graph')) if isinstance(g, dict)
                      for s in as_list(g.get('shape'))}
-    for kind, shapes in r['tools']:
-        if shapes:
-            missing = shapes - live_shapes
-            if missing:
+    for r in reached:
+        for kind, shapes in r['tools']:
+            if shapes:
+                missing = shapes - live_shapes
+                if missing:
+                    violations += 1
+                    print(f"VIOLATION {path}: {r['name']} declares a {kind} tool with "
+                          f"pod:formShape {sorted(missing)}, but no tool graph on the pod carries it")
+            elif kind not in live_types:
                 violations += 1
-                print(f"VIOLATION {path}: {r['name']} declares a {kind} tool with "
-                      f"pod:formShape {sorted(missing)}, but no tool graph on the pod carries it")
-        elif kind not in live_types:
-            violations += 1
-            print(f"VIOLATION {path}: {r['name']} declares a {kind} tool, "
-                  f"but the pod carries no tool of type {kind!r}")
-print("Every pod carries every member shape and declared tool its category tag's template requires."
+                print(f"VIOLATION {path}: {r['name']} declares a {kind} tool, "
+                      f"but the pod carries no tool of type {kind!r}")
+print("Every pod carries every member shape and declared tool its category tags' templates require."
       if violations == 0 else f'{violations} violation(s) found.')
 ```
 
@@ -1358,7 +1362,7 @@ print('All pods satisfy the tool-graph claimant invariants (member-only, distinc
 
 If a violation is found: for a tool graph claimed by a non-member, either add that claimant as a new `member` entry first, or — if the claimant is the organization behind a `service:ServiceProvider` that is already a member — add the missing `service:providedBy` triple to that service's own member graph, or reconsider whether the claim really belongs in this pod's tool at all. For a repeated claimant within one tool, merge the two graphs' content into one — a single member can only make one claim about a given tool's topic, not two.
 
-**YAML-9 — pod tag well-formedness**: A pod's two tag fields — `tpod.userTag` and `tpod.serviceTag` (`pod:userTag`/`pod:serviceTag`, `pod.ttl`'s Pod Tags section) — are each optional and each 0..N, but they are different shapes and SHACL reaches different distances into each, so what is left for this check differs by kind. **`tpod.userTag`** is a plain string, and `shacl/pod-shacl.ttl`'s `:InstancePodShape` constrains it only to a non-empty one (`sh:minLength 1`), leaving all three of the original failure modes here. *Whitespace*: `" Ginger"` and `"Ginger"` are distinct strings that `sh:minLength` accepts equally, and a padded tag silently fails to match its own unpadded twin in a tag search. *Type confusion*: a YAML value that isn't a string at all — a bare `2027` parsing as an integer, or a nested mapping left behind by a hand edit — reaches synthesis as a non-string, and `helpers/databook_graphs.py`'s `emit_lit()` stringifies whatever it is rather than rejecting it. *Duplication*: RDF is a set, so a tag repeated twice under this property collapses to a single triple *before* validation ever runs, making the duplicate permanently invisible to SHACL no matter what constraint is written. **`tpod.serviceTag`** is a nested mapping per value, and its three sub-keys become `pod:tagNamespace`/`pod:tagKey`/`pod:tagValue` on a `pod:ServiceTag` node that `:ServiceTagShape` constrains directly — spelling, cardinality and surrounding whitespace included. This check therefore does **not** repeat those regexes; duplicating them here would only let the two drift. What it covers for this kind is what no SHACL constraint can reach: a **sub-value that is not a string**, which `emit_lit()` stringifies into something that may well pass (a YAML float `1.2` becomes `"1.2"` and satisfies the reverse-DNS pattern outright); an **entry that is not a mapping at all**, typically a leftover flat `"AppleContacts/Christmas_List"` string from the retired opaque-string form, which SHACL can only report as three anonymous `sh:minCount` failures with no hint that the YAML shape is the problem; an **unrecognized extra sub-key**, which the emitter drops silently so RDF never learns it existed; the field being **present but empty**, indistinguishable in RDF from the field being absent; and **duplication**, which changes character here rather than disappearing — two identical entries synthesize two *distinct* blank nodes, so unlike a repeated literal the duplicate really is present after synthesis, but comparing sibling nodes needs a SPARQL query rather than any core SHACL constraint, and this repo uses `sh:sparql` nowhere. Deduplication is on the whole `(namespace, key, value)` triple, never on `(namespace, key)` alone: a contact sitting in three Apple Contacts Groups is legitimately three tags sharing one namespace and one key. Duplication *across* kinds is deliberately not flagged — the two properties are separate. This check reads YAML directly, before synthesis, which is the only point at which any of it is still observable. Run:
+**YAML-9 — pod tag well-formedness**: A pod's three tag fields — `tpod.categoryTag`, `tpod.userTag` and `tpod.serviceTag` (`pod:categoryTag`/`pod:userTag`/`pod:serviceTag`, `pod.ttl`'s Pod Tags section) — are each optional and each 0..N, but they are different shapes and SHACL reaches different distances into each, so what is left for this check differs by kind. **`tpod.categoryTag`** is a list of concept CURIEs, and `:InstancePodShape` checks each value is a `skos:Concept` in some scheme, so what is left here is only what synthesis hides: a value that is **not a string**, the field being **present but empty**, and a CURIE **repeated** on one pod, which RDF collapses to a single triple before validation runs. A tag together with one of its own broader concepts is deliberately not flagged: the broader one is redundant, being implied anyway, but harmless. **`tpod.userTag`** is a plain string, and `shacl/pod-shacl.ttl`'s `:InstancePodShape` constrains it only to a non-empty one (`sh:minLength 1`), leaving all three of the original failure modes here. *Whitespace*: `" Ginger"` and `"Ginger"` are distinct strings that `sh:minLength` accepts equally, and a padded tag silently fails to match its own unpadded twin in a tag search. *Type confusion*: a YAML value that isn't a string at all — a bare `2027` parsing as an integer, or a nested mapping left behind by a hand edit — reaches synthesis as a non-string, and `helpers/databook_graphs.py`'s `emit_lit()` stringifies whatever it is rather than rejecting it. *Duplication*: RDF is a set, so a tag repeated twice under this property collapses to a single triple *before* validation ever runs, making the duplicate permanently invisible to SHACL no matter what constraint is written. **`tpod.serviceTag`** is a nested mapping per value, and its three sub-keys become `pod:tagNamespace`/`pod:tagKey`/`pod:tagValue` on a `pod:ServiceTag` node that `:ServiceTagShape` constrains directly — spelling, cardinality and surrounding whitespace included. This check therefore does **not** repeat those regexes; duplicating them here would only let the two drift. What it covers for this kind is what no SHACL constraint can reach: a **sub-value that is not a string**, which `emit_lit()` stringifies into something that may well pass (a YAML float `1.2` becomes `"1.2"` and satisfies the reverse-DNS pattern outright); an **entry that is not a mapping at all**, typically a leftover flat `"AppleContacts/Christmas_List"` string from the retired opaque-string form, which SHACL can only report as three anonymous `sh:minCount` failures with no hint that the YAML shape is the problem; an **unrecognized extra sub-key**, which the emitter drops silently so RDF never learns it existed; the field being **present but empty**, indistinguishable in RDF from the field being absent; and **duplication**, which changes character here rather than disappearing — two identical entries synthesize two *distinct* blank nodes, so unlike a repeated literal the duplicate really is present after synthesis, but comparing sibling nodes needs a SPARQL query rather than any core SHACL constraint, and this repo uses `sh:sparql` nowhere. Deduplication is on the whole `(namespace, key, value)` triple, never on `(namespace, key)` alone: a contact sitting in three Apple Contacts Groups is legitimately three tags sharing one namespace and one key. Duplication *across* kinds is deliberately not flagged — the two properties are separate. This check reads YAML directly, before synthesis, which is the only point at which any of it is still observable. Run:
 
 ```python
 import glob, re, yaml
@@ -1381,6 +1385,25 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     if not fm or fm.get('type') != 'pod-databook':
         continue
     tpod = fm.get('tpod', {}) or {}
+
+    # tpod.categoryTag — a list of concept CURIEs. Their being concepts in a
+    # scheme is :InstancePodShape's business; only the YAML shape and exact
+    # duplicates, which RDF would collapse silently, are checked here.
+    if 'categoryTag' in tpod:
+        values = as_list(tpod.get('categoryTag'))
+        if not values:
+            print(f'VIOLATION {path}: categoryTag is present but empty — omit the field instead')
+            violations += 1
+        seen = set()
+        for v in values:
+            if not isinstance(v, str) or not v.strip():
+                print(f'VIOLATION {path}: categoryTag value {v!r} is not a non-empty string')
+                violations += 1
+                continue
+            if v in seen:
+                print(f'VIOLATION {path}: categoryTag value {v!r} is duplicated')
+                violations += 1
+            seen.add(v)
 
     # tpod.userTag — a plain string, so all three original failure modes
     # still apply to it unchanged.

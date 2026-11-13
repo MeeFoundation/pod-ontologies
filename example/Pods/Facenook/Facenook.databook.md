@@ -20,7 +20,8 @@ description: >
   use; and a pod:Browser tool, which no template declared here and the app added during the
   presenting flow.
 tpod:
-  categoryTag: "podcat:Companies"
+  categoryTag:
+    - "podcat:Companies"
   creator: ":Self"
   owner: ":Self"
   member:

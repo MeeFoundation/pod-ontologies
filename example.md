@@ -86,7 +86,7 @@ Alice lived in Boston until August 2025 and now lives in Paradise, CA. Her *Para
 
 ### Possessions (Things)
 
-Alice, like everyone, owns (or borrows, or rents) zillions of things. A few of them are described in [graph 22](<example/Pods/Things/Things.databook.md#graph-22>), which concentrates on cards: a plastic driver's license card, a payment card, a health insurance card, and a Social Security card. Alice also has a wallet, and keeps some of these cards in it and some separately. She has a vehicle too — see [Vehicles](#vehicles) below. Everything else she owns is out of scope for this example.
+Alice, like everyone, owns (or borrows, or rents) zillions of things. A few of them are described in her *Things* pod (`podcat:Things`), in [graph 22](<example/Pods/Things/Things.databook.md#graph-22>), which concentrates on cards: a plastic driver's license card, a payment card, a health insurance card, and a Social Security card. Alice also has a wallet, and keeps some of these cards in it and some separately. She has a vehicle too — see [Vehicles](#vehicles) below. Everything else she owns is out of scope for this example.
 
 Here are a few lines from [graph 22](<example/Pods/Things/Things.databook.md#graph-22>):
 
@@ -108,7 +108,7 @@ Here are a few lines from [graph 22](<example/Pods/Things/Things.databook.md#gra
 
 #### Vehicles
 
-Alice has a pod for her car, named *RAV4* after the car itself and tagged `podcat:Vehicles`. Since `podcat:Vehicles` is narrower than `podcat:Things`, a search for `podcat:Things` finds it together with the *Things* pod. Thanks to `podcat:Vehicles`'s template pod, the *RAV4* pod identifies the car's vehicle type, make and model (real Wikidata individuals — Toyota and the Toyota RAV4), model year, VIN, color, body type, fuel type, drive wheel configuration, current odometer reading, and engine specification as a real `v:Vehicle` individual rather than a bare label ([graph 63](<example/Pods/RAV4/RAV4.databook.md#graph-63>)).
+Alice has a pod for her car, named *RAV4* after the car itself and tagged `podcat:Vehicles`. Since `podcat:Vehicles` is narrower than `podcat:Things`, a search for `podcat:Things` finds it together with the *Things* pod. Tagging it `podcat:Vehicles` gave it the form tool that concept's template declares, whose graph ([graph 63](<example/Pods/RAV4/RAV4.databook.md#graph-63>)) records the car as a real `v:Vehicle` individual rather than a bare label: its vehicle type, make and model (real Wikidata individuals — Toyota and the Toyota RAV4), model year, VIN, color, body type, fuel type, drive wheel configuration, current odometer reading, and engine specification. Its required `member` entry ([graph 62](<example/Pods/RAV4/RAV4.databook.md#graph-62>)) is the usual given-name stub.
 
 Here is a snippet from [graph 63](<example/Pods/RAV4/RAV4.databook.md#graph-63>):
 

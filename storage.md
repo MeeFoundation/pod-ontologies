@@ -55,7 +55,7 @@ of *all* Tellipod data, with no carve-out for the unstructured parts.
 - **Attachments versus private files.** The distinction is a rule about *propagation*: an
   attachment is content every member receives, and a private file stays in one member's copy and
   reaches no one else. The two are told apart by how the member added them in the app.
-- **The note.** At most one per pod. It supports links to other pods, resolved by target pod id,
+- **The note.** Exactly one per pod. It supports links to other pods, resolved by target pod id,
   and to the pod's own tools, graphs and attachments. It is a rich-text document with Markdown-like
   formatting, held in the app's own internal format — one suited to those links and to merging
   concurrent edits by several members. A member can export it as a Markdown file.

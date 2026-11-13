@@ -239,7 +239,7 @@ The split into two leaves is the diagram's substantive claim, and it is a PDN-la
 Its legend is the same six titled boxes the 12 example diagrams carry, stacked in this order: "UI View", "Pod name", "Category tags", "Claimant", "Other", "Members". The identical block appears in 13 diagrams, so a change to it has to be applied thirteen times by hand, the same fan-out PNG-11 warns about. Box by box:
 
 - **UI View** holds a green `#Heading` with a grey connector, standing for a group header (PNG-1i). This diagram draws none; the box is kept so that all 13 legends stay identical.
-- **Pod name** holds the three-line pod-box formula: bold black "Pod name", green "#Category tag", grey "#User tag(s)".
+- **Pod name** holds the three-line pod-box formula: bold black "Pod name", green "#Category tag(s)", grey "#User tag(s)".
 - **Category tags** holds four fill-color swatches in a 2×2 grid, labeled inside each swatch: "Person" (tan) and "Mix" (light-blue-to-tan gradient) on top, "Org" (light blue) and "None" (purple/lavender) below, following PNG-1h's rule over the pod's category tags. "Mix" is a pod whose tags reach both top concepts. "None" is a pod carrying no `pod:categoryTag`, a display convention and not a class.
 - **Claimant** holds two claim-fill swatches, a green "Other" (claimed by someone other than the self) and a dashed "Self" (claimed by the user). Claim fill is a two-state fact; there is no third "Delegate" fill (see PNG-10 and PNG-11).
 - **Other** holds a document icon labeled "Attachment", a pod attachment drawn in a pod box (filled green when it is a credential signed by its issuer, per PNG-10, and never counted as a graph shape, per PNG-1c), and a square labeled "Form", the kind of tool a square stands for.

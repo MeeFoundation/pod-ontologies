@@ -677,6 +677,13 @@ pod:member rdf:type owl:ObjectProperty ;
 #    later.
 #    The pod's note keeps its own separate role and its own Note
 #    area, and is neither an attachment nor a private file.
+#    Beside it, each member has a meta note: their own personal
+#    note about the pod, in the same format as the note, shown in
+#    the same Note area but private to that member. Like a private
+#    file, it stays in their own copy of the pod and never reaches
+#    another member, owner included. No property models it, not
+#    even a documentation-only one, since it is per-member state
+#    rather than shared pod content.
 #    pod:attachment, below, links a pod to each of its attachments,
 #    every one described as a sources:SourceItem (other/sources.ttl).
 #    A private file is never a pod:attachment value. The diagram

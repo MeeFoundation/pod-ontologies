@@ -31,6 +31,10 @@ in that folder. The layout is flat: every pod is one folder directly under `exam
   content simply has no `X.md`. The file is plain Markdown, a stand-in approximating
   what the app's Markdown export of the note would write. At runtime the note is app-internal, held
   in the app's own format rather than as Markdown, and has no name of its own.
+- **The member's meta note is a file named `X.meta.md`** beside the note, absent when empty, and
+  Markdown for the same reason the note's file is. Every example pod is the copy Alice holds, so a
+  `X.meta.md` is always hers: other members' meta notes never reach her copy, and so never appear.
+  At runtime the meta note is app-internal, like the note.
 - **A pod's attachments are the plain files inside its `_pod-attachments` folder, and the member's
   own private files are the ones loose beside it.** At runtime the same distinction is a rule about
   what propagates on a share, decided by how the member added the file in the app, not by which
@@ -83,6 +87,9 @@ the metadata about the pod itself; a pod's unstructured content sits beside it:
   is what the app's export of a note writes, not because the note is Markdown: a link to another
   pod is written in the export's `[[id|text]]` form, and a link to a block inside the pod has no
   syntax here at all (see [Where the note's format and block links go](#where-the-notes-format-and-block-links-go));
+- **the member's meta note** — one Markdown file named `X.meta.md`, absent when the member has
+  written nothing in it. It is the holding member's own personal note about the pod and never
+  reaches another member;
 - **the attachments** — the plain files inside the folder's own `_pod-attachments` subfolder, flat,
   like email attachments. Every pod has that subfolder, empty or not, and its contents are the part
   of a pod's folder that travels when the pod is shared;
@@ -621,8 +628,8 @@ in full. And a pod's chat area holds more than its group stream (see
 seen by those two alone, and a direct message between a user and their own personal agent (@Telli)
 by that user alone, so neither can live in shared, synced pod content the way the group stream can —
 whatever holds a pod's chat has to hold messages with different propagation rules. A pod already has
-two pieces of content that do not propagate on a share, `pod:serviceTag` and a member's own private
-files, so the precedent exists; what is particular here is that the split runs *within* one feature
+three pieces of content that do not propagate on a share, `pod:serviceTag`, a member's own meta
+note and their own private files, so the precedent exists; what is particular here is that the split runs *within* one feature
 rather than between two properties.
 
 What is genuinely still open is the storage format the app uses for it, which is an app-internal

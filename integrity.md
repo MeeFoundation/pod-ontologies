@@ -1563,7 +1563,7 @@ If any `MISSING:` lines appear, either add the file or update the link.
 1. **Nothing sits loose in `example/Pods/` itself** — every pod has its own folder, so a (non-hidden) file directly in `example/Pods/` is an error.
 2. **Every folder directly in `example/Pods/` is a pod**, holding exactly one pod-databook: never more, since a `pod:Pod` is self-contained and two pods sharing a folder would make a file in it ambiguously part of both; and never none, a folder with nothing in it being an empty/placeholder folder and one holding files but no databook being stray content outside any pod.
 3. **The databook's stem equals its folder's name**, verbatim: `<Name>.databook.md` in `<Name>/`.
-4. **No pod folder nests inside another**: no subfolder of a pod folder, at any depth, holds a pod-databook or a `_pod-attachments` folder. A pod folder holds, besides its databook, an optional `<Name>.md` note, its `_pod-attachments`, and the member's own private files, which they may arrange in subfolders however they like.
+4. **No pod folder nests inside another**: no subfolder of a pod folder, at any depth, holds a pod-databook or a `_pod-attachments` folder. A pod folder holds, besides its databook, an optional `<Name>.md` note, an optional `<Name>.meta.md` meta note, its `_pod-attachments`, and the member's own private files, which they may arrange in subfolders however they like.
 5. **`_pod-attachments` sits directly inside its pod folder and is flat** — plain files only, no subfolder and no pod-databook.
 6. **Every pod has a `_pod-attachments` folder**, empty or not; since git cannot track an empty directory, a pod with no attachments carries a `.gitkeep` in it.
 

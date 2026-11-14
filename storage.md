@@ -12,7 +12,7 @@ point here rather than restating any of this.
 ## Where pod content lives
 
 A pod's entire content is app-internal: its members, tools, graphs, tags, name and id,
-together with its note, its attachments, its chat, and a member's own private files. None of it is
+together with its note, each member's own meta note, its attachments, its chat, and a member's own private files. None of it is
 written to the filesystem, in any form, at any point. There is no folder representing a pod, no
 file representing its note, and no directory holding its attachments.
 
@@ -61,6 +61,9 @@ of *all* Tellipod data, with no carve-out for the unstructured parts.
   and to the pod's own tools, graphs and attachments. It is a rich-text document with Markdown-like
   formatting, held in the app's own internal format — one suited to those links and to merging
   concurrent edits by several members. A member can export it as a Markdown file.
+- **The meta note.** One per member per pod, the member's own personal note about it, in the same
+  format as the note. It is private to that member: it stays in their own copy of the pod, syncs
+  across their own devices, and never propagates on a share.
 - **PKM tools.** Tellipod's store is not a PKM vault, and no Obsidian-style tool reads it directly.
   The note's wikilink-style links and its Markdown export are the bridge to such tools.
 

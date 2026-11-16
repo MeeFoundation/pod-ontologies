@@ -1,11 +1,11 @@
 ---
 id: http://www.example.org/tpod/pods/pod-55
-title: "Paula's Things"
+title: "Things"
 type: pod-databook
 version: 1.0.0
 created: 2026-11-16
 description: >
-  Pod DataBook for the "Paula's Things" pod (category tag: podcat:Things). It sits in Alice's pod space for Paula, anchored to the Paula Walker pod, so its podcat:Things tag means Paula's things rather than Alice's own (which are in the Things pod, in her default space). It is a one-member pod with one member entry about :Self, plus a form tool about :Paula_Walker that Alice added with the Contact Info form, since podcat:Things' own template pod declares no tool.
+  Pod DataBook for the "Things" pod (category tag: podcat:Things) in Alice's pod space for Paula, anchored to the Paula Walker pod. Its name and its podcat:Things tag mean Paula's things rather than Alice's own, which are in the other "Things" pod, in her default space; the space is what tells the two apart. Its folder carries the space name as a suffix only because two folders cannot share a name (pod-databook.md's Filename Convention). It is a one-member pod with one member entry about :Self, plus a form tool about :Paula_Walker that Alice added with the Contact Info form, since podcat:Things' own template pod declares no tool.
 tpod:
   categoryTag:
     - "podcat:Things"

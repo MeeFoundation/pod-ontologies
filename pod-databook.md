@@ -163,14 +163,21 @@ example/Pods/<Name>/<Name>.databook.md
 
 `<Name>` is the pod's own name, exactly as the DataBook's `title:` field gives it — verbatim, same
 case, spacing and punctuation (e.g. `Acme`, `Paula Walker`, `Ginger Care & Feeding`) — and the
-folder carries the same name. Nothing else goes into the filename: not the pod's category tags,
-not a role, and no numeric disambiguator. A folder holds **at most one** DataBook, and FS-5 requires
+folder carries the same name. The one exception is a pod in a [pod space](README.md#pod-spaces)
+other than the default: its `<Name>` may instead be its `title:` followed by a space and the pod
+space's name in parentheses — `Things (Paula Walker)` for a pod titled `Things` in the space
+anchored to the *Paula Walker* pod, a space's name being its anchor pod's `title:`. The suffix is
+there only because two folders cannot share a name, and is used only where the bare title would
+collide; the pod's name is still its `title:`. Nothing else goes into the filename: not the pod's
+category tags, not a role, and no numeric disambiguator. A folder holds **at most one** DataBook, and FS-5 requires
 it to agree with the folder's `_pod-attachments` marker, so a pod folder carries exactly one.
 
 Pod names need not be unique in the app, which resolves every reference to a pod by its id (see
 [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
-Folders here must differ, though, so two example pods that would share a name are given
-distinguishing ones instead — `Ginger Medical` rather than a bare `Medical`, for instance. A pod's `id:` is deliberately *not* derived from its name — see [`id`](#id)
+Folders here must differ, though. Two pods in different spaces that share a name are told apart
+by the space suffix above. Two in the same space — or in the default space, which has no suffix —
+are given distinguishing names instead: `Ginger Medical` rather than a bare `Medical`, for
+instance, since a pet has no space of its own to supply the difference. A pod's `id:` is deliberately *not* derived from its name — see [`id`](#id)
 below.
 
 ## Frontmatter

@@ -34,7 +34,7 @@ A category tag says what kind of thing a pod is about, never whose (see README's
 |---|---|---|---|
 | Alice Walker (default) | `podcat:Person` | — | every pod not listed below, Sophia Walker, Paula Walker and Acme included |
 | Sophia Walker | `podcat:Person` | [Sophia Walker](<example/Pods/Sophia Walker/Sophia Walker.databook.md>) | Health & Wellness, Jane Starostina, Medical Appointment |
-| Paula Walker | `podcat:Person` | [Paula Walker](<example/Pods/Paula Walker/Paula Walker.databook.md>) | Paula's Things |
+| Paula Walker | `podcat:Person` | [Paula Walker](<example/Pods/Paula Walker/Paula Walker.databook.md>) | Things |
 | Acme | `podcat:Organization` | [Acme](<example/Pods/Acme/Acme.databook.md>) | Alice Walker |
 
 Each anchor pod is an ordinary pod in Alice's default space, about the person or organization its space is for — its form tool's topic is `:Sophia_Walker`, `:Paula_Walker` or `:Acme`. Opening one shows a link into its space, and each space links back to it. Sophia and Paula are people, so their spaces reuse the Person branch, and Alice's space for her mother has its own Things just as hers does. Acme is an organization, so its space is rooted at `podcat:Organization`, and the only place an Organization-rooted tag like `podcat:Employees` can be used is in a space like it. Each chain here is one step long, every anchor pod sitting in the default space; a pod about Paula's sister, kept in Paula's space, could anchor a space of its own one step further out. Ginger, Alice's cat, has three pods but no space, since only a person or an organization anchors one: her pods sit in Alice's default space, gathered by Alice's "Ginger" user tag.
@@ -143,7 +143,7 @@ Here are a few lines from [graph 22](<example/Pods/Things/Things.databook.md#gra
     BFO_0000176 :Alice_Wallet .                            # in the wallet
 ```
 
-Paula has things too, and Alice keeps a few of them on record: a separate [*Paula's Things*](<example/Pods/Paula's Things/Paula's Things.databook.md>) pod, also tagged `podcat:Things`, whose form tool ([graph 108](<example/Pods/Paula's Things/Paula's Things.databook.md#graph-108>)) records Paula's wallet and the two cards in it; its required `member` entry ([graph 107](<example/Pods/Paula's Things/Paula's Things.databook.md#graph-107>)) is the usual given-name stub. The two pods carry the same tag, and what tells them apart is the pod space each sits in: *Things* in Alice's default space, *Paula's Things* in her space for Paula, so a Things search in either space finds only the one (see [Pod Spaces](#pod-spaces) below).
+Paula has things too, and Alice keeps a few of them on record: a second [*Things*](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md>) pod, also tagged `podcat:Things`, whose form tool ([graph 108](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-108>)) records Paula's wallet and the two cards in it; its required `member` entry ([graph 107](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-107>)) is the usual given-name stub. The two pods carry the same name and the same tag, and what tells them apart is the pod space each sits in: one in Alice's default space, the other in her space for Paula, so a Things search in either space finds only the one (see [Pod Spaces](#pod-spaces) below).
 
 <p align="center"><img src="example/images/things.png" alt="Things pods"></p>
 
@@ -254,7 +254,7 @@ A summary of all thirty-one pods under `example/Pods/`, grouped by the subsectio
 | Current and Previous Homes | Boston | [Boston.databook.md](<example/Pods/Boston/Boston.databook.md>) {7} | Self | `podcat:Previous` | — | — | 13, 82 |
 | Current and Previous Homes | Paradise | [Paradise.databook.md](<example/Pods/Paradise/Paradise.databook.md>) {8} | Self | `podcat:Home` | — | — | 18, 83 |
 | Possessions (Things) | Things | [Things.databook.md](<example/Pods/Things/Things.databook.md>) {11} | Self | `podcat:Things` | — | — | 22 |
-| Possessions (Things) | Paula's Things | [Paula's Things.databook.md](<example/Pods/Paula's Things/Paula's Things.databook.md>) {55} | Paula Walker | `podcat:Things` | Paula Walker | — | 107, 108 |
+| Possessions (Things) | Things | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md>) {55} | Paula Walker | `podcat:Things` | Paula Walker | — | 107, 108 |
 | Vehicles | RAV4 | [RAV4.databook.md](<example/Pods/RAV4/RAV4.databook.md>) {44} | Alice's RAV4 | `podcat:Vehicles` | — | — | 62, 63 |
 | Caring for Ginger | Ginger | [Ginger.databook.md](<example/Pods/Ginger/Ginger.databook.md>) {41} | Ginger | `podcat:Pets` | — | "Ginger" | 36, 37 |
 | Caring for Ginger | Ginger Medical | [Ginger Medical.databook.md](<example/Pods/Ginger Medical/Ginger Medical.databook.md>) {40} | Ginger | `podcat:PetsMedical` | — | "Ginger" | 32, 33, 57 |
@@ -306,7 +306,7 @@ The graphs in the table below are *about* Alice and claimed *by* Alice. The "Pod
 | 99 | [Hilton.databook.md](<example/Pods/Hilton/Hilton.databook.md#graph-99>) {52} | `podcat:TravelProvider` | The Hilton pod's required `member` entry, claimed by and about Alice — her given name, satisfying `ContactInfoShape` | [view](example/graphs/images/graph-99.png) |
 | 102 | [PRIVO.databook.md](<example/Pods/PRIVO/PRIVO.databook.md#graph-102>) {53} | `podcat:IdVerification` | The PRIVO pod's own `:Self` member entry — carries her given name (required by `ContactInfoShape`, `pod:memberShape`) | [view](example/graphs/images/graph-102.png) |
 | 104 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-104>) {54} | `podcat:Companies` | The Facenook pod's own `:Self` member entry — carries her given name (required by `ContactInfoShape`, `pod:memberShape`) | [view](example/graphs/images/graph-104.png) |
-| 107 | [Paula's Things.databook.md](<example/Pods/Paula's Things/Paula's Things.databook.md#graph-107>) {55} | `podcat:Things` | The Paula's Things pod's required `member` entry — her given name (required by `ContactInfoShape`, the template's `pod:memberShape`) | [view](example/graphs/images/graph-107.png) |
+| 107 | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-107>) {55} | `podcat:Things` | The required `member` entry of the Things pod in Alice's space for Paula — her given name (required by `ContactInfoShape`, the template's `pod:memberShape`) | [view](example/graphs/images/graph-107.png) |
 
 The following table lists graphs that are *about* Alice but claimed by others.
 
@@ -355,7 +355,7 @@ The following table lists graphs about anyone or anything else in Alice's pods: 
 | 103 | [PRIVO.databook.md](<example/Pods/PRIVO/PRIVO.databook.md#graph-103>) {53} | `podcat:IdVerification` | PRIVO's website as a pod member — `:PRIVO_Site`, typed `s:WebsiteService`, carrying `s:siteDomain "privo.com"`; also an `s:ServiceProvider` carrying `s:providedBy :PRIVO`, since PRIVO supports the Pod Interface natively; claimed by PRIVO Inc. | [view](example/graphs/images/graph-103.png) |
 | 105 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-105>) {54} | `podcat:Companies` | Facenook's website, a social network site, as a pod member — `:Facenook_Site`, typed `s:WebsiteService`, carrying `s:siteDomain "facenook.com"`; minted by Alice's app during the presenting flow and claimed by Alice | [view](example/graphs/images/graph-105.png) |
 | 106 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-106>) {54} | `podcat:Companies` | Alice's basic claim about her Facenook account itself — service name, username, service URI, and password — backs the Facenook pod's form tool, whose `formTopic: ":Alice_Facenook_Account"` is the pod's derived subject; typed `sa:ServiceAccount` | [view](example/graphs/images/graph-106.png) |
-| 108 | [Paula's Things.databook.md](<example/Pods/Paula's Things/Paula's Things.databook.md#graph-108>) {55} | `podcat:Things` | Alice's record of her mother Paula's possessions — wallet, driver's license and debit card; the pod's form-tool graph, `formTopic: ":Paula_Walker"`, in Alice's pod space for Paula | [view](example/graphs/images/graph-108.png) |
+| 108 | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-108>) {55} | `podcat:Things` | Alice's record of her mother Paula's possessions — wallet, driver's license and debit card; the pod's form-tool graph, `formTopic: ":Paula_Walker"`, in Alice's pod space for Paula | [view](example/graphs/images/graph-108.png) |
 
 ## Diagrams
 

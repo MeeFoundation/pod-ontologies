@@ -1326,7 +1326,7 @@ print()
 print('Derived subjects listed above for every pod — member/tool subject overlap is allowed, not a violation.')
 ```
 
-**YAML-5 — Pod-databook `title:` is the pod's name and matches its own folder's OS name** (a scaffolding check — at runtime there is no folder at all, and the app's own record of the name is authoritative outright): `title:` is defined as the pod's own name — it is always exactly the name of the filesystem folder that holds the pod-databook, and the two are kept in sync (a folder rename means updating `title:` to match, never the reverse); `title:` is never an independent display-name override of the folder's name. The [Filename Convention](pod-databook.md#filename-convention) already requires a pod-databook's *filename root* to be an exact copy of its folder's own name, but that convention is about the filename — not the separate `title:` YAML field, which several other checks (notably PNG-1a's box-label match) treat as authoritative for what a pod "is called." The invariant: for every pod-databook under `example/Pods/`, `title:` must equal `os.path.basename` of the folder it directly lives in, verbatim (same case/spacing/punctuation rule as the filename convention — no kebab-casing, no paraphrasing). Run:
+**YAML-5 — Pod-databook `title:` is the pod's name and matches its own folder's OS name** (a scaffolding check — at runtime there is no folder at all, and the app's own record of the name is authoritative outright): `title:` is defined as the pod's own name — it is always exactly the name of the filesystem folder that holds the pod-databook, and the two are kept in sync (a folder rename means updating `title:` to match, never the reverse); `title:` is never an independent display-name override of the folder's name. The [Filename Convention](pod-databook.md#filename-convention) already requires a pod-databook's *filename root* to be an exact copy of its folder's own name, but that convention is about the filename — not the separate `title:` YAML field, which several other checks (notably PNG-1a's box-label match) treat as authoritative for what a pod "is called." The invariant: for every pod-databook under `example/Pods/`, `title:` must equal `os.path.basename` of the folder it directly lives in, verbatim (same case/spacing/punctuation rule as the filename convention — no kebab-casing, no paraphrasing). The one allowance is the filename convention's space suffix: a pod carrying a `tpod.space` (one outside the default space) may instead sit in a folder named `<title> (<space name>)`, the space's name being the `title:` of the pod its `tpod.space.anchorPod` names — `Things (Paula Walker)` for the `Things` pod in the space anchored to *Paula Walker*. Run:
 
 ```python
 import os, re, yaml
@@ -1336,21 +1336,30 @@ def frontmatter(path):
     m = re.match(r'^---\n(.*?)\n---', text, re.DOTALL)
     return yaml.safe_load(m.group(1)) if m else None
 
-errors = 0
+found = []
 for dirpath, _, filenames in os.walk('example/Pods'):
     if 'under-development' in dirpath.split(os.sep):
         continue
-    pods = [f for f in filenames if f.endswith('.databook.md')]
-    for fname in pods:
-        path = os.path.join(dirpath, fname)
-        fm = frontmatter(path)
-        if not fm:
-            continue
-        title = fm.get('title')
-        folder_name = os.path.basename(dirpath)
-        if title != folder_name:
-            print(f'MISMATCH  {path}  folder={folder_name!r}  title={title!r}')
-            errors += 1
+    for fname in filenames:
+        if fname.endswith('.databook.md'):
+            path = os.path.join(dirpath, fname)
+            fm = frontmatter(path)
+            if fm:
+                found.append((path, os.path.basename(dirpath), fm))
+
+# A space's name is its anchor pod's title (pod.ttl's Pod Spaces section).
+titles = {fm.get('id'): fm.get('title') for _, _, fm in found}
+
+errors = 0
+for path, folder_name, fm in found:
+    title = fm.get('title')
+    allowed = {title}
+    space = (fm.get('tpod') or {}).get('space')
+    if isinstance(space, dict) and titles.get(space.get('anchorPod')):
+        allowed.add(f"{title} ({titles[space['anchorPod']]})")
+    if folder_name not in allowed:
+        print(f'MISMATCH  {path}  folder={folder_name!r}  title={title!r}  allowed={sorted(allowed)!r}')
+        errors += 1
 print('OK — title: matches its own folder name for every pod-databook.' if errors == 0 else f'{errors} mismatch(es) found.')
 ```
 

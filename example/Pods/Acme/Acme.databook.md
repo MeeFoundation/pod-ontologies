@@ -2,16 +2,18 @@
 id: http://www.example.org/tpod/pods/pod-35
 title: "Acme"
 type: pod-databook
-version: 1.3.0
+version: 1.4.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Acme" pod (category tag: podcat:Organization; user tag: "Acme"). It is a
-  one-member pod with one member entry about :Self, plus one form tool about
-  :Acme itself — Alice's employer's own o:Organization profile, since
-  podcat:Organization's own TemplatePod declares that tool.
+  Pod DataBook for the "Acme" pod (category tag: podcat:Work; user tag: "Acme"). It sits in Alice's
+  default pod space, where its tag must fall under podcat:Person, and it
+  anchors her Organization-rooted pod space for Acme. It is a one-member pod
+  with one member entry about :Self, plus one form tool about :Acme itself —
+  Alice's employer's own o:Organization profile, which she added with the
+  Organization form (oshapes:OrganizationShape).
 tpod:
   categoryTag:
-    - "podcat:Organization"
+    - "podcat:Work"
   creator: ":Self"
   owner: ":Self"
   userTag:

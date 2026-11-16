@@ -279,7 +279,8 @@ member's own tags on it. Its non-graph keys map one-for-one onto properties defi
 |------------|-------------------|-------------|---------|
 | `tpod.creator` | `pod:creator` | 1 | Who created this pod's content — a `p:Person` |
 | `tpod.owner` | `pod:owner` | 1+ (required, no upper bound) | Which of the pod's members hold the owner role — always includes `tpod.creator`'s own value; a `p:Person`, never an `s:Service` |
-| `tpod.categoryTag` | `pod:categoryTag` | 0..N | A category concept the member has tagged this pod with — a `skos:Concept` individual in `podcat:PodCategoryScheme` (e.g. `"podcat:Others"`) or in a [category extension](README.md#category-extensions)'s own scheme (e.g. `"bhscat:BostonHubSociety"`). Any number of values, even from unrelated branches of the taxonomy, and a pod with none is of the UserDefined (Custom) category. Only the concepts the member chose are written — implied broader concepts never are. The member's own, never shared; each offered as a suggestion when the pod is shared (see [Joining a Pod](app-behavior.md#joining-a-pod)) |
+| `tpod.categoryTag` | `pod:categoryTag` | 0..N | A category concept the member has tagged this pod with — a `skos:Concept` individual in `podcat:PodCategoryScheme` (e.g. `"podcat:Others"`) or in a [category extension](README.md#category-extensions)'s own scheme (e.g. `"bhscat:BostonHubSociety"`). Any number of values, every one falling under the root of the pod's space (`tpod.space.root`, or `podcat:Person` in the default space), and a pod with none is of the UserDefined (Custom) category. Only the concepts the member chose are written — implied broader concepts never are. The member's own, never shared; each offered as a suggestion when the pod is shared (see [Joining a Pod](app-behavior.md#joining-a-pod)) |
+| `tpod.space` | `pod:space` | 0..1 (absent = default space) | The pod space this pod sits in — whose life it belongs to (see [Pod Spaces](README.md#pod-spaces)). Absent for a pod in the default space, whose IRI `http://www.example.org/tpod/spaces/space-0` is synthesized and never written. Otherwise a mapping of exactly three keys: `id`, the space's own IRI (`http://www.example.org/tpod/spaces/space-<N>`); `root`, `"podcat:Person"` or `"podcat:Organization"` (`pod:spaceRoot`); and `anchorPod`, the `id` of the pod about the space's party (`pod:anchorPod`). Every pod in one space restates the same mapping, so each pod's synthesis is self-contained (integrity.md's YAML-11); the anchor pod itself carries nothing extra. The member's own, never shared; its name offered as a suggestion when the pod is shared |
 | `tpod.userTag` | `pod:userTag` | 0..N | A free-text tag the member minted (e.g. a pet's name, to gather every pod about that pet). The member's own private tag: never shared, never propagated, and never sent as a suggestion |
 | `tpod.serviceTag` | `pod:serviceTag` | 0..N | A tag written by this member's own service module for its own bookkeeping. Each entry is a mapping of three sub-keys — `namespace`, `key`, `value` (`pod:tagNamespace`/`pod:tagKey`/`pod:tagValue`), e.g. `namespace: "foundation.mee.applecontacts"`, `key: "group"`, `value: "Christmas List"` — not a single string. Never displayed and never findable by the user — reachable only by the writing module, within its own namespace — and **local to this member's copy** — the one piece of pod content that does not propagate on a share |
 
@@ -526,6 +527,10 @@ description: >
 tpod:
   categoryTag:
     - "podcat:Concept"
+  space:                       # omit for a pod in the default space
+    id: "http://www.example.org/tpod/spaces/space-N"
+    root: "podcat:Person"
+    anchorPod: "http://www.example.org/tpod/pods/pod-MM"
   creator: ":Self"
   owner: ":Self"
   userTag:
@@ -593,14 +598,15 @@ No single tool checks the whole format. It is enforced in three places:
   entry carries), YAML-3 (`pod-<NN>` id pattern), FS-5 (folder ↔ pod-databook structure),
   YAML-5 (`title:` matches the folder's OS name), TTL-3/TTL-4 (a `shape:` value against the
   graph's own content, and against the templates of the pod's category tags), YAML-9
-  (`tpod.categoryTag`/`tpod.userTag`/`tpod.serviceTag` well-formedness), and YAML-10 (`tool-<NN>` id pattern and
-  uniqueness).
+  (`tpod.categoryTag`/`tpod.userTag`/`tpod.serviceTag` well-formedness), YAML-10 (`tool-<NN>` id pattern and
+  uniqueness), YAML-11 (`tpod.space` well-formedness), and TTL-9 (pod spaces across every pod,
+  and each pod's tags against its space's root).
 - **`helpers/validate.py`** — synthesizes `pod:` triples from the frontmatter and runs SHACL
   (`shacl/pod-shacl.ttl` and friends) against them, plus a per-graph template pass driven by each
   entry's `shape:` value. See [Validation](example.md#validation) in example.md for the commands.
 - **`helpers/databook_graphs.py`** — the parser, and the de facto machine-readable spec for which
   keys are actually consumed. It reads exactly: top-level `id` and `type`;
-  `tpod.categoryTag`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.serviceTag[].{namespace,key,value}`;
+  `tpod.categoryTag`, `tpod.space.{id,root,anchorPod}`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.serviceTag[].{namespace,key,value}`;
   `tpod.member[].{id,claimant,subject,shape}`; and
   `tpod.tool[].{id,type,formTopic,graph[].{id,claimant,shape}}`. No other key is consumed anywhere; an
   unrecognized key is silently ignored.

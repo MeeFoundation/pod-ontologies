@@ -29,6 +29,10 @@ FRONTMATTER_RE = re.compile(r"^(---\n)(.*?\n)(---\n?)(.*)$", re.DOTALL)
 TPOD_NS = "http://www.example.org/tpod#"
 POD = "http://mee.foundation/ontologies/pod#"
 
+# The example user's default pod space — the one with no pod:anchorPod,
+# rooted at podcat:Person. A pod with no `tpod.space` key sits in it.
+DEFAULT_SPACE = "http://www.example.org/tpod/spaces/space-0"
+
 PREFIXES = {
     "podcat": "http://mee.foundation/ontologies/pod-categories#",
     "pod": "http://mee.foundation/ontologies/pod#",
@@ -275,6 +279,28 @@ def process_pod_databook(fm, triples):
     # emitted here — it belongs to pod:TemplatePod alone.
     for cat in as_list(tpod.get("categoryTag")):
         emit_obj(triples, subj, POD + "categoryTag", resolve(cat))
+
+    # pod:space — exactly one pod:PodSpace per pod (pod.ttl's Pod Spaces
+    # section). A pod in the default space carries no `tpod.space` key and is
+    # placed in DEFAULT_SPACE, rooted at podcat:Person with no anchor. A pod in
+    # any other space carries `tpod.space` as a mapping — `id`, `root` and
+    # `anchorPod` — so each pod's synthesis is self-contained, every pod in a
+    # space restating the same three values (integrity.md's YAML-11 checks
+    # they agree). The anchor pod itself carries nothing extra: that it
+    # anchors a space is read off the spaces that name it.
+    space = tpod.get("space")
+    if space is None:
+        emit_obj(triples, subj, POD + "space", DEFAULT_SPACE)
+        emit_type(triples, DEFAULT_SPACE, POD + "PodSpace")
+        emit_obj(triples, DEFAULT_SPACE, POD + "spaceRoot", resolve("podcat:Person"))
+    elif isinstance(space, dict):
+        sid = space.get("id") or f"_:space_{subj.rsplit('/', 1)[-1]}"
+        emit_obj(triples, subj, POD + "space", sid)
+        emit_type(triples, sid, POD + "PodSpace")
+        if space.get("root"):
+            emit_obj(triples, sid, POD + "spaceRoot", resolve(space["root"]))
+        if space.get("anchorPod"):
+            emit_obj(triples, sid, POD + "anchorPod", resolve(space["anchorPod"]))
 
     # pod:userTag — 0..N plain xsd:string values, domain pod:InstancePod
     # (pod.ttl's Pod Tags section), so emitted after the pod:InstancePod

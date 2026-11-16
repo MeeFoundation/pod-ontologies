@@ -2,13 +2,17 @@
 id: http://www.example.org/tpod/pods/pod-13
 title: "Sophia Health & Wellness"
 type: pod-databook
-version: 1.5.0
+version: 1.6.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Sophia Health & Wellness" pod (category tag: podcat:HealthWellness; user tag: "Sophia"). It is a one-member pod with one member entry about :Self and one graph about :Sophia_Walker (the pod's subject).
+  Pod DataBook for the "Sophia Health & Wellness" pod (category tag: podcat:HealthWellness; user tag: "Sophia"). It sits in Alice's pod space for Sophia, anchored to the Sophia Walker pod, since what it records belongs to Sophia's life rather than Alice's. It is a one-member pod with one member entry about :Self and one graph about :Sophia_Walker (the pod's subject).
 tpod:
   categoryTag:
     - "podcat:HealthWellness"
+  space:
+    id: "http://www.example.org/tpod/spaces/space-1"
+    root: "podcat:Person"
+    anchorPod: "http://www.example.org/tpod/pods/pod-12"
   creator: ":Self"
   owner: ":Self"
   userTag:

@@ -1,0 +1,24 @@
+flowchart TD
+    classDef person fill:#fffacd,stroke:#aaa,color:#333
+    classDef org    fill:#cce5ff,stroke:#aaa,color:#333
+    classDef service fill:#e6e6e6,stroke:#aaa,color:#333
+    classDef lit    fill:none,stroke:none,font-style:italic,color:#2a7a2a
+    classDef meta   fill:#f5f5ff,stroke:#9999cc,color:#333
+
+    subgraph ctx["Graph"]
+        direction LR
+        ctx_meta["claimant: :Self\nformTopic: :Paula_Walker\nshape: pshapes:ContactInfoShape"]:::meta
+    end
+
+    n1d7e95f2a0b8[":Paula_DriversLicense\n(PhysicalDriversLicense)"]
+    n7c2a346dbe9e[":Paula_Wallet\n(Wallet)"]
+    na5ee14d8129a[":Paula_PaymentCard\n(PhysicalPaymentCard)"]
+    n0a19bd2dbd74[":Paula_Walker\n(Person)"]:::person
+    n0e3e62db5889("Paula"):::lit
+
+    n1d7e95f2a0b8 -->|"continuantPartOf"| n7c2a346dbe9e
+    na5ee14d8129a -->|"continuantPartOf"| n7c2a346dbe9e
+    n0a19bd2dbd74 -->|"GivenName"| n0e3e62db5889
+    n0a19bd2dbd74 -->|"hasWallet"| n7c2a346dbe9e
+    n0a19bd2dbd74 -->|"hasPhysicalCard"| n1d7e95f2a0b8
+    n0a19bd2dbd74 -->|"hasPhysicalCard"| na5ee14d8129a

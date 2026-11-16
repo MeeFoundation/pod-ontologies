@@ -13,10 +13,10 @@
 @base <http://mee.foundation/ontologies/pod> .
 
 <http://mee.foundation/ontologies/pod> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/10.2.0> ;
-    dc:date "2026-11-13"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/10.3.0> ;
+    dc:date "2026-11-16"^^xsd:date ;
     rdfs:label "Pod Ontology"@en ;
-    rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:InstancePod (an actual pod held by a user) — a pod is always exactly one of the two, never both. There are no further kinds of pod: an instance pod that carries anything beyond its pod:member baseline carries it as a pod:Tool — a form, a calendar, a drawing canvas, a map, an address-book sync or a connection to a standalone web browser, each with its own data format and its own contribution to the app's UI (pod:Form, pod:Calendar, pod:Canvas, pod:Map, pod:Contacts, pod:Browser), zero or more per pod, rather than in a subclass of its own. pod:InstancePod also carries the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:serviceTag, whose values are pod:ServiceTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
+    rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Each pod also sits in exactly one pod:PodSpace (pod:space), the life it belongs to — the user's own, or that of a person or organization the user keeps pods about — rooted at podcat:Person or podcat:Organization (pod:spaceRoot) and, unless it is the user's default space, anchored to the pod about that party (pod:anchorPod); spaces form a flat set and never nest. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:InstancePod (an actual pod held by a user) — a pod is always exactly one of the two, never both. There are no further kinds of pod: an instance pod that carries anything beyond its pod:member baseline carries it as a pod:Tool — a form, a calendar, a drawing canvas, a map, an address-book sync or a connection to a standalone web browser, each with its own data format and its own contribution to the app's UI (pod:Form, pod:Calendar, pod:Canvas, pod:Map, pod:Contacts, pod:Browser), zero or more per pod, rather than in a subclass of its own. pod:InstancePod also carries the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:serviceTag, whose values are pod:ServiceTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
 
 
 #################################################################
@@ -54,7 +54,8 @@ pod:abstract rdf:type owl:AnnotationProperty ;
 #    (pod:attachment). Classification is kind-specific: a
 #    pod:TemplatePod names the one concept it is a template for
 #    (pod:category), and a pod:InstancePod carries zero or more
-#    pod:categoryTag values.
+#    pod:categoryTag values and sits in exactly one pod:PodSpace
+#    (see the Pod Spaces section below).
 #    Everything facet-specific — including pod:member (its linked
 #    pod:MemberGraph container(s)) and pod:tool (its pod:Tool nodes) —
 #    lives on pod:TemplatePod or pod:InstancePod below. There is
@@ -177,6 +178,73 @@ pod:owner rdf:type owl:ObjectProperty ;
     rdfs:comment """Identifies which of a pod:InstancePod's members hold the owner role, as opposed to the regular (non-owner) member role every other member defaults to — a named individual of p:Person, the same range pod:creator uses (never a service:Service — an invited service can join a pod as a member but can never be promoted to owner, mirroring pod:member's own comment that a service can join a pod as a member but never creates one). Required, one or more values (sh:minCount 1, no maxCount, enforced by shacl/pod-shacl.ttl's :InstancePodShape) — every pod:InstancePod has at least one owner and may have several: pod:creator's own value is always included among pod:owner's values as the pod's initial (and, until any promotion, sole) owner, and any current owner may add any other current regular p:Person member (identified by pod:member, not by a tool's own pod:claimant) to pod:owner, promoting them, or remove another owner's value from pod:owner, demoting them back to regular-member status — the sh:minCount 1 floor is what keeps a pod's last remaining owner from being demoted. Every member has full read/write access to the pod's note regardless of ownership (app-level; see app-behavior.md's Permissions section); what an owner alone may do is delete any member's claim or attachment, not only their own. A claim itself is immutable at this layer — a member creates, reads and deletes their own claims but never updates one, a correction being a retraction followed by a fresh claim; the app presents that to the user as an ordinary edit of the value, so app-behavior.md, written at the user level, describes the same operation as an update. Every pod:owner value is also one of the pod's active members — i.e. it must equal the pod:subject of at least one of that pod's pod:member graphs — an invariant not itself OWL/SHACL-expressible (it requires dereferencing each linked graph's own pod:subject, not just counting or matching cardinalities), so it is checked only by CLAUDE.md's own integrity check (YAML-7), not by shacl/pod-shacl.ttl."""@en .
 
 #################################################################
+#    Pod Spaces
+#
+#    A pod space is the life a pod belongs to. A category tag says
+#    what kind of thing a pod is about — Things, Travel, Pets — but
+#    not whose: Alice's things and her mother's things both take
+#    podcat:Things. The space supplies the whose. Every pod a user
+#    holds sits in exactly one pod:PodSpace (pod:space), and each
+#    space is fixed to one top concept of podcat:PodCategoryScheme
+#    (pod:spaceRoot): podcat:Person for a person's life,
+#    podcat:Organization for an organization's. Within a space the
+#    whole branch beneath that root is available again, so a space
+#    for Alice's mother reuses Things, Travel, People and the rest
+#    exactly as Alice's own space does.
+#
+#    A user has one default space, the one with no pod:anchorPod,
+#    rooted at podcat:Person: their own life. Every other space is
+#    anchored to a pod in some other space — the pod about the person
+#    or organization the space is for. The anchor pod stays an
+#    ordinary pod with its own members, tools and graphs; the anchor
+#    is a reference to it, not containment of it. Spaces form a flat
+#    set and pods within a space form a flat set — nothing nests.
+#    Following pod:anchorPod and then that pod's own pod:space,
+#    repeatedly, always ends at the default space, and the spaces it
+#    passes through are the chain of relationships by which the user
+#    reaches the space's party (the user's mother, then her sister).
+#
+#    Only a person or an organization anchors a space — a pet does
+#    not, the Person and Organization branches being the only two
+#    there are to reuse. A space's name is derived, never stored:
+#    the anchor pod's name, or the user's own name for the default
+#    space.
+#
+#    pod:space is per-member, exactly as the tags are: each member
+#    places a shared pod in a space of their own, and placement never
+#    propagates. When a pod is shared, the sender's space name travels
+#    with the invitation as a suggestion only (app-behavior.md's
+#    Joining a Pod).
+#
+#    Constrained by shacl/pod-shacl.ttl's :InstancePodShape and
+#    :PodSpaceShape. That one default space exists per user, and that
+#    every anchor chain reaches it, are integrity.md's YAML-11 and
+#    TTL-9. See README.md's Pod Spaces section.
+#################################################################
+
+pod:PodSpace rdf:type owl:Class ;
+    rdfs:label "PodSpace"@en ;
+    rdfs:comment """The life a set of a user's pods belongs to — the user's own, or that of a person or organization the user keeps pods about. A flat set of pods: not a pod, holding no content of its own, and neither containing nor contained by any other space. Every pod:InstancePod sits in exactly one (pod:space). Carries exactly one pod:spaceRoot, the top concept (podcat:Person or podcat:Organization) every category tag of every pod in it must reach, and at most one pod:anchorPod: none on the user's single default space, rooted at podcat:Person, and exactly one on every other space, naming the pod — in some other space — about the person or organization the space is for. Per-member: each member's spaces, and which of them a shared pod sits in, are their own."""@en .
+
+pod:space rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain pod:InstancePod ;
+    rdfs:range pod:PodSpace ;
+    rdfs:label "space"@en ;
+    rdfs:comment """The pod space this pod sits in, i.e. whose life it belongs to. Exactly one value (shacl/pod-shacl.ttl's :InstancePodShape). Every pod:categoryTag value of the pod must reach that space's pod:spaceRoot. Per-member state, never shared pod content, exactly as pod:categoryTag is: each member places the pod in a space of their own, and moving it changes only their own copy. When the pod is shared, the sender's space name accompanies the invitation as a suggestion only; a joining member who does not take it up finds the pod in their default space. Moving a pod to a space with a different root drops each category tag that does not reach the new root."""@en .
+
+pod:spaceRoot rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
+    rdfs:domain pod:PodSpace ;
+    rdfs:range skos:Concept ;
+    rdfs:label "spaceRoot"@en ;
+    rdfs:comment """The top concept of podcat:PodCategoryScheme this space is rooted at — podcat:Person for a person's life, podcat:Organization for an organization's — and so the branch of the taxonomy its pods are tagged from. Exactly one value, one of those two (shacl/pod-shacl.ttl's :PodSpaceShape). Chosen by the user when the space is created and fixed thereafter; the default space's is always podcat:Person. A category extension concept falls under a space's root when its skos:broadMatch leads there. Range skos:Concept is referenced by name without owl:imports."""@en .
+
+pod:anchorPod rdf:type owl:ObjectProperty , owl:FunctionalProperty , owl:InverseFunctionalProperty ;
+    rdfs:domain pod:PodSpace ;
+    rdfs:range pod:InstancePod ;
+    rdfs:label "anchorPod"@en ;
+    rdfs:comment """The pod about the person or organization this space is for — an ordinary pod in some other space, which keeps its own members, tools and graphs. At most one value: absent only on the user's default space, present on every other. Inverse-functional: a pod anchors at most one space. A reference, not containment — spaces never nest. The anchor pod never sits in the space it anchors, and following pod:anchorPod then pod:space repeatedly always reaches the default space without revisiting one (shacl/pod-shacl.ttl's :PodSpaceShape; integrity.md's TTL-9). The anchor pod's derived subject is a p:Person or an o:Organization, never a pet. Deleting the anchor pod moves its space's pods into the space that held the anchor pod and removes the space. Navigation runs both ways: from the anchor pod into its space, and from the space back to the anchor pod."""@en .
+
+#################################################################
 #    Pod Tags
 #
 #    Three sibling properties, all domain pod:InstancePod:
@@ -256,7 +324,7 @@ pod:categoryTag rdf:type owl:ObjectProperty ;
     rdfs:domain pod:InstancePod ;
     rdfs:range skos:Concept ;
     rdfs:label "categoryTag"@en ;
-    rdfs:comment """The category concept the member has tagged this pod with — a genuine skos:Concept individual (e.g. podcat:ImmediateFamily, podcat:BankingPayments) scoped to a concept scheme via its own skos:inScheme value, not a string and not a class. Zero or more values, no fixed upper bound (shacl/pod-shacl.ttl's :InstancePodShape), even from unrelated branches of the taxonomy: a pod about someone who is both a colleague and a relative can carry a tag for each relationship. A pod with none is of the UserDefined category; that is a display convention, never a concept. The scheme is normally podcat:PodCategoryScheme (pod-categories.ttl); it may instead be an installed category extension's own scheme (pod-category-ext/), whose concepts each carry exactly one skos:broadMatch into podcat:PodCategoryScheme (integrity.md's TTL-8). Only the concepts the member chose are stored. Every broader concept of any of them — reached by skos:broader transitively, and across an extension's skos:broadMatch — is an implied tag: the app shows it greyed out beside the explicit ones, and a search for it matches the pod, but it is derived on demand and never asserted. Per-member state, never shared pod content: adding or removing a category tag changes only the tagging member's copy, so members may tag the same pod differently. When a pod is shared, the sender's category tags accompany the invitation as suggestions only, and the joining member adopts each or not. Adding a category tag naming a concept that has a pod:TemplatePod (reverse lookup ?tc pod:category X) triggers Lazy Instantiation: the pod gains each tool that template declares and does not already carry. Because tools are shared content, a tool gained this way reaches every member, even though the tag that prompted it does not. Removing a tag never removes a tool, the removed tag's tools included. Range skos:Concept is referenced by name without owl:imports."""@en .
+    rdfs:comment """The category concept the member has tagged this pod with — a genuine skos:Concept individual (e.g. podcat:ImmediateFamily, podcat:BankingPayments) scoped to a concept scheme via its own skos:inScheme value, not a string and not a class. Zero or more values, no fixed upper bound (shacl/pod-shacl.ttl's :InstancePodShape), every one of which must reach the pod:spaceRoot of the pod's own pod:space, by skos:broader transitively and across an extension concept's skos:broadMatch: several tags may come from different branches beneath that root — People and Pets, say, in a podcat:Person-rooted space — but a pod never carries a podcat:Person-rooted and a podcat:Organization-rooted tag at once. A pod with none is of the UserDefined category; that is a display convention, never a concept. The scheme is normally podcat:PodCategoryScheme (pod-categories.ttl); it may instead be an installed category extension's own scheme (pod-category-ext/), whose concepts each carry exactly one skos:broadMatch into podcat:PodCategoryScheme (integrity.md's TTL-8). Only the concepts the member chose are stored. Every broader concept of any of them — reached by skos:broader transitively, and across an extension's skos:broadMatch — is an implied tag: the app shows it greyed out beside the explicit ones, and a search for it matches the pod, but it is derived on demand and never asserted. Per-member state, never shared pod content: adding or removing a category tag changes only the tagging member's copy, so members may tag the same pod differently. When a pod is shared, the sender's category tags accompany the invitation as suggestions only, and the joining member adopts each or not. Adding a category tag naming a concept that has a pod:TemplatePod (reverse lookup ?tc pod:category X) triggers Lazy Instantiation: the pod gains each tool that template declares and does not already carry. Because tools are shared content, a tool gained this way reaches every member, even though the tag that prompted it does not. Removing a tag never removes a tool, the removed tag's tools included. Range skos:Concept is referenced by name without owl:imports."""@en .
 
 pod:userTag rdf:type owl:DatatypeProperty ;
     rdfs:domain pod:InstancePod ;

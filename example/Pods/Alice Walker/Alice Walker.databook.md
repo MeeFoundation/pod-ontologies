@@ -2,13 +2,17 @@
 id: http://www.example.org/tpod/pods/pod-18
 title: "Alice Walker"
 type: pod-databook
-version: 1.3.0
+version: 1.4.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Alice Walker" pod (category tag: podcat:Employees; user tag: "Acme"). It is a one-member pod with one member entry about :Self.
+  Pod DataBook for the "Alice Walker" pod (category tag: podcat:Employees; user tag: "Acme"). It sits in Alice's Organization-rooted pod space for Acme, anchored to the Acme pod, which is why its podcat:Employees tag — a concept under podcat:Organization — is allowed. It is a one-member pod with one member entry about :Self.
 tpod:
   categoryTag:
     - "podcat:Employees"
+  space:
+    id: "http://www.example.org/tpod/spaces/space-3"
+    root: "podcat:Organization"
+    anchorPod: "http://www.example.org/tpod/pods/pod-35"
   creator: ":Self"
   owner: ":Self"
   userTag:

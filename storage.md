@@ -46,10 +46,12 @@ of *all* Tellipod data, with no carve-out for the unstructured parts.
   marks it in a filesystem, because it is not in one. The reserved `_pod-attachments` folder that
   marks a pod in this repo is a scaffolding convention only (see below).
 - **Per-member state.** What each member keeps for themselves is their tags — category tags, user tags, and the service tags their
-  own modules write — held in that member's own store and never shared content. This is what lets
-  two members of a shared pod each classify it however they like without touching what the other
-  sees; a sender's category tags cross a share only as suggestions the recipient may adopt (see
-  [Tags](README.md#tags) in README.md).
+  own modules write — and the pod space they place the pod in, all held in that member's own store
+  and never shared content. This is what lets two members of a shared pod each classify it however
+  they like without touching what the other sees; a sender's category tags and space name cross a
+  share only as suggestions the recipient may adopt (see [Tags](README.md#tags) and
+  [Pod Spaces](README.md#pod-spaces) in README.md). A pod space is no more a folder than a pod is:
+  nothing on disk stands for one.
 - **A pod's name.** The app's own record of the name is authoritative. A name need not be unique,
   since a pod is resolved by its stable id; a pod the user left unnamed is given `Untitled-N` by the
   app; and some pods share a name across members while others keep one per member (see

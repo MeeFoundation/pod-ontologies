@@ -5,14 +5,15 @@ type: pod-databook
 version: 1.0.0
 created: 2026-11-16
 description: >
-  Pod DataBook for the "Ruth Alvarez" pod (category tag: podcat:PrimaryCarePhysician). It sits in Alice's pod space for Paula, anchored to the Paula Walker pod: Dr. Ruth Alvarez is Paula's primary care physician, whom Alice keeps on record so she can help her mother with appointments. It is a one-member pod with one member entry about :Self and one graph about :Ruth_Alvarez (the pod's subject).
+  Pod DataBook for the "Ruth Alvarez" pod (category tag: podcat:PrimaryCarePhysician). It sits in Alice's pod space for Paula: Dr. Ruth Alvarez is Paula's primary care physician, whom Alice keeps on record so she can help her mother with appointments. It is a one-member pod with one member entry about :Self and one graph about :Ruth_Alvarez (the pod's subject).
 tpod:
   categoryTag:
     - "podcat:PrimaryCarePhysician"
   space:
     id: "http://www.example.org/tpod/spaces/space-2"
+    name: "Paula Walker"
     root: "podcat:Person"
-    anchorPod: "http://www.example.org/tpod/pods/pod-19"
+    subject: ":Paula_Walker"
   creator: ":Self"
   owner: ":Self"
   member:

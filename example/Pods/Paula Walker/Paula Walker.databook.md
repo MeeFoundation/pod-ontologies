@@ -2,10 +2,10 @@
 id: http://www.example.org/tpod/pods/pod-19
 title: "Paula Walker"
 type: pod-databook
-version: 1.7.0
+version: 1.8.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Paula Walker" pod (category tag: podcat:ImmediateFamily; user tag: "Acme"). Paula is Alice's mother and also her Acme colleague. The pod sits in Alice's default pod space, so its tags must fall under podcat:Person, and the Acme connection is carried by the user tag and by graph 06 rather than by a podcat:Employees tag. The pod anchors Alice's pod space for Paula, which holds a Things pod of Paula's own. Alice has not shared the pod with Paula, so it is a single-member pod: its one member entry is about :Self, and Alice's record of Paula is held by a form tool she added by hand, whose topic is :Paula_Walker.
+  Pod DataBook for the "Paula Walker" pod (category tag: podcat:ImmediateFamily; user tag: "Acme"). Paula is Alice's mother and also her Acme colleague. The pod sits in Alice's default pod space, so its tags must fall under podcat:Person, and the Acme connection is carried by the user tag and by graph 06 rather than by a podcat:Employees tag. Alice also keeps a separate pod space for Paula, which holds pods about Paula's own life. Alice has not shared the pod with Paula, so it is a single-member pod: its one member entry is about :Self, and Alice's record of Paula is held by a form tool she added by hand, whose topic is :Paula_Walker.
 tpod:
   categoryTag:
     - "podcat:ImmediateFamily"

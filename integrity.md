@@ -117,7 +117,7 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
 
 - **PNG-1i — The view header and group headers match the pods' tags**: These elements are display-only, and none of them is a pod. Each diagram carries one view header and zero or more group headers.
 
-  - **The view header** is italic, at the top left, and has two lines, naming the two things a persistent view stores (app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)). The first, `Pod space: <space name>`, names the pod space the view is scoped to. A space's name is its anchor pod's name; the default space's is the user's own, marked `(default)` — `Pod space: Alice Walker (default)` — so it cannot be mistaken for the *Alice Walker* pod, which sits in the Acme space. A view widened to every space reads `Pod space: all`, and only then does each pod box carry a grey `in <space name>` line naming the space it sits in (`in Alice Walker (default)`, `in Paula Walker`), since in a single-space view the header already says it. Every pod box drawn must sit in the named space, unless the view is `all`. The second line, `View tags: #<tag>`, names the view's stored tag query, and every pod box drawn must match it. A pod matches when the tag is one of the pod's user tags (`#Ginger`, `#Sophia`, `#Acme`), when the tag is one of the pod's category tags, or when the tag is a concept one of its category tags reaches upward (`#Travel` matches `#Trips` and `#Provider`; `#Groups` matches `#Boston Hub Society` through its `skos:broadMatch`).
+  - **The view header** is italic, at the top left, and has two lines, naming the two things a persistent view stores (app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)). The first, `Pod space: <space name>`, names the pod space the view is scoped to, by its `pod:spaceName`; the default space's is the user's own name, marked `(default)` — `Pod space: Alice Walker (default)` — so it cannot be mistaken for the *Alice Walker* pod, which sits in the Acme space. A view widened to every space reads `Pod space: all`, and only then does each pod box carry a grey `in <space name>` line naming the space it sits in (`in Alice Walker (default)`, `in Paula Walker`), since in a single-space view the header already says it. Every pod box drawn must sit in the named space, unless the view is `all`. The second line, `View tags: #<tag>`, names the view's stored tag query, and every pod box drawn must match it. A pod matches when the tag is one of the pod's user tags (`#Ginger`, `#Sophia`, `#Acme`), when the tag is one of the pod's category tags, or when the tag is a concept one of its category tags reaches upward (`#Travel` matches `#Trips` and `#Provider`; `#Groups` matches `#Boston Hub Society` through its `skos:broadMatch`).
   - **A group header** is a green `#<prefLabel>` with grey connectors to the pods listed under it. A pod's headers are, for each of its category tags, the broader concepts that tag reaches, outermost first, down to the tag's immediate broader concept. A pod with several category tags is listed once under each of its tags' header chains, so it can appear more than once in one view, each box identical. Its tags all fall under one root, its pod space's (TTL-9), so every chain starts beneath the same top concept. The top concept (`podcat:Person` or `podcat:Organization`) is never drawn as a header. A deeper header is drawn indented beneath the one above it: `people2.png`'s `#Health & Wellness`, then `#Medical`, then `#Provider`, above Jane Starostina and Medical Appointment. A header is never the category tag it is drawn for; that tag is on the box (PNG-1f).
   - **Pods with no header** are those listed for a tag that sits directly under a top concept, or is one, and those which carry no tag. They are listed first, above every header: `things.png`'s "Things" (`#Things`, directly under Person) above `#Things` and RAV4, and `work.png`'s "Acme" (`#Work`, directly under Person).
 
@@ -194,9 +194,9 @@ The 13 diagrams are: `example/images/people.png`, `example/images/people2.png`, 
 
 **PNG-2 — Diagram ↔ files ↔ example.md coverage**: Every numbered graph circle in any of the 13 pod diagrams (`example/images/`) must have (a) a corresponding embedded graph section — a `tpod.member` or `tpod.tool[].graph` entry plus its `### Graph NN` body section — inside a pod-databook file under `example/Pods/`, and (b) a row in one of the tables in the **Graphs** section of `example.md`. Conversely, every row in those tables must correspond to an embedded graph that actually exists — and to that alone: a row does **not** need a numbered circle in any diagram. The 13 diagrams are not required to draw every graph; every graph is documented — a row in `example.md`'s **Graphs** section and a PNG in `example/graphs/images/` (FS-2 and FS-3) — whether or not any diagram draws it. If a circle exists in a diagram but has no embedded graph or `example.md` row, report it rather than creating a graph to match: the DataBooks are authoritative (PNG-1).
 
-**PNG-3 — `pod.ttl` matches `images/pod-ontology/pod.png`**: `Pod` shows `attachment` (to a `sources:SourceItem` box, drawn **0..N**, matching `pod:attachment`'s range — `other/sources.ttl`, referenced by name with no `owl:imports` — and its unbounded cardinality: the files every member of the pod receives, never a member's own private ones). The two classification properties, `pod:category` and `pod:categoryTag`, both range over the classificatory `skos:Concept` (a concept in `podcat:PodCategoryScheme`, pod-categories.ttl, or in a category extension's own scheme); pods do not nest, so there is no tree-position class for either to be confused with. Both record what kind of thing a pod is, and neither needs `owl:imports pod-categories.ttl` (referenced by name only, mirroring `pod:creator`'s identical pattern). The diagram shows two arrows off `Pod` with no counterpart in `pod.ttl` — `note` (to a placeholder box, `(note data object) 1..1` — the note is held in the app's own internal format, not as a Markdown file) and `chat` (to a placeholder box, `(a chat stream) 1..1` — every pod always has a chat stream, possibly empty, held inside the app rather than in the pod's folder) — this is a deliberate, accepted exception to 12a/12b below: README.md already describes both properties' intended semantics (see the Documentation-only Properties section) as planned, but `pod.ttl` itself has no `pod:note`/`pod:chat` declaration yet — neither is ever reified as a triple in any real graph. `Pod` (abstract, blue) carries `attachment` (plus the still-open `note`/`chat` arrows above). `Pod` splits into two disjoint kinds (`owl:disjointWith` — a pod is always exactly one, never both): `TemplatePod` (abstract, blue, a reusable class-level template) carries `category` (to a `skos:Concept` box, **0..1** — the one concept the template is for, carried by every template except `ctpl:UserDefinedTemplatePod`, which carries none), `memberShape` (to a `sh:NodeShape` box, 0..N) and `declaresTool` (to a `pod:Tool` box, 0..N); `InstancePod` (concrete, black, a pod a user actually has) carries `member` (to a `pod:MemberGraph` box, 1..N, no fixed upper bound), `tool` (to a `pod:Tool` box, 0..N), `creator` (to a `p:Person` box, 1..1), `owner` (to its own `p:Person` box, 1..N, no fixed upper bound — every arrow in this diagram carries its own target label, so `creator` and `owner` are drawn as two separate `p:Person` boxes rather than sharing one), `space` (to a `pod:PodSpace` box, **1..1**, which in turn carries `spaceRoot` (to a `skos:Concept` box, 1..1) and `anchorPod` (back to `InstancePod`, 0..1) — `pod.ttl`'s Pod Spaces section), and the three tag properties `categoryTag` (to a `skos:Concept` box, **0..N**), `userTag` (to an `xsd:string` box, 0..N) and `serviceTag` (to a `pod:ServiceTag` box, 0..N) — `pod.ttl`'s Pod Tags section. The three tag arrows hang off `InstancePod`, never off `Pod`: their domain is `pod:InstancePod` deliberately, since a `TemplatePod` seeds no tags. `category` and `categoryTag` hang off different boxes for the same reason: `category` names the one concept a template is for and never appears on an instance pod, while `categoryTag` is a member's own classification of a pod, zero or more concepts. The three tags point at different kinds of target because they are different shapes: a category tag is a concept, a user tag is a bare literal, and a service tag is a value node. `ServiceTag` and the `Tool` hierarchy are **not** drawn in this diagram: each has its own, `images/pod-ontology/tag.png` (PNG-6) and `images/pod-ontology/tool.png` (PNG-7). Here they appear only as arrow targets — a `pod:ServiceTag` box off `serviceTag`, and a `pod:Tool` box off both `tool` and `declaresTool` — never as members of the `Pod` hierarchy, which neither has an `rdfs:subClassOf` relation to. There is no `shape` arrow off `InstancePod` at all — a pod stores no shape of its own; the `shape` property that does exist has domain `pod:Graph` and is drawn in `graph.png` (PNG-4) (each graph's own `pod:shape`, set from the template that supplied the graph, is the validation authority for that graph; there is no single template of a pod to derive a pod-level shape from, a pod carrying zero or more category tags) — and no pod-level `subject` arrow off `InstancePod` either — there is no such property (a pod's own subject is derived from its tools' own `pod:formTopic` values, or failing those from `member`'s own `pod:subject` values, rather than stored on the pod itself; those two are real, surviving properties, scoped to `pod:Tool` and `pod:MemberGraph` rather than to `InstancePod` — see PNG-4). `TemplatePod` has no subclasses of its own, and no individual is ever typed both `TemplatePod` and `InstancePod` — every template individual in `pod-category-templates.ttl` is typed solely `TemplatePod`. No arrow points from `Pod`, `TemplatePod`, or `InstancePod` to any tree-position box at all — pods do not nest, and both classification arrows point to `skos:Concept`. This diagram is the ontology-level (not example-data) picture of `pod:Pod`'s structure — the member-composition hierarchy and its content-linking properties. A single "Key" box in the lower right carries three swatches, in this order — blue "Abstract", black "Concrete and visible", green "Concrete but hidden" — and the class-box colors track them exactly: blue is `pod:abstract true` in `pod.ttl` (`Pod` and `TemplatePod`, and nothing else here) and black is every remaining concrete class. The Key lists exactly the swatches this diagram actually uses — two here, since the one green ("concrete but hidden") class, `ServiceTag`, is drawn in `tag.png` instead. A concrete class may only be green where `pod.ttl` or `README.md` actually says the user never sees it; absent that, it is black. Unlike PNG-1 (example diagrams, where the diagram always wins), this check does not presume which side is authoritative when the two disagree — surface the discrepancy and ask:
+**PNG-3 — `pod.ttl` matches `images/pod-ontology/pod.png`**: `Pod` shows `attachment` (to a `sources:SourceItem` box, drawn **0..N**, matching `pod:attachment`'s range — `other/sources.ttl`, referenced by name with no `owl:imports` — and its unbounded cardinality: the files every member of the pod receives, never a member's own private ones). The two classification properties, `pod:category` and `pod:categoryTag`, both range over the classificatory `skos:Concept` (a concept in `podcat:PodCategoryScheme`, pod-categories.ttl, or in a category extension's own scheme); pods do not nest, so there is no tree-position class for either to be confused with. Both record what kind of thing a pod is, and neither needs `owl:imports pod-categories.ttl` (referenced by name only, mirroring `pod:creator`'s identical pattern). The diagram shows two arrows off `Pod` with no counterpart in `pod.ttl` — `note` (to a placeholder box, `(note data object) 1..1` — the note is held in the app's own internal format, not as a Markdown file) and `chat` (to a placeholder box, `(a chat stream) 1..1` — every pod always has a chat stream, possibly empty, held inside the app rather than in the pod's folder) — this is a deliberate, accepted exception to 12a/12b below: README.md already describes both properties' intended semantics (see the Documentation-only Properties section) as planned, but `pod.ttl` itself has no `pod:note`/`pod:chat` declaration yet — neither is ever reified as a triple in any real graph. `Pod` (abstract, blue) carries `attachment` (plus the still-open `note`/`chat` arrows above). `Pod` splits into two disjoint kinds (`owl:disjointWith` — a pod is always exactly one, never both): `TemplatePod` (abstract, blue, a reusable class-level template) carries `category` (to a `skos:Concept` box, **0..1** — the one concept the template is for, carried by every template except `ctpl:UserDefinedTemplatePod`, which carries none), `memberShape` (to a `sh:NodeShape` box, 0..N) and `declaresTool` (to a `pod:Tool` box, 0..N); `InstancePod` (concrete, black, a pod a user actually has) carries `member` (to a `pod:MemberGraph` box, 1..N, no fixed upper bound), `tool` (to a `pod:Tool` box, 0..N), `creator` (to a `p:Person` box, 1..1), `owner` (to its own `p:Person` box, 1..N, no fixed upper bound — every arrow in this diagram carries its own target label, so `creator` and `owner` are drawn as two separate `p:Person` boxes rather than sharing one), `space` (to a `pod:PodSpace` box, **1..1**, which in turn carries `spaceRoot` (to a `skos:Concept` box, 1..1), `spaceName` (to an `xsd:string` box, 1..1) and `spaceSubject` (to an `xsd:anyURI` box, 0..1) — `pod.ttl`'s Pod Spaces section), and the three tag properties `categoryTag` (to a `skos:Concept` box, **0..N**), `userTag` (to an `xsd:string` box, 0..N) and `serviceTag` (to a `pod:ServiceTag` box, 0..N) — `pod.ttl`'s Pod Tags section. The three tag arrows hang off `InstancePod`, never off `Pod`: their domain is `pod:InstancePod` deliberately, since a `TemplatePod` seeds no tags. `category` and `categoryTag` hang off different boxes for the same reason: `category` names the one concept a template is for and never appears on an instance pod, while `categoryTag` is a member's own classification of a pod, zero or more concepts. The three tags point at different kinds of target because they are different shapes: a category tag is a concept, a user tag is a bare literal, and a service tag is a value node. `ServiceTag` and the `Tool` hierarchy are **not** drawn in this diagram: each has its own, `images/pod-ontology/tag.png` (PNG-6) and `images/pod-ontology/tool.png` (PNG-7). Here they appear only as arrow targets — a `pod:ServiceTag` box off `serviceTag`, and a `pod:Tool` box off both `tool` and `declaresTool` — never as members of the `Pod` hierarchy, which neither has an `rdfs:subClassOf` relation to. There is no `shape` arrow off `InstancePod` at all — a pod stores no shape of its own; the `shape` property that does exist has domain `pod:Graph` and is drawn in `graph.png` (PNG-4) (each graph's own `pod:shape`, set from the template that supplied the graph, is the validation authority for that graph; there is no single template of a pod to derive a pod-level shape from, a pod carrying zero or more category tags) — and no pod-level `subject` arrow off `InstancePod` either — there is no such property (a pod's own subject is derived from its tools' own `pod:formTopic` values, or failing those from `member`'s own `pod:subject` values, rather than stored on the pod itself; those two are real, surviving properties, scoped to `pod:Tool` and `pod:MemberGraph` rather than to `InstancePod` — see PNG-4). `TemplatePod` has no subclasses of its own, and no individual is ever typed both `TemplatePod` and `InstancePod` — every template individual in `pod-category-templates.ttl` is typed solely `TemplatePod`. No arrow points from `Pod`, `TemplatePod`, or `InstancePod` to any tree-position box at all — pods do not nest, and both classification arrows point to `skos:Concept`. This diagram is the ontology-level (not example-data) picture of `pod:Pod`'s structure — the member-composition hierarchy and its content-linking properties. A single "Key" box in the lower right carries three swatches, in this order — blue "Abstract", black "Concrete and visible", green "Concrete but hidden" — and the class-box colors track them exactly: blue is `pod:abstract true` in `pod.ttl` (`Pod` and `TemplatePod`, and nothing else here) and black is every remaining concrete class. The Key lists exactly the swatches this diagram actually uses — two here, since the one green ("concrete but hidden") class, `ServiceTag`, is drawn in `tag.png` instead. A concrete class may only be green where `pod.ttl` or `README.md` actually says the user never sees it; absent that, it is black. Unlike PNG-1 (example diagrams, where the diagram always wins), this check does not presume which side is authoritative when the two disagree — surface the discrepancy and ask:
 
-- **12a** — every property arrow shown off `Pod` (`attachment`) has a corresponding `pod:` property in `pod.ttl` with `rdfs:domain pod:Pod` (the diagram's `note` and `chat` arrows are the two accepted exceptions — see above: both are planned properties, not yet added to `pod.ttl`). Every arrow off `TemplatePod` (`category`, `memberShape`, `declaresTool`) has `rdfs:domain pod:TemplatePod`, every arrow off `InstancePod` (`creator`, `owner`, `member`, `tool`, `space`, `categoryTag`, `userTag`, `serviceTag`) has `rdfs:domain pod:InstancePod`, and every arrow off `PodSpace` (`spaceRoot`, `anchorPod`) has `rdfs:domain pod:PodSpace`. No arrow may appear off the `pod:Tool` or `pod:ServiceTag` target boxes here — those belong to PNG-7 and PNG-6. No `shape` arrow should appear off `InstancePod` at all — a pod stores no shape of its own, and `pod:shape`'s domain is `pod:Graph`, so it belongs in `graph.png` (PNG-4) (each graph carries its own; a pod stores none). No pod-level `subject` arrow should appear off `InstancePod` either — that property doesn't exist (see PNG-3's own note above); `pod:subject` is real, but scoped to `pod:MemberGraph`, not to `InstancePod` (see PNG-4). Each arrow's target type in the diagram must match the property's `rdfs:range` — `member`'s is `pod:MemberGraph` and `formGraph`'s is `pod:FormGraph` — deliberately *different* classes, one per list, `tool`'s and `declaresTool`'s are both `pod:Tool`, `creator`'s and `owner`'s are both `p:Person` (two separate arrows, each with its own target box — what must match is the range, not the box count), `categoryTag`'s is `skos:Concept`, `userTag`'s is `xsd:string` and `serviceTag`'s is `pod:ServiceTag` (three separate arrows, each 0..N — not one shared arrow, since a tag's kind is carried entirely by which property holds it, and no two share a target), `tagNamespace`'s, `tagKey`'s and `tagValue`'s are all `xsd:string` (three separate arrows, each 1..1), `attachment`'s is `sources:SourceItem` (0..N — a stale `(file)` placeholder target is a discrepancy), `category`'s is `skos:Concept` itself (value is a named category-concept individual, scoped via `skos:inScheme` to `podcat:PodCategoryScheme` or a category extension's own scheme — no class-value punning, since pod-categories.ttl's hierarchy is SKOS, not OWL classes), `memberShape`'s is `sh:NodeShape` (0..N, not 0..1). `formShape` does **not** appear in this diagram at all — its domain is `pod:Tool`, so it is drawn in `tool.png` (PNG-7).
+- **12a** — every property arrow shown off `Pod` (`attachment`) has a corresponding `pod:` property in `pod.ttl` with `rdfs:domain pod:Pod` (the diagram's `note` and `chat` arrows are the two accepted exceptions — see above: both are planned properties, not yet added to `pod.ttl`). Every arrow off `TemplatePod` (`category`, `memberShape`, `declaresTool`) has `rdfs:domain pod:TemplatePod`, every arrow off `InstancePod` (`creator`, `owner`, `member`, `tool`, `space`, `categoryTag`, `userTag`, `serviceTag`) has `rdfs:domain pod:InstancePod`, and every arrow off `PodSpace` (`spaceRoot`, `spaceName`, `spaceSubject`) has `rdfs:domain pod:PodSpace`. No arrow may appear off the `pod:Tool` or `pod:ServiceTag` target boxes here — those belong to PNG-7 and PNG-6. No `shape` arrow should appear off `InstancePod` at all — a pod stores no shape of its own, and `pod:shape`'s domain is `pod:Graph`, so it belongs in `graph.png` (PNG-4) (each graph carries its own; a pod stores none). No pod-level `subject` arrow should appear off `InstancePod` either — that property doesn't exist (see PNG-3's own note above); `pod:subject` is real, but scoped to `pod:MemberGraph`, not to `InstancePod` (see PNG-4). Each arrow's target type in the diagram must match the property's `rdfs:range` — `member`'s is `pod:MemberGraph` and `formGraph`'s is `pod:FormGraph` — deliberately *different* classes, one per list, `tool`'s and `declaresTool`'s are both `pod:Tool`, `creator`'s and `owner`'s are both `p:Person` (two separate arrows, each with its own target box — what must match is the range, not the box count), `categoryTag`'s is `skos:Concept`, `userTag`'s is `xsd:string` and `serviceTag`'s is `pod:ServiceTag` (three separate arrows, each 0..N — not one shared arrow, since a tag's kind is carried entirely by which property holds it, and no two share a target), `tagNamespace`'s, `tagKey`'s and `tagValue`'s are all `xsd:string` (three separate arrows, each 1..1), `attachment`'s is `sources:SourceItem` (0..N — a stale `(file)` placeholder target is a discrepancy), `category`'s is `skos:Concept` itself (value is a named category-concept individual, scoped via `skos:inScheme` to `podcat:PodCategoryScheme` or a category extension's own scheme — no class-value punning, since pod-categories.ttl's hierarchy is SKOS, not OWL classes), `memberShape`'s is `sh:NodeShape` (0..N, not 0..1). `formShape` does **not** appear in this diagram at all — its domain is `pod:Tool`, so it is drawn in `tool.png` (PNG-7).
 - **12b** — every `pod:` property defined in `pod.ttl` appears as an arrow in the diagram, under the box matching its domain — `Pod`, `TemplatePod`, `InstancePod`, `Tool` (or one of its `Form`/`Calendar`/`Canvas`/`Contacts`/`Map`/`Browser` subclasses), or `ServiceTag` (catches new properties added to the ttl but never drawn, or drawn under the wrong box).
 - **12c** — the class hierarchy `Pod` → `TemplatePod`/`InstancePod` (both `owl:disjointWith` one another) shown in the diagram matches `pod.ttl`'s actual `rdfs:subClassOf` relationships (by class local name, not just position). No class hangs below `InstancePod`: a pod that carries a tool is not a different kind of pod, only one carrying `tool` values. `pod:Tool` takes no part in this hierarchy — it has no `rdfs:subClassOf` relation to `Pod` or to either of its kinds, so no subclass line may connect the two; an `InstancePod` *points at* tools via `pod:tool`, and a `TemplatePod` at declared ones via `pod:declaresTool`, but neither contains them as subclasses. `ServiceTag` likewise takes no part in this hierarchy: it is a value-node class `pod:serviceTag` points at, with no `rdfs:subClassOf` in `pod.ttl`, so no subclass line may connect it to `Pod` or to any of `Pod`'s kinds, and its green fill is a display fact about its instances rather than anything `pod:abstract` records.
 
@@ -1063,17 +1063,15 @@ print("Every category extension concept maps into the core taxonomy and has a te
 
 If a violation is found: for **39a**/**39b**/**39c**, fix the concept's own block — it belongs to its publisher's scheme and reaches the core taxonomy only through a single `skos:broadMatch`. For **39d**, add a `pod:TemplatePod` for it to the same file, carrying `pod:category` naming the concept and a `pod:memberShape` naming whichever shape the extension publishes (TTL-7's second half requires the `pod:memberShape`; unlike a `pod-category-templates.ttl` template, it need not be `pshapes:ContactInfoShape` — a bundle differing there is the entire purpose of an extension).
 
-**TTL-9 — pod spaces form a well-founded flat set, and every pod's tags fall under its space's root**: Every pod sits in exactly one `pod:PodSpace` (`pod:space`), and that space carries exactly one `pod:spaceRoot` (`podcat:Person` or `podcat:Organization`) and at most one `pod:anchorPod` (see README's [Pod Spaces](README.md#pod-spaces)). `shacl/pod-shacl.ttl` states all of that, but `helpers/validate.py` validates one pod at a time, and a space's anchor pod is a different pod, whose triples are not in that data graph. So the shape's anchor constraints find nothing there, and this check runs over every pod at once. It reads the triples `helpers/yaml-to-rdf.py` synthesizes from every pod's `tpod.` frontmatter, plus `helpers/extract-all.py`'s merged graph content (for the anchor pod's subject type only), plus `pod-categories.ttl` and every `pod-category-ext/` bundle. It verifies:
+**TTL-9 — pod spaces are well formed, and every pod's tags fall under its space's root**: Every pod sits in exactly one `pod:PodSpace` (`pod:space`), and that space carries exactly one `pod:spaceRoot` (`podcat:Person` or `podcat:Organization`), exactly one `pod:spaceName` and at most one `pod:spaceSubject` (see README's [Pod Spaces](README.md#pod-spaces)). `shacl/pod-shacl.ttl` states each space's own cardinalities, but `helpers/validate.py` validates one pod at a time, and some of what makes a set of spaces right reads across every pod, or reaches into the graphs. So this check runs over every pod at once. It reads the triples `helpers/yaml-to-rdf.py` synthesizes from every pod's `tpod.` frontmatter, plus `helpers/extract-all.py`'s merged graph content (for the subjects' types only), plus `pod-categories.ttl` and every `pod-category-ext/` bundle. It verifies:
 
-- **9a** — exactly one space carries no `pod:anchorPod`, the default space, and it is rooted at `podcat:Person`;
-- **9b** — every space carries exactly one `pod:spaceRoot`, one of the two top concepts, and at most one anchor (pods placed in the same space must agree on both — YAML-11 checks the same at YAML level);
+- **9a** — exactly one space carries `pod:spaceSubject :Self`, the default space, and it is rooted at `podcat:Person`;
+- **9b** — every space carries exactly one `pod:spaceRoot`, one of the two top concepts, exactly one `pod:spaceName` and at most one `pod:spaceSubject` (pods placed in the same space must agree on all three — YAML-11 checks the same at YAML level);
 - **9c** — every pod sits in exactly one space;
 - **9d** — every `pod:categoryTag` value of every pod reaches its space's root, by `skos:broader` transitively and across an extension concept's `skos:broadMatch`;
-- **9e** — every anchor pod is one of the pods, and no pod anchors two spaces;
-- **9f** — following `pod:anchorPod` and then that pod's `pod:space`, repeatedly, reaches the default space without revisiting a space (a self-anchored space is the one-step case);
-- **9g** — every anchor pod's derived subject (YAML-4: its tools' `pod:formTopic` values, else its `member` graphs' `pod:subject` values) is typed `p:Person` or `o:Organization` in the graph content: only a person or an organization anchors a space, never a pet.
+- **9e** — every `pod:spaceSubject` other than `:Self` is typed, in some graph, as the kind of party its space's root implies: `p:Person` for a `podcat:Person`-rooted space, `o:Organization` for a `podcat:Organization`-rooted one. Only a person or an organization has a space, never a pet.
 
-It prints one line per non-default space, naming its root, its anchor pod and what that pod is about. Run:
+It prints one line per space, naming its name, root and subject. Run:
 
 ```python
 import glob, subprocess, sys
@@ -1082,16 +1080,16 @@ from rdflib.namespace import RDF, SKOS
 
 POD = rdflib.Namespace('http://mee.foundation/ontologies/pod#')
 PODCAT = rdflib.Namespace('http://mee.foundation/ontologies/pod-categories#')
-P = rdflib.URIRef('http://mee.foundation/ontologies/persona#Person')
-O = rdflib.URIRef('http://mee.foundation/ontologies/organization#Organization')
-ROOTS = {PODCAT.Person, PODCAT.Organization}
+SELF = rdflib.URIRef('http://www.example.org/tpod#Self')
+# The party type each root implies for a space's pod:spaceSubject.
+KIND = {PODCAT.Person: rdflib.URIRef('http://mee.foundation/ontologies/persona#Person'),
+        PODCAT.Organization: rdflib.URIRef('http://mee.foundation/ontologies/organization#Organization')}
 
-root = sys.argv[1] if len(sys.argv) > 1 else '.'
 pods = rdflib.Graph()
-pods.parse(data=subprocess.run(['python3', 'helpers/yaml-to-rdf.py', root],
+pods.parse(data=subprocess.run(['python3', 'helpers/yaml-to-rdf.py'],
            capture_output=True, text=True, check=True).stdout, format='turtle')
 content = rdflib.Graph()
-content.parse(data=subprocess.run(['python3', 'helpers/extract-all.py', f'{root}/example'],
+content.parse(data=subprocess.run(['python3', 'helpers/extract-all.py'],
               capture_output=True, text=True, check=True).stdout, format='turtle')
 cats = rdflib.Graph()
 for path in ['pod-categories.ttl'] + sorted(glob.glob('pod-category-ext/*.ttl')):
@@ -1110,78 +1108,56 @@ def reaches(tag, top):
     return False
 
 def short(x):
-    return str(x).rsplit('/', 1)[-1]
+    return str(x).rsplit('/', 1)[-1].rsplit('#', 1)[-1]
 
 errors = []
-all_pods = set(pods.subjects(RDF.type, POD.InstancePod))
-spaces = set(pods.subjects(RDF.type, POD.PodSpace))
+spaces = sorted(set(pods.subjects(RDF.type, POD.PodSpace)))
 
-for s in sorted(spaces):
-    rs = set(pods.objects(s, POD.spaceRoot))
-    if len(rs) != 1 or not rs <= ROOTS:
-        errors.append(f'{short(s)}: pod:spaceRoot must be exactly one of Person/Organization, got {sorted(map(short, rs))}')
-    anchors = set(pods.objects(s, POD.anchorPod))
-    if len(anchors) > 1:
-        errors.append(f'{short(s)}: pods disagree on its anchor pod: {sorted(map(short, anchors))}')
-
-defaults = [s for s in spaces if not set(pods.objects(s, POD.anchorPod))]
+# 9a — exactly one default space: the one whose subject is :Self, rooted at Person.
+defaults = [s for s in spaces if (s, POD.spaceSubject, SELF) in pods]
 if len(defaults) != 1:
-    errors.append(f'expected exactly one default (anchorless) space, found {sorted(map(short, defaults))}')
+    errors.append(f'expected exactly one space with pod:spaceSubject :Self, found {[short(s) for s in defaults]}')
 elif set(pods.objects(defaults[0], POD.spaceRoot)) != {PODCAT.Person}:
     errors.append(f'default space {short(defaults[0])} must be rooted at podcat:Person')
 
-anchor_of = {}
 for s in spaces:
-    for a in pods.objects(s, POD.anchorPod):
-        if a in anchor_of:
-            errors.append(f'{short(a)} anchors both {short(anchor_of[a])} and {short(s)}')
-        anchor_of[a] = s
-        if a not in all_pods:
-            errors.append(f'{short(s)}: anchor pod {short(a)} is not one of the pods')
+    roots = set(pods.objects(s, POD.spaceRoot))
+    names = set(pods.objects(s, POD.spaceName))
+    subjects = set(pods.objects(s, POD.spaceSubject))
+    # 9b — one root of the two, one name, at most one subject (pods placed in
+    # the same space must agree on all three; YAML-11 checks the same in YAML).
+    if len(roots) != 1 or not roots <= set(KIND):
+        errors.append(f'{short(s)}: pod:spaceRoot must be exactly one of Person/Organization, got {sorted(map(short, roots))}')
+    if len(names) != 1:
+        errors.append(f'{short(s)}: must have exactly one pod:spaceName, got {sorted(map(str, names))}')
+    if len(subjects) > 1:
+        errors.append(f'{short(s)}: pods disagree on its pod:spaceSubject: {sorted(map(short, subjects))}')
+    # 9e — a subject is the kind of party the root implies: a p:Person for a
+    # Person-rooted space, an o:Organization for an Organization-rooted one.
+    for subj in subjects:
+        for r in roots & set(KIND):
+            if subj != SELF and (subj, RDF.type, KIND[r]) not in content:
+                errors.append(f'{short(s)}: pod:spaceSubject {short(subj)} is not typed {short(KIND[r])} in any graph')
+    print(f'{short(s)}: "{next(iter(names), "?")}", root {", ".join(map(short, roots))}, subject {", ".join(map(short, subjects)) or "(none)"}')
 
-for pod in sorted(all_pods):
+for pod in sorted(set(pods.subjects(RDF.type, POD.InstancePod))):
+    # 9c — every pod sits in exactly one space.
     sp = set(pods.objects(pod, POD.space))
     if len(sp) != 1:
         errors.append(f'{short(pod)}: must sit in exactly one space, has {len(sp)}')
         continue
-    s = sp.pop()
-    for r in pods.objects(s, POD.spaceRoot):
+    # 9d — every category tag reaches that space's root.
+    for r in pods.objects(sp.pop(), POD.spaceRoot):
         for tag in pods.objects(pod, POD.categoryTag):
             if not reaches(tag, r):
                 errors.append(f'{short(pod)}: tag {short(tag)} does not reach its space root {short(r)}')
-
-# Every chain anchorPod -> space -> anchorPod ... ends at the default space.
-for s in sorted(spaces):
-    seen, cur = [s], s
-    while True:
-        a = next(pods.objects(cur, POD.anchorPod), None)
-        if a is None:
-            break
-        nxt = next(pods.objects(a, POD.space), None)
-        if nxt is None or nxt in seen:
-            errors.append(f'{short(s)}: anchor chain {" -> ".join(map(short, seen))} -> {short(nxt) if nxt else "?"} never reaches the default space')
-            break
-        seen.append(nxt)
-        cur = nxt
-
-# The anchor pod's party is a person or an organization, never a pet: its
-# derived subject (YAML-4: the tools' pod:formTopic values, else the member
-# graphs' pod:subject values) is typed p:Person or o:Organization.
-for a, s in sorted(anchor_of.items()):
-    topics = {t for tool in pods.objects(a, POD.tool) for t in pods.objects(tool, POD.formTopic)}
-    if not topics:
-        topics = {x for g in pods.objects(a, POD.member) for x in pods.objects(g, POD.subject)}
-    kinds = {k for t in topics for k in content.objects(t, RDF.type)} & {P, O}
-    if not kinds:
-        errors.append(f'{short(s)}: anchor pod {short(a)} is about {sorted(map(short, topics))}, not a p:Person or o:Organization')
-    print(f'{short(s)}: root {short(next(pods.objects(s, POD.spaceRoot)))}, anchor {short(a)} about {", ".join(sorted(map(short, topics)))}')
 
 for e in errors:
     print('FAIL', e)
 print('TTL-9', 'PASS' if not errors else f'FAIL ({len(errors)})')
 ```
 
-If a violation is found: for **9a**–**9c**, fix the `tpod.space` mapping of the pods involved (a pod with no `tpod.space` is in the default space, so a second anchorless space means some pod's mapping lost its `anchorPod`). For **9d**, either retag the pod with a concept under its space's root or move it to a space whose root the tag reaches. For **9e**/**9f**, re-anchor the space to the pod about its party, which must sit in some other space. For **9g**, a pet or a thing is the topic of a pod in someone's space, never the anchor of one.
+If a violation is found: for **9a**–**9c**, fix the `tpod.space` mapping of the pods involved (a pod with no `tpod.space` is in the default space, whose subject `:Self` is synthesized and never written). For **9d**, either retag the pod with a concept under its space's root or move it to a space whose root the tag reaches. For **9e**, either correct the space's `subject` or its `root`, or — if the subject really is a person or organization nobody has typed yet — type it in the graph that introduces it.
 
 ## YAML — pod DataBook checks
 
@@ -1344,7 +1320,7 @@ print()
 print('Derived subjects listed above for every pod — member/tool subject overlap is allowed, not a violation.')
 ```
 
-**YAML-5 — Pod-databook `title:` is the pod's name and matches its own folder's OS name** (a scaffolding check — at runtime there is no folder at all, and the app's own record of the name is authoritative outright): `title:` is defined as the pod's own name — it is always exactly the name of the filesystem folder that holds the pod-databook, and the two are kept in sync (a folder rename means updating `title:` to match, never the reverse); `title:` is never an independent display-name override of the folder's name. The [Filename Convention](pod-databook.md#filename-convention) already requires a pod-databook's *filename root* to be an exact copy of its folder's own name, but that convention is about the filename — not the separate `title:` YAML field, which several other checks (notably PNG-1a's box-label match) treat as authoritative for what a pod "is called." The invariant: for every pod-databook under `example/Pods/`, `title:` must equal `os.path.basename` of the folder it directly lives in, verbatim (same case/spacing/punctuation rule as the filename convention — no kebab-casing, no paraphrasing). The one allowance is the filename convention's space suffix: a pod carrying a `tpod.space` (one outside the default space) may instead sit in a folder named `<title> (<space name>)`, the space's name being the `title:` of the pod its `tpod.space.anchorPod` names — `Things (Paula Walker)` for the `Things` pod in the space anchored to *Paula Walker*. Run:
+**YAML-5 — Pod-databook `title:` is the pod's name and matches its own folder's OS name** (a scaffolding check — at runtime there is no folder at all, and the app's own record of the name is authoritative outright): `title:` is defined as the pod's own name — it is always exactly the name of the filesystem folder that holds the pod-databook, and the two are kept in sync (a folder rename means updating `title:` to match, never the reverse); `title:` is never an independent display-name override of the folder's name. The [Filename Convention](pod-databook.md#filename-convention) already requires a pod-databook's *filename root* to be an exact copy of its folder's own name, but that convention is about the filename — not the separate `title:` YAML field, which several other checks (notably PNG-1a's box-label match) treat as authoritative for what a pod "is called." The invariant: for every pod-databook under `example/Pods/`, `title:` must equal `os.path.basename` of the folder it directly lives in, verbatim (same case/spacing/punctuation rule as the filename convention — no kebab-casing, no paraphrasing). The one allowance is the filename convention's space suffix: a pod carrying a `tpod.space` (one outside the default space) may instead sit in a folder named `<title> (<space name>)`, the space's name being its `tpod.space.name` — `Things (Paula Walker)` for the `Things` pod in the space named *Paula Walker*. Run:
 
 ```python
 import os, re, yaml
@@ -1365,16 +1341,13 @@ for dirpath, _, filenames in os.walk('example/Pods'):
             if fm:
                 found.append((path, os.path.basename(dirpath), fm))
 
-# A space's name is its anchor pod's title (pod.ttl's Pod Spaces section).
-titles = {fm.get('id'): fm.get('title') for _, _, fm in found}
-
 errors = 0
 for path, folder_name, fm in found:
     title = fm.get('title')
     allowed = {title}
     space = (fm.get('tpod') or {}).get('space')
-    if isinstance(space, dict) and titles.get(space.get('anchorPod')):
-        allowed.add(f"{title} ({titles[space['anchorPod']]})")
+    if isinstance(space, dict) and space.get('name'):
+        allowed.add(f"{title} ({space['name']})")
     if folder_name not in allowed:
         print(f'MISMATCH  {path}  folder={folder_name!r}  title={title!r}  allowed={sorted(allowed)!r}')
         errors += 1
@@ -1672,7 +1645,7 @@ print('YAML-10: OK' if errors == 0 else f'YAML-10: {errors} issue(s) found')
 
 If a malformed id is found, fix it to match the pattern. If a duplicate number is found, give the newer tool the next unused number — never renumber an existing tool's id, since a block link in some member's copy of the note may already resolve by it. As with YAML-3, this holds for `example/Pods/` too, fictional as its data is.
 
-**YAML-11 — `tpod.space` well-formedness**: A pod in any space but the default carries `tpod.space`, a mapping of exactly three string keys — `id`, the space's own IRI, following the flat pattern `http://www.example.org/tpod/spaces/space-<N>`; `root`, `"podcat:Person"` or `"podcat:Organization"`; and `anchorPod`, the `id` of the pod about the space's party (see [The `tpod` Block](pod-databook.md#the-tpod-block)). A pod in the default space carries no `tpod.space` at all, and `space-0`, the default space's IRI, is synthesized by `helpers/databook_graphs.py` and never written. Every pod in one space restates the same mapping, so that each pod's synthesis is self-contained; this check verifies they agree, that `anchorPod` names a real pod in `example/Pods/`, and that no pod is its own space's anchor. TTL-9 checks the rest over the synthesized triples. Run:
+**YAML-11 — `tpod.space` well-formedness**: A pod in any space but the default carries `tpod.space`, a mapping of three required string keys and one optional one — `id`, the space's own IRI, following the flat pattern `http://www.example.org/tpod/spaces/space-<N>`; `name`, the space's name; `root`, `"podcat:Person"` or `"podcat:Organization"`; and, optionally, `subject`, the party whose life the space holds (see [The `tpod` Block](pod-databook.md#the-tpod-block)). A pod in the default space carries no `tpod.space` at all: `space-0`, its name and its subject `:Self` are synthesized by `helpers/databook_graphs.py` and never written, so no written mapping may name `:Self`. Every pod in one space restates the same mapping, so that each pod's synthesis is self-contained; this check verifies they agree. TTL-9 checks the rest over the synthesized triples. Run:
 
 ```python
 import glob, re, yaml
@@ -1680,33 +1653,33 @@ from collections import defaultdict
 
 ID = re.compile(r'^http://www\.example\.org/tpod/spaces/space-([1-9]\d*)$')
 ROOTS = {'podcat:Person', 'podcat:Organization'}
-KEYS = {'id', 'root', 'anchorPod'}
+REQUIRED, OPTIONAL = {'id', 'name', 'root'}, {'subject'}
 
 def frontmatter(path):
     text = open(path, encoding='utf-8').read()
     m = re.match(r'^---\n(.*?)\n---', text, re.DOTALL)
     return yaml.safe_load(m.group(1)) if m else None
 
-pods, spaces, errors = {}, defaultdict(set), 0
+spaces, errors = defaultdict(set), 0
 for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
-    if fm and fm.get('type') == 'pod-databook':
-        pods[fm['id']] = (path, (fm.get('tpod') or {}).get('space'))
-
-for pid, (path, space) in pods.items():
+    if not fm or fm.get('type') != 'pod-databook':
+        continue
+    space = (fm.get('tpod') or {}).get('space')
     if space is None:
         continue  # the default space
     if not isinstance(space, dict):
         print(f'NOT A MAPPING  {path}  tpod.space={space!r}')
         errors += 1
         continue
-    if set(space) != KEYS:
-        print(f'KEYS  {path}  tpod.space has {sorted(space)}, expected exactly {sorted(KEYS)}')
+    keys = set(space)
+    if not REQUIRED <= keys or keys - REQUIRED - OPTIONAL:
+        print(f'KEYS  {path}  tpod.space has {sorted(keys)}; required {sorted(REQUIRED)}, optional {sorted(OPTIONAL)}')
         errors += 1
-    if not all(isinstance(v, str) for v in space.values()):
-        print(f'NOT A STRING  {path}  tpod.space values must all be strings: {space!r}')
+    if not all(isinstance(v, str) and v.strip() == v and v for v in space.values()):
+        print(f'NOT A STRING  {path}  tpod.space values must all be non-empty, unpadded strings: {space!r}')
         errors += 1
         continue
     if not ID.match(space.get('id', '')):
@@ -1715,23 +1688,19 @@ for pid, (path, space) in pods.items():
     if space.get('root') not in ROOTS:
         print(f'ROOT  {path}  tpod.space.root={space.get("root")!r} is not podcat:Person or podcat:Organization')
         errors += 1
-    anchor = space.get('anchorPod')
-    if anchor not in pods:
-        print(f'ANCHOR  {path}  tpod.space.anchorPod={anchor!r} is not the id of any pod in example/Pods/')
+    if space.get('subject') == ':Self':
+        print(f'SELF  {path}  only the default space has subject :Self, and it is never written')
         errors += 1
-    elif anchor == pid:
-        print(f'SELF-ANCHORED  {path}  is its own space\'s anchor pod')
-        errors += 1
-    spaces[space.get('id')].add((space.get('root'), anchor))
+    spaces[space.get('id')].add((space.get('name'), space.get('root'), space.get('subject')))
 
 for sid, variants in sorted(spaces.items()):
     if len(variants) > 1:
-        print(f'DISAGREE  {sid}  pods state it differently: {sorted(variants)}')
+        print(f'DISAGREE  {sid}  pods state it differently: {sorted(variants, key=str)}')
         errors += 1
 print('YAML-11: OK' if errors == 0 else f'YAML-11: {errors} issue(s) found')
 ```
 
-If an issue is found, copy the space's mapping from another pod already in it, or, for a new space, mint the next unused `space-<N>` and name the pod about its party as `anchorPod`.
+If an issue is found, copy the space's mapping from another pod already in it, or, for a new space, mint the next unused `space-<N>`.
 
 ## FS — filesystem and documentation checks
 

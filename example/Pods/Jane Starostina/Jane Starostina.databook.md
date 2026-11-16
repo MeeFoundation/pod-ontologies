@@ -2,17 +2,18 @@
 id: http://www.example.org/tpod/pods/pod-14
 title: "Jane Starostina"
 type: pod-databook
-version: 1.6.0
+version: 1.7.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Jane Starostina" pod (category tag: podcat:PrimaryCarePhysician; user tag: "Sophia"). It sits in Alice's pod space for Sophia, anchored to the Sophia Walker pod, Jane being Sophia's doctor rather than Alice's. It is a one-member pod with one member entry about :Self and one graph about :Jane_Starostina (the pod's subject).
+  Pod DataBook for the "Jane Starostina" pod (category tag: podcat:PrimaryCarePhysician; user tag: "Sophia"). It sits in Alice's pod space for Sophia, Jane being Sophia's doctor rather than Alice's. It is a one-member pod with one member entry about :Self and one graph about :Jane_Starostina (the pod's subject).
 tpod:
   categoryTag:
     - "podcat:PrimaryCarePhysician"
   space:
     id: "http://www.example.org/tpod/spaces/space-1"
+    name: "Sophia Walker"
     root: "podcat:Person"
-    anchorPod: "http://www.example.org/tpod/pods/pod-12"
+    subject: ":Sophia_Walker"
   creator: ":Self"
   owner: ":Self"
   userTag:

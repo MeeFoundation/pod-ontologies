@@ -1,0 +1,22 @@
+flowchart TD
+    classDef person fill:#fffacd,stroke:#aaa,color:#333
+    classDef org    fill:#cce5ff,stroke:#aaa,color:#333
+    classDef service fill:#e6e6e6,stroke:#aaa,color:#333
+    classDef lit    fill:none,stroke:none,font-style:italic,color:#2a7a2a
+    classDef meta   fill:#f5f5ff,stroke:#9999cc,color:#333
+
+    subgraph ctx["Graph"]
+        direction LR
+        ctx_meta["claimant: :Self\nformTopic: :Ruth_Alvarez\nshape: ['pshapes:PrimaryCarePhysicianShape', 'pshapes:ContactInfoShape']"]:::meta
+    end
+
+    n08292dbd29b1[":Ruth_Alvarez\n(Person)"]:::person
+    n892e95690453("Ruth"):::lit
+    n26dd0c72ce54("Alvarez"):::lit
+    nbe100e6ffdc7("Paula Walker's primary care physician"):::lit
+    ne5a1ab78770b("Geriatrics"):::lit
+
+    n08292dbd29b1 -->|"GivenName"| n892e95690453
+    n08292dbd29b1 -->|"FamilyName"| n26dd0c72ce54
+    n08292dbd29b1 -->|"ont00001917"| nbe100e6ffdc7
+    n08292dbd29b1 -->|"specialty"| ne5a1ab78770b

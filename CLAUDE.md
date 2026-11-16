@@ -57,7 +57,7 @@ Every core file — the ontologies, their SHACL shapes, the helper scripts, the 
 
 ## Example Files
 
-Every graph below is an embedded section (a `tpod.member`/`tpod.tool[].graph` entry + `### Graph NN` body) inside its owning pod-databook file under `example/Pods/` — there are no standalone graph files (see [pod-databook.md](pod-databook.md#body-structure)). **This table is exhaustive**: every embedded graph in the example pods has a row. A graph that the 12 example diagrams do not draw (integrity.md's PNG-1g) is documented here and in example.md's Graphs section exactly like any other.
+Every graph below is an embedded section (a `tpod.member`/`tpod.tool[].graph` entry + `### Graph NN` body) inside its owning pod-databook file under `example/Pods/` — there are no standalone graph files (see [pod-databook.md](pod-databook.md#body-structure)). **This table is exhaustive**: every embedded graph in the example pods has a row. A graph that the 13 example diagrams do not draw (integrity.md's PNG-1g) is documented here and in example.md's Graphs section exactly like any other.
 
 | Graph — File | Purpose |
 |------|---------|
@@ -136,6 +136,10 @@ Every graph below is an embedded section (a `tpod.member`/`tpod.tool[].graph` en
 | Graph 91 — `example/Pods/Kyoto Trip 2027/Kyoto Trip 2027.databook.md` | Dave's own contribution to the itinerary — a day trip to Fushimi Inari Taisha and a kaiseki dinner reservation in Gion; the second tool graph, reaching the pod's one-per-member cap |
 | Graph 107 — `example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md` | The required `member` entry of the Things pod in Alice's space for Paula, claimed by and about Alice — her given name, satisfying `ContactInfoShape`, the `podcat:Things` template's `pod:memberShape` |
 | Graph 108 — `example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md` | Alice's record of her mother Paula's possessions — wallet, driver's license and debit card; the pod's form-tool graph, `formTopic: ":Paula_Walker"`, in Alice's pod space for Paula (anchored to the Paula Walker pod), which is what makes its `podcat:Things` tag mean Paula's things |
+| Graph 109 — `example/Pods/Marcus Bell/Marcus Bell.databook.md` | The Marcus Bell pod's required `member` entry, claimed by and about Alice — her given name |
+| Graph 110 — `example/Pods/Marcus Bell/Marcus Bell.databook.md` | Alice's record of Dr. Marcus Bell, her own primary care physician (Internal Medicine) — the pod's form-tool graph, in her default space; one of the three `podcat:PrimaryCarePhysician` pods that only their spaces tell apart |
+| Graph 111 — `example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md` | The Ruth Alvarez pod's required `member` entry, claimed by and about Alice — her given name |
+| Graph 112 — `example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md` | Alice's record of Dr. Ruth Alvarez, her mother Paula's primary care physician (Geriatrics) — the pod's form-tool graph, in Alice's pod space for Paula |
 | Graph 99 — `example/Pods/Hilton/Hilton.databook.md` | The Hilton pod's required `member` entry, claimed by and about Alice — her given name, satisfying `ContactInfoShape` |
 
 ## Architecture

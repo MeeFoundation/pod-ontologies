@@ -4,27 +4,31 @@ This file continues [README.md](README.md), which describes the Category, Pod, G
 
 ## How Alice uses Tellipod
 
-Alice has been using the app for some time and has created a number of pods and been invited into others — thirty-one in all. The Tellipod UI lets her find any of them by category tag, user tag or pod name, and open it to see its contents. Depending on her role in a pod, she may be able to edit its contents — including inserting links to other pods — and delete it for every member (see app-behavior.md's [Permissions](app-behavior.md#permissions)). She can also create new pods of her own, and keep the searches she returns to as persistent views (see README's [Tags](README.md#tags) and app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)). Every one of her pods carries one category tag, and each sits in one of her four pod spaces (see [Pod Spaces](#pod-spaces) below).
+Alice has been using the app for some time and has created a number of pods and been invited into others — thirty-three in all. The Tellipod UI lets her find any of them by category tag, user tag or pod name, and open it to see its contents. Depending on her role in a pod, she may be able to edit its contents — including inserting links to other pods — and delete it for every member (see app-behavior.md's [Permissions](app-behavior.md#permissions)). She can also create new pods of her own, and keep the searches she returns to as persistent views (see README's [Tags](README.md#tags) and app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)). Every one of her pods carries one category tag, and each sits in one of her four pod spaces (see [Pod Spaces](#pod-spaces) below).
 
 This repo carries each pod as a folder directly under `example/Pods/`, holding its pod DataBook at `example/Pods/<Name>/<Name>.databook.md` and a `_pod-attachments` folder — all of which is [development scaffolding](pod-databook.md#development-scaffolding) rather than anything a running Tellipod produces (see [storage.md](storage.md)). Every mention of "Self" in the following is a reference to the user, Alice.
 
 ### Tags and Views
 
-Alice keeps seven persistent views. A view is scoped to the pod space it was saved in unless she widens it to all spaces; the five without that note are scoped to her default space. The four category-tag views lean on broader-concept matching (see app-behavior.md's [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag)), as the table's "via" notes show:
+Alice keeps nine persistent views. A view is scoped to the pod space it was saved in unless she widens it to all spaces; the five without that note are scoped to her default space. The six category-tag views lean on broader-concept matching (see app-behavior.md's [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag)), as the table's "via" notes show:
 
 | View | Query | Pods it gathers |
 |---|---|---|
 | People | category tag `podcat:People` | Sophia Walker and Paula Walker (via `podcat:ImmediateFamily`), Bob Johnson and Fred Flintstone (both via `podcat:Others`) |
 | Government | category tag `podcat:Government` | Passport and SSN (via `podcat:Federal`), Birth Certificate and Drivers License (via `podcat:State`) |
 | Companies | category tag `podcat:Companies` | Google, ATT, Arca and Facenook directly, and PRIVO via `podcat:IdVerification` |
+| Things | category tag `podcat:Things`, all spaces | Things (her own, and the one in her space for Paula), and RAV4 via `podcat:Vehicles` |
+| Medical | category tag `podcat:Medical`, all spaces | Marcus Bell, Ruth Alvarez and Jane Starostina (via `podcat:PrimaryCarePhysician`), and Medical Appointment (via `podcat:MedicalAppointment`) |
 | Groups | category tag `podcat:Groups` | Chestnut Hill Village Association directly, and Boston Hub Society via `bhscat:BostonHubSociety`'s `skos:broadMatch` |
 | Sophia | user tag "Sophia", all spaces | Sophia Walker, Health & Wellness, Jane Starostina, Medical Appointment |
 | Ginger | user tag "Ginger" | Ginger, Ginger Medical, Ginger Care & Feeding |
 | Acme | user tag "Acme", all spaces | Acme, Alice Walker, Paula Walker |
 
-The user-tag views gather what no category can. Sophia's four pods carry four different category tags — `podcat:ImmediateFamily`, `podcat:HealthWellness`, `podcat:PrimaryCarePhysician`, `podcat:MedicalAppointment` — whose nearest common ancestor is the top concept `podcat:Person`, which would gather nearly everything Alice has. The "Acme" view likewise picks out one employer's pods. Both views are widened to all spaces, because their pods sit in more than one: the Sophia view's in her default space and her space for Sophia, the Acme view's in her default space and her space for Acme.
+The user-tag views gather what no category can. Sophia's four pods carry four different category tags — `podcat:ImmediateFamily`, `podcat:HealthWellness`, `podcat:PrimaryCarePhysician`, `podcat:MedicalAppointment` — whose nearest common ancestor is the top concept `podcat:Person`, which would gather nearly everything Alice has. The "Acme" view likewise picks out one employer's pods. Both are widened to all spaces, because their pods sit in more than one: the Sophia view's in her default space and her space for Sophia, the Acme view's in her default space and her space for Acme.
 
-The diagrams embedded below show what the desktop app displays. A view's header and the green `#Tag` labels above groups of pods are UI-generated group headers, each naming a broader concept that the pods' own category tags fall under; they are not pods and are not stored in any data. A pod box's green `#tag` lines are its category tags, and its grey `#tag` its user tags.
+The Things and Medical views are widened to all spaces for the opposite reason: to put side by side pods a category tag alone cannot tell apart, which is the case for pod spaces made in the [section below](#pod-spaces).
+
+The diagrams embedded below show what the desktop app displays. A view's header has two lines: the pod space it is scoped to — `Pod space: Alice Walker (default)`, or `Pod space: all` for a widened view, in which each pod box also names its own space — and the tags it searches for. The green `#Tag` labels above groups of pods are UI-generated group headers, each naming a broader concept that the pods' own category tags fall under; they are not pods and are not stored in any data. A pod box's green `#tag` lines are its category tags, and its grey `#tag` its user tags.
 
 ### Pod Spaces
 
@@ -34,10 +38,15 @@ A category tag says what kind of thing a pod is about, never whose (see README's
 |---|---|---|---|
 | Alice Walker (default) | `podcat:Person` | — | every pod not listed below, Sophia Walker, Paula Walker and Acme included |
 | Sophia Walker | `podcat:Person` | [Sophia Walker](<example/Pods/Sophia Walker/Sophia Walker.databook.md>) | Health & Wellness, Jane Starostina, Medical Appointment |
-| Paula Walker | `podcat:Person` | [Paula Walker](<example/Pods/Paula Walker/Paula Walker.databook.md>) | Things |
+| Paula Walker | `podcat:Person` | [Paula Walker](<example/Pods/Paula Walker/Paula Walker.databook.md>) | Things, Ruth Alvarez |
 | Acme | `podcat:Organization` | [Acme](<example/Pods/Acme/Acme.databook.md>) | Alice Walker |
 
 Each anchor pod is an ordinary pod in Alice's default space, about the person or organization its space is for — its form tool's topic is `:Sophia_Walker`, `:Paula_Walker` or `:Acme`. Opening one shows a link into its space, and each space links back to it. Sophia and Paula are people, so their spaces reuse the Person branch, and Alice's space for her mother has its own Things just as hers does. Acme is an organization, so its space is rooted at `podcat:Organization`, and the only place an Organization-rooted tag like `podcat:Employees` can be used is in a space like it. Each chain here is one step long, every anchor pod sitting in the default space; a pod about Paula's sister, kept in Paula's space, could anchor a space of its own one step further out. Ginger, Alice's cat, has three pods but no space, since only a person or an organization anchors one: her pods sit in Alice's default space, gathered by Alice's "Ginger" user tag.
+
+Two of Alice's views show why spaces are needed: in each, a category tag says what kind of thing a pod is about, and only the space says whose.
+
+- **Things.** Alice has a [*Things*](<example/Pods/Things/Things.databook.md>) pod of her own and a [*Things*](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md>) pod for her mother's possessions. Both are named Things and tagged `podcat:Things`; one sits in her default space and one in her space for Paula. In her default space, a Things search finds only her own; her all-spaces Things view shows both, each labeled with its space.
+- **Primary care physicians.** Alice keeps a pod for her own doctor, [*Marcus Bell*](<example/Pods/Marcus Bell/Marcus Bell.databook.md>), in her default space; one for her mother's, [*Ruth Alvarez*](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md>), in her space for Paula; and one for her daughter's, *Jane Starostina*, in her space for Sophia. All three are tagged `podcat:PrimaryCarePhysician`, and each holds the same Primary Care Physician form ([graph 110](<example/Pods/Marcus Bell/Marcus Bell.databook.md#graph-110>), [graph 112](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>), [graph 25](<example/Pods/Jane Starostina/Jane Starostina.databook.md#graph-25>)), so nothing in the tag or the form says whose doctor each one is. The space does. Her all-spaces Medical view gathers all three, with Sophia's Medical Appointment, under the group header `#Provider`, each labeled with the space it sits in. Before spaces, the only way to tell them apart was to fold the patient into the pod's name or a user tag.
 
 In the repo, a pod in any space but the default carries a `tpod.space` mapping naming the space's id, root and anchor pod (see [The `tpod` Block](pod-databook.md#the-tpod-block)).
 
@@ -228,7 +237,7 @@ The pod carries no user tag, and needs none: `sa:loyaltyProgramID` in its own to
 
 ## Pods Mentioned
 
-A summary of all thirty-one pods under `example/Pods/`, grouped by the subsection that describes each. User tags and pod spaces are Alice's own and private to her instance; a pod with no space noted sits in her default space.
+A summary of all thirty-three pods under `example/Pods/`, grouped by the subsection that describes each. User tags and pod spaces are Alice's own and private to her instance; a pod with no space noted sits in her default space.
 
 | Subsection | Name | Pod DataBook | Subject(s) | Category Tag | Space | User Tags | Graphs |
 |---|---|---|---|---|---|---|---|
@@ -255,6 +264,8 @@ A summary of all thirty-one pods under `example/Pods/`, grouped by the subsectio
 | Current and Previous Homes | Paradise | [Paradise.databook.md](<example/Pods/Paradise/Paradise.databook.md>) {8} | Self | `podcat:Home` | — | — | 18, 83 |
 | Possessions (Things) | Things | [Things.databook.md](<example/Pods/Things/Things.databook.md>) {11} | Self | `podcat:Things` | — | — | 22 |
 | Possessions (Things) | Things | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md>) {55} | Paula Walker | `podcat:Things` | Paula Walker | — | 107, 108 |
+| Pod Spaces | Marcus Bell | [Marcus Bell.databook.md](<example/Pods/Marcus Bell/Marcus Bell.databook.md>) {56} | Marcus Bell | `podcat:PrimaryCarePhysician` | — | — | 109, 110 |
+| Pod Spaces | Ruth Alvarez | [Ruth Alvarez.databook.md](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md>) {57} | Ruth Alvarez | `podcat:PrimaryCarePhysician` | Paula Walker | — | 111, 112 |
 | Vehicles | RAV4 | [RAV4.databook.md](<example/Pods/RAV4/RAV4.databook.md>) {44} | Alice's RAV4 | `podcat:Vehicles` | — | — | 62, 63 |
 | Caring for Ginger | Ginger | [Ginger.databook.md](<example/Pods/Ginger/Ginger.databook.md>) {41} | Ginger | `podcat:Pets` | — | "Ginger" | 36, 37 |
 | Caring for Ginger | Ginger Medical | [Ginger Medical.databook.md](<example/Pods/Ginger Medical/Ginger Medical.databook.md>) {40} | Ginger | `podcat:PetsMedical` | — | "Ginger" | 32, 33, 57 |
@@ -307,6 +318,8 @@ The graphs in the table below are *about* Alice and claimed *by* Alice. The "Pod
 | 102 | [PRIVO.databook.md](<example/Pods/PRIVO/PRIVO.databook.md#graph-102>) {53} | `podcat:IdVerification` | The PRIVO pod's own `:Self` member entry — carries her given name (required by `ContactInfoShape`, `pod:memberShape`) | [view](example/graphs/images/graph-102.png) |
 | 104 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-104>) {54} | `podcat:Companies` | The Facenook pod's own `:Self` member entry — carries her given name (required by `ContactInfoShape`, `pod:memberShape`) | [view](example/graphs/images/graph-104.png) |
 | 107 | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-107>) {55} | `podcat:Things` | The required `member` entry of the Things pod in Alice's space for Paula — her given name (required by `ContactInfoShape`, the template's `pod:memberShape`) | [view](example/graphs/images/graph-107.png) |
+| 109 | [Marcus Bell.databook.md](<example/Pods/Marcus Bell/Marcus Bell.databook.md#graph-109>) {56} | `podcat:PrimaryCarePhysician` | The Marcus Bell pod's required `member` entry — Alice's given-name stub | [view](example/graphs/images/graph-109.png) |
+| 111 | [Ruth Alvarez.databook.md](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md#graph-111>) {57} | `podcat:PrimaryCarePhysician` | The Ruth Alvarez pod's required `member` entry — Alice's given-name stub | [view](example/graphs/images/graph-111.png) |
 
 The following table lists graphs that are *about* Alice but claimed by others.
 
@@ -356,6 +369,8 @@ The following table lists graphs about anyone or anything else in Alice's pods: 
 | 105 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-105>) {54} | `podcat:Companies` | Facenook's website, a social network site, as a pod member — `:Facenook_Site`, typed `s:WebsiteService`, carrying `s:siteDomain "facenook.com"`; minted by Alice's app during the presenting flow and claimed by Alice | [view](example/graphs/images/graph-105.png) |
 | 106 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-106>) {54} | `podcat:Companies` | Alice's basic claim about her Facenook account itself — service name, username, service URI, and password — backs the Facenook pod's form tool, whose `formTopic: ":Alice_Facenook_Account"` is the pod's derived subject; typed `sa:ServiceAccount` | [view](example/graphs/images/graph-106.png) |
 | 108 | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-108>) {55} | `podcat:Things` | Alice's record of her mother Paula's possessions — wallet, driver's license and debit card; the pod's form-tool graph, `formTopic: ":Paula_Walker"`, in Alice's pod space for Paula | [view](example/graphs/images/graph-108.png) |
+| 110 | [Marcus Bell.databook.md](<example/Pods/Marcus Bell/Marcus Bell.databook.md#graph-110>) {56} | `podcat:PrimaryCarePhysician` | Alice's record of Dr. Marcus Bell, her own primary care physician — name and specialty (Internal Medicine); the pod's form-tool graph, in her default space | [view](example/graphs/images/graph-110.png) |
+| 112 | [Ruth Alvarez.databook.md](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>) {57} | `podcat:PrimaryCarePhysician` | Alice's record of Dr. Ruth Alvarez, her mother Paula's primary care physician — name and specialty (Geriatrics); the pod's form-tool graph, in her space for Paula | [view](example/graphs/images/graph-112.png) |
 
 ## Diagrams
 

@@ -1,0 +1,22 @@
+flowchart TD
+    classDef person fill:#fffacd,stroke:#aaa,color:#333
+    classDef org    fill:#cce5ff,stroke:#aaa,color:#333
+    classDef service fill:#e6e6e6,stroke:#aaa,color:#333
+    classDef lit    fill:none,stroke:none,font-style:italic,color:#2a7a2a
+    classDef meta   fill:#f5f5ff,stroke:#9999cc,color:#333
+
+    subgraph ctx["Graph"]
+        direction LR
+        ctx_meta["claimant: :Self\nformTopic: :Marcus_Bell\nshape: ['pshapes:PrimaryCarePhysicianShape', 'pshapes:ContactInfoShape']"]:::meta
+    end
+
+    nb605f01e4fa4[":Marcus_Bell\n(Person)"]:::person
+    n2a74661ef477("Marcus"):::lit
+    n03e331371f56("Bell"):::lit
+    nc797a0e206d0("Alice Walker's primary care physician"):::lit
+    n49341c0ab2e6("Internal Medicine"):::lit
+
+    nb605f01e4fa4 -->|"GivenName"| n2a74661ef477
+    nb605f01e4fa4 -->|"FamilyName"| n03e331371f56
+    nb605f01e4fa4 -->|"ont00001917"| nc797a0e206d0
+    nb605f01e4fa4 -->|"specialty"| n49341c0ab2e6

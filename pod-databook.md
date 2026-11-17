@@ -162,7 +162,7 @@ example/Pods/<Name>/<Name>.databook.md
 ```
 
 `<Name>` is the pod's own name, exactly as the DataBook's `title:` field gives it — verbatim, same
-case, spacing and punctuation (e.g. `Acme`, `Paula Walker`, `Care & Feeding`) — and the
+case, spacing and punctuation (e.g. `Acme`, `Paula Walker`, `Health & Wellness`) — and the
 folder carries the same name. The one exception is a pod in a [pod space](README.md#pod-spaces)
 other than the default: its `<Name>` may instead be its `title:` followed by a space and the pod
 space's name in parentheses — `Things (Paula Walker)` for a pod titled `Things` in a space
@@ -241,7 +241,7 @@ member's copy, and any member may rename the pod — see
 [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md for
 the one exception, a bare two-member pod, whose name is instead independent per member.
 `title:` is always present, because a pod always has a name: one its creator left unnamed carries
-the `Untitled-N` the app assigned it, so its folder here would be `example/Pods/Untitled-1/`, and
+the `Untitled-N` the app assigned it, so its folder here is `example/Pods/Untitled-1/`, and
 YAML-5 applies to it unchanged.
 
 ### `type`

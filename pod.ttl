@@ -13,10 +13,10 @@
 @base <http://mee.foundation/ontologies/pod> .
 
 <http://mee.foundation/ontologies/pod> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/10.3.0> ;
-    dc:date "2026-11-16"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/10.4.0> ;
+    dc:date "2026-11-17"^^xsd:date ;
     rdfs:label "Pod Ontology"@en ;
-    rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Each pod also sits in exactly one pod:PodSpace (pod:space), the life it belongs to — the user's own, or that of a person or organization the user keeps pods about — rooted at podcat:Person or podcat:Organization (pod:spaceRoot), carrying a name (pod:spaceName) and optionally the party it is for (pod:spaceSubject); spaces form a flat set and never nest. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:InstancePod (an actual pod held by a user) — a pod is always exactly one of the two, never both. There are no further kinds of pod: an instance pod that carries anything beyond its pod:member baseline carries it as a pod:Tool — a form, a calendar, a drawing canvas, a map, an address-book sync or a connection to a standalone web browser, each with its own data format and its own contribution to the app's UI (pod:Form, pod:Calendar, pod:Canvas, pod:Map, pod:Contacts, pod:Browser), zero or more per pod, rather than in a subclass of its own. pod:InstancePod also carries the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:serviceTag, whose values are pod:ServiceTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
+    rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Each pod also sits in exactly one pod:PodSpace (pod:space), the life it belongs to — the user's own, or that of a person, organization or pet the user keeps pods about — rooted at podcat:Person, podcat:Organization or podcat:Pet (pod:spaceRoot), carrying a name (pod:spaceName) and optionally the party it is for (pod:spaceSubject); spaces form a flat set and never nest. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:InstancePod (an actual pod held by a user) — a pod is always exactly one of the two, never both. There are no further kinds of pod: an instance pod that carries anything beyond its pod:member baseline carries it as a pod:Tool — a form, a calendar, a drawing canvas, a map, an address-book sync or a connection to a standalone web browser, each with its own data format and its own contribution to the app's UI (pod:Form, pod:Calendar, pod:Canvas, pod:Map, pod:Contacts, pod:Browser), zero or more per pod, rather than in a subclass of its own. pod:InstancePod also carries the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:serviceTag, whose values are pod:ServiceTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
 
 
 #################################################################
@@ -187,15 +187,18 @@ pod:owner rdf:type owl:ObjectProperty ;
 #    holds sits in exactly one pod:PodSpace (pod:space), and each
 #    space is fixed to one top concept of podcat:PodCategoryScheme
 #    (pod:spaceRoot): podcat:Person for a person's life,
-#    podcat:Organization for an organization's. Within a space the
-#    whole branch beneath that root is available again, so a space
-#    for Alice's mother reuses Things, Travel, People and the rest
-#    exactly as Alice's own space does.
+#    podcat:Organization for an organization's, podcat:Pet for a
+#    pet's. Within a space the whole branch beneath that root is
+#    available again, so a space for Alice's mother reuses Things,
+#    Travel, People and the rest exactly as Alice's own space does,
+#    and a space for her cat has its own Health, Care & Feeding and
+#    Records.
 #
 #    A space carries a name of its own (pod:spaceName), and may name
-#    the party whose life it holds (pod:spaceSubject), a p:Person or
-#    an o:Organization — never a pet, the Person and Organization
-#    branches being the only two there are to reuse. Spaces are
+#    the party whose life it holds (pod:spaceSubject), a p:Person, an
+#    o:Organization or a pets:Pet — never a vehicle, a document or
+#    any other thing, there being no branch of the taxonomy for a
+#    thing's life. Spaces are
 #    independent of one another and of any pod: a flat set, linked to
 #    nothing, and the pods in each are a flat set — nothing nests.
 #    That the user's mother has a sister, and that the sister has a
@@ -209,9 +212,9 @@ pod:owner rdf:type owl:ObjectProperty ;
 #
 #    pod:space is per-member, exactly as the tags are: each member
 #    places a shared pod in a space of their own, and placement never
-#    propagates. When a pod is shared, the sender's space name travels
-#    with the invitation as a suggestion only (app-behavior.md's
-#    Joining a Pod).
+#    propagates. When a pod is shared, nothing about the sender's
+#    space travels with the invitation: the joining member picks a
+#    space of their own (app-behavior.md's Joining a Pod).
 #
 #    Constrained by shacl/pod-shacl.ttl's :InstancePodShape and
 #    :PodSpaceShape. That one default space exists per user, and that
@@ -221,31 +224,31 @@ pod:owner rdf:type owl:ObjectProperty ;
 
 pod:PodSpace rdf:type owl:Class ;
     rdfs:label "PodSpace"@en ;
-    rdfs:comment """The life a set of a user's pods belongs to — the user's own, or that of a person or organization the user keeps pods about. A flat set of pods: not a pod, holding no content of its own, and linked to no other space and to no pod. Every pod:InstancePod sits in exactly one (pod:space). Carries exactly one pod:spaceRoot, the top concept (podcat:Person or podcat:Organization) every category tag of every pod in it must reach; exactly one pod:spaceName; and at most one pod:spaceSubject, the party whose life it is. The user's default space is the one whose subject is :Self. Per-member: each member's spaces, and which of them a shared pod sits in, are their own."""@en .
+    rdfs:comment """The life a set of a user's pods belongs to — the user's own, or that of a person, organization or pet the user keeps pods about. A flat set of pods: not a pod, holding no content of its own, and linked to no other space and to no pod. Every pod:InstancePod sits in exactly one (pod:space). Carries exactly one pod:spaceRoot, the top concept (podcat:Person, podcat:Organization or podcat:Pet) every category tag of every pod in it must reach; exactly one pod:spaceName; and at most one pod:spaceSubject, the party whose life it is. The user's default space is the one whose subject is :Self. Per-member: each member's spaces, and which of them a shared pod sits in, are their own."""@en .
 
 pod:space rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
     rdfs:domain pod:InstancePod ;
     rdfs:range pod:PodSpace ;
     rdfs:label "space"@en ;
-    rdfs:comment """The pod space this pod sits in, i.e. whose life it belongs to. Exactly one value (shacl/pod-shacl.ttl's :InstancePodShape). Every pod:categoryTag value of the pod must reach that space's pod:spaceRoot. Per-member state, never shared pod content, exactly as pod:categoryTag is: each member places the pod in a space of their own, and moving it changes only their own copy. When the pod is shared, the sender's pod:spaceName accompanies the invitation as a suggestion only; a joining member who does not take it up finds the pod in their default space. Moving a pod to a space with a different root drops each category tag that does not reach the new root."""@en .
+    rdfs:comment """The pod space this pod sits in, i.e. whose life it belongs to. Exactly one value (shacl/pod-shacl.ttl's :InstancePodShape). Every pod:categoryTag value of the pod must reach that space's pod:spaceRoot. Per-member state, never shared pod content, exactly as pod:categoryTag is: each member places the pod in a space of their own, and moving it changes only their own copy. When the pod is shared, nothing about the sender's space accompanies the invitation; the joining member chooses a space of their own for it, the default space preselected. Moving a pod to a space with a different root drops each category tag that does not reach the new root."""@en .
 
 pod:spaceRoot rdf:type owl:ObjectProperty , owl:FunctionalProperty ;
     rdfs:domain pod:PodSpace ;
     rdfs:range skos:Concept ;
     rdfs:label "spaceRoot"@en ;
-    rdfs:comment """The top concept of podcat:PodCategoryScheme this space is rooted at — podcat:Person for a person's life, podcat:Organization for an organization's — and so the branch of the taxonomy its pods are tagged from. Exactly one value, one of those two (shacl/pod-shacl.ttl's :PodSpaceShape). Chosen by the user when the space is created and fixed thereafter; the default space's is always podcat:Person. A category extension concept falls under a space's root when its skos:broadMatch leads there. Range skos:Concept is referenced by name without owl:imports."""@en .
+    rdfs:comment """The top concept of podcat:PodCategoryScheme this space is rooted at — podcat:Person for a person's life, podcat:Organization for an organization's, podcat:Pet for a pet's — and so the branch of the taxonomy its pods are tagged from. Exactly one value, one of those three (shacl/pod-shacl.ttl's :PodSpaceShape). Chosen by the user when the space is created and fixed thereafter; the default space's is always podcat:Person. A category extension concept falls under a space's root when its skos:broadMatch leads there. Range skos:Concept is referenced by name without owl:imports."""@en .
 
 pod:spaceName rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
     rdfs:domain pod:PodSpace ;
     rdfs:range xsd:string ;
     rdfs:label "spaceName"@en ;
-    rdfs:comment """The space's name, as the user sees it — typically the name of the person or organization whose life it holds (e.g. "Paula Walker"); the default space's is the user's own name, which the app marks "(default)". Exactly one value, a non-empty string (shacl/pod-shacl.ttl's :PodSpaceShape). Chosen by the user and freely renamed. Need not be unique, a space being resolved by its own IRI. It is what accompanies an invitation as a suggestion when a pod in the space is shared."""@en .
+    rdfs:comment """The space's name, as the user sees it — typically the name of the person, organization or pet whose life it holds (e.g. "Paula Walker", "Ginger"); the default space's is the user's own name, which the app marks "(default)". Exactly one value, a non-empty string (shacl/pod-shacl.ttl's :PodSpaceShape). Chosen by the user and freely renamed. Need not be unique, a space being resolved by its own IRI. Never sent to another member."""@en .
 
 pod:spaceSubject rdf:type owl:AnnotationProperty ;
     rdfs:domain pod:PodSpace ;
     rdfs:range xsd:anyURI ;
     rdfs:label "spaceSubject"@en ;
-    rdfs:comment """The party whose life this space holds — a p:Person for a space rooted at podcat:Person, an o:Organization for one rooted at podcat:Organization; never a pet or a thing. At most one value, an IRI (shacl/pod-shacl.ttl's :PodSpaceShape), and optional: a space the user has not tied to anyone is still a space, known by its pod:spaceName alone. It is what lets software, and not only the user reading a name, tell whose life a space holds — the way pod:subject names a member graph's party and pod:formTopic a form's topic. The user's default space carries :Self, and is the one space that does. That the party's type matches the space's root reads the graphs that type it, and is integrity.md's TTL-9."""@en .
+    rdfs:comment """The party whose life this space holds — a p:Person for a space rooted at podcat:Person, an o:Organization for one rooted at podcat:Organization, a pets:Pet for one rooted at podcat:Pet; never a vehicle, a document or any other thing. At most one value, an IRI (shacl/pod-shacl.ttl's :PodSpaceShape), and optional: a space the user has not tied to anyone is still a space, known by its pod:spaceName alone. It is what lets software, and not only the user reading a name, tell whose life a space holds — the way pod:subject names a member graph's party and pod:formTopic a form's topic. The user's default space carries :Self, and is the one space that does. That the party's type matches the space's root reads the graphs that type it, and is integrity.md's TTL-9."""@en .
 
 #################################################################
 #    Pod Tags

@@ -2,13 +2,18 @@
 id: http://www.example.org/tpod/pods/pod-40
 title: "Ginger Medical"
 type: pod-databook
-version: 2.4.0
+version: 2.5.0
 created: 2026-08-21
 description: >
-  Pod DataBook for the "Ginger Medical" pod (category tag: podcat:PetsMedical; user tag: "Ginger"). It is a two-member pod, shared by Alice with Paula, with two members (about :Self and :Paula_Walker) and one graph about :Ginger, Alice's cat (the pod's subject).
+  Pod DataBook for the "Ginger Medical" pod (category tag: podcat:PetsMedical; user tag: "Ginger"). It is a two-member pod, shared by Alice with Paula, with two members (about :Self and :Paula_Walker) and one graph about :Ginger, Alice's cat (the pod's subject). It sits in Alice's pod space for Ginger, rooted at podcat:Pet.
 tpod:
   categoryTag:
     - "podcat:PetsMedical"
+  space:
+    id: "http://www.example.org/tpod/spaces/space-4"
+    name: "Ginger"
+    root: "podcat:Pet"
+    subject: ":Ginger"
   creator: ":Self"
   owner: ":Self"
   userTag:

@@ -14,8 +14,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.3.0> ;
-    dc:date "2026-11-16"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.4.0> ;
+    dc:date "2026-11-17"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — and the pod:PodSpace each pod sits in, in the Pod Ontology."@en .
 
@@ -225,8 +225,8 @@
     ] ;
 
     # pod:space — exactly one: every pod belongs to one life, the user's
-    # own (the default space) or that of a person or organization they
-    # keep pods about. Per-member, like the tags. The space node itself
+    # own (the default space) or that of a person, organization or pet
+    # they keep pods about. Per-member, like the tags. The space node itself
     # is constrained by :PodSpaceShape below.
     sh:property [
         sh:path pod:space ;
@@ -566,7 +566,7 @@
 #################################################################
 #  PodSpace
 #  pod:PodSpace is the life a set of a user's pods belongs to. Exactly
-#  one pod:spaceRoot, one of the two top concepts; exactly one
+#  one pod:spaceRoot, one of the three top concepts; exactly one
 #  pod:spaceName, a non-empty string; at most one pod:spaceSubject, an
 #  IRI. A space points at no other space and at no pod, so there is no
 #  chain to constrain. That the user has exactly one default space (the
@@ -584,8 +584,8 @@
         sh:path pod:spaceRoot ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
-        sh:in ( podcat:Person podcat:Organization ) ;
-        sh:message "A pod:PodSpace must have exactly one pod:spaceRoot, podcat:Person or podcat:Organization."@en
+        sh:in ( podcat:Person podcat:Organization podcat:Pet ) ;
+        sh:message "A pod:PodSpace must have exactly one pod:spaceRoot, podcat:Person, podcat:Organization or podcat:Pet."@en
     ] ;
 
     sh:property [

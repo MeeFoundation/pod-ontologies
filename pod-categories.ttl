@@ -8,8 +8,8 @@
 @base <http://mee.foundation/ontologies/pod-categories> .
 
 <http://mee.foundation/ontologies/pod-categories> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod-categories/3.3.0> ;
-    dc:date "2026-11-16"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod-categories/3.4.0> ;
+    dc:date "2026-11-17"^^xsd:date ;
     rdfs:label "Pod Categories"@en ;
     rdfs:comment """Pod Categories for the Tellipod App."""@en .
 
@@ -20,12 +20,12 @@
 
 podcat:PodCategoryScheme rdf:type skos:ConceptScheme ;
     rdfs:label "Category Scheme"@en ;
-    rdfs:comment """The SKOS concept scheme holding every category of information a user tracks about a person or organization. Every podcat: concept in this file carries skos:inScheme podcat:PodCategoryScheme — this is what identifies a concept as one of this app's own category concepts; there is no dedicated OWL class for that purpose any more (skos:Concept is the sole rdf:type every concept carries). Rooted at two top concepts, podcat:Person and podcat:Organization (skos:hasTopConcept), with every other concept reachable from one of the two by following skos:broader (asserted child → parent, at most one step at a time). skos:broader is a topical/thesaurus relation, not OWL subsumption: podcat:Pets skos:broader podcat:Person does not mean a pet is a kind of person, only that Pets is a narrower topic within the Person-rooted branch of information a user tracks about themselves — the same is true of every other skos:broader edge in this scheme. Pods themselves do not nest; this scheme is the only hierarchy there is, and it is what makes a tag search broaden. A pod carries zero or more of these concepts as its pod:categoryTag values (pod.ttl), each member's own, all beneath the one top concept its pod:PodSpace is rooted at (pod:spaceRoot) — podcat:Person for a space holding a person's life, podcat:Organization for an organization's; searching for a concept matches every pod tagged with it or with any concept beneath it by skos:broader, transitively — and, for a category extension's concept, by its skos:broadMatch into this scheme. A pod tagged podcat:ImmediateFamily is therefore found by a search for podcat:People and for podcat:Person, those broader tags being implied and never stored. pod:category (pod.ttl) is used only by a pod:TemplatePod, naming the one concept it is a template for."""@en ;
-    skos:hasTopConcept podcat:Person, podcat:Organization .
+    rdfs:comment """The SKOS concept scheme holding every category of information a user tracks about a person, an organization or a pet. Every podcat: concept in this file carries skos:inScheme podcat:PodCategoryScheme — this is what identifies a concept as one of this app's own category concepts; there is no dedicated OWL class for that purpose any more (skos:Concept is the sole rdf:type every concept carries). Rooted at three top concepts, podcat:Person, podcat:Organization and podcat:Pet (skos:hasTopConcept), with every other concept reachable from one of the three by following skos:broader (asserted child → parent, at most one step at a time). skos:broader is a topical/thesaurus relation, not OWL subsumption: podcat:Pets skos:broader podcat:Person does not mean a pet is a kind of person, only that Pets is a narrower topic within the Person-rooted branch of information a user tracks about themselves — the same is true of every other skos:broader edge in this scheme. Pods themselves do not nest; this scheme is the only hierarchy there is, and it is what makes a tag search broaden. A pod carries zero or more of these concepts as its pod:categoryTag values (pod.ttl), each member's own, all beneath the one top concept its pod:PodSpace is rooted at (pod:spaceRoot) — podcat:Person for a space holding a person's life, podcat:Organization for an organization's, podcat:Pet for a pet's; searching for a concept matches every pod tagged with it or with any concept beneath it by skos:broader, transitively — and, for a category extension's concept, by its skos:broadMatch into this scheme. A pod tagged podcat:ImmediateFamily is therefore found by a search for podcat:People and for podcat:Person, those broader tags being implied and never stored. pod:category (pod.ttl) is used only by a pod:TemplatePod, naming the one concept it is a template for."""@en ;
+    skos:hasTopConcept podcat:Person, podcat:Organization, podcat:Pet .
 
 
 #################################################################
-#    Category concepts: Personal and Organizational roots
+#    Category concepts: Person, Organization and Pet roots
 #################################################################
 
 podcat:Person rdf:type skos:Concept ;
@@ -39,6 +39,12 @@ podcat:Organization rdf:type skos:Concept ;
     skos:inScheme podcat:PodCategoryScheme ;
     skos:topConceptOf podcat:PodCategoryScheme ;
     rdfs:comment "Root topic for all built-in categories of information about an organization — organizations and organization-centric topics (e.g. Companies, BankingPayments(org))."@en .
+
+podcat:Pet rdf:type skos:Concept ;
+    skos:prefLabel "Pet"@en ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    skos:topConceptOf podcat:PodCategoryScheme ;
+    rdfs:comment "Root topic for all built-in categories of information about one pet's life — its health, care, providers, records, belongings and travel. A pod space rooted here holds the pods of a single pet."@en .
 
 #################################################################
 #    Personal concepts
@@ -469,31 +475,7 @@ podcat:Pets rdf:type skos:Concept ;
     skos:prefLabel "Pets"@en ;
     skos:broader podcat:Person ;
     skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Care instructions, veterinarians, medicines, food providers."@en .
-
-podcat:PetsMedical rdf:type skos:Concept ;
-    skos:prefLabel "Medical"@en ;
-    skos:broader podcat:Pets ;
-    skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "A pet's medical care — veterinarians, prescriptions, medications and dosing instructions, devices, diagnoses, and treatments."@en .
-
-podcat:PetsVeterinarians rdf:type skos:Concept ;
-    skos:prefLabel "Veterinarians"@en ;
-    skos:broader podcat:PetsMedical ;
-    skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Veterinary practices and providers a pet sees for care."@en .
-
-podcat:PetsDevices rdf:type skos:Concept ;
-    skos:prefLabel "Devices"@en ;
-    skos:broader podcat:PetsMedical ;
-    skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Medical devices and supplies used in a pet's care, e.g. syringes, nebulizers, and injection solutions."@en .
-
-podcat:PetsCareAndFeeding rdf:type skos:Concept ;
-    skos:prefLabel "Care & Feeding"@en ;
-    skos:broader podcat:Pets ;
-    skos:inScheme podcat:PodCategoryScheme ;
-    rdfs:comment "Day-to-day instructions for someone else to take care of a pet — a pet's diet, food providers, feeding instructions and schedule, dietary restrictions, where they sleep, and other routine care."@en .
+    rdfs:comment "A pet in the user's life — the pod about the pet itself, as a pod about a family member is about that person. Everything about the pet's own life — its medical care, feeding, providers and records — is tagged from podcat:Pet's branch, in a pod space for that pet."@en .
 
 podcat:Home rdf:type skos:Concept ;
     skos:prefLabel "Home"@en ;
@@ -586,6 +568,148 @@ podcat:SportsEntertainment rdf:type skos:Concept ;
     skos:broader podcat:Person ;
     skos:inScheme podcat:PodCategoryScheme ;
     rdfs:comment "Sports events (watching or participating) and entertainment (movies, plays, jazz clubs). Favorite teams/groups, venues, streaming services, ticketing. See podcat:Information for other interests."@en .
+
+#################################################################
+#    Pet concepts
+#################################################################
+
+podcat:PetHealth rdf:type skos:Concept ;
+    skos:prefLabel "Health"@en ;
+    skos:broader podcat:Pet ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "A pet's health: its medical care and the insurance that pays for it."@en .
+
+podcat:PetsMedical rdf:type skos:Concept ;
+    skos:prefLabel "Medical"@en ;
+    skos:broader podcat:PetHealth ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "A pet's medical care — veterinarians, prescriptions, medications and dosing instructions, devices, diagnoses, and treatments."@en .
+
+podcat:PetsVeterinarians rdf:type skos:Concept ;
+    skos:prefLabel "Veterinarians"@en ;
+    skos:broader podcat:PetsMedical ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Veterinary practices and providers a pet sees for care."@en .
+
+podcat:PetVetVisits rdf:type skos:Concept ;
+    skos:prefLabel "Vet Visits"@en ;
+    skos:broader podcat:PetsMedical ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Appointments with a veterinarian, and the record of each visit — reason, findings, and follow-up."@en .
+
+podcat:PetMedications rdf:type skos:Concept ;
+    skos:prefLabel "Medications"@en ;
+    skos:broader podcat:PetsMedical ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Medicines a pet takes, with dosage, schedule, and refill details."@en .
+
+podcat:PetVaccinations rdf:type skos:Concept ;
+    skos:prefLabel "Vaccinations"@en ;
+    skos:broader podcat:PetsMedical ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "A pet's vaccination history and certificates, e.g. a rabies certificate, and when each booster is due."@en .
+
+podcat:PetsDevices rdf:type skos:Concept ;
+    skos:prefLabel "Devices"@en ;
+    skos:broader podcat:PetsMedical ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Medical devices and supplies used in a pet's care, e.g. syringes, nebulizers, and injection solutions."@en .
+
+podcat:PetInsurance rdf:type skos:Concept ;
+    skos:prefLabel "Insurance"@en ;
+    skos:broader podcat:PetHealth ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "A pet's health insurance policy, its coverage, and claims."@en .
+
+podcat:PetsCareAndFeeding rdf:type skos:Concept ;
+    skos:prefLabel "Care & Feeding"@en ;
+    skos:broader podcat:Pet ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Day-to-day instructions for someone else to take care of a pet — a pet's diet, food providers, feeding instructions and schedule, dietary restrictions, where they sleep, and other routine care."@en .
+
+podcat:PetDiet rdf:type skos:Concept ;
+    skos:prefLabel "Diet"@en ;
+    skos:broader podcat:PetsCareAndFeeding ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "What a pet eats — food brands and where to buy them, portions, feeding schedule, treats, and dietary restrictions."@en .
+
+podcat:PetGrooming rdf:type skos:Concept ;
+    skos:prefLabel "Grooming"@en ;
+    skos:broader podcat:PetsCareAndFeeding ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Grooming routines — bathing, brushing, nail trimming, and dental care. See podcat:PetGroomers for the people who do it."@en .
+
+podcat:PetExercise rdf:type skos:Concept ;
+    skos:prefLabel "Exercise"@en ;
+    skos:broader podcat:PetsCareAndFeeding ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Walks, play, and other exercise a pet needs, and when."@en .
+
+podcat:PetCareProviders rdf:type skos:Concept ;
+    skos:prefLabel "Care Providers"@en ;
+    skos:broader podcat:Pet ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "People and businesses who look after a pet, other than for medical care. See podcat:PetsVeterinarians for veterinary care."@en .
+
+podcat:PetSitters rdf:type skos:Concept ;
+    skos:prefLabel "Sitters & Walkers"@en ;
+    skos:broader podcat:PetCareProviders ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Pet sitters and dog walkers."@en .
+
+podcat:PetBoarding rdf:type skos:Concept ;
+    skos:prefLabel "Boarding"@en ;
+    skos:broader podcat:PetCareProviders ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Kennels and other boarding facilities that keep a pet while its owner is away."@en .
+
+podcat:PetGroomers rdf:type skos:Concept ;
+    skos:prefLabel "Groomers"@en ;
+    skos:broader podcat:PetCareProviders ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Groomers and grooming salons."@en .
+
+podcat:PetTrainers rdf:type skos:Concept ;
+    skos:prefLabel "Trainers"@en ;
+    skos:broader podcat:PetCareProviders ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Trainers and behaviorists, and the classes a pet attends."@en .
+
+podcat:PetRecords rdf:type skos:Concept ;
+    skos:prefLabel "Records"@en ;
+    skos:broader podcat:Pet ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Official and identifying records about a pet."@en .
+
+podcat:PetRegistration rdf:type skos:Concept ;
+    skos:prefLabel "Registration"@en ;
+    skos:broader podcat:PetRecords ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "A pet's license or registration with a city or county, and its license tag."@en .
+
+podcat:PetMicrochip rdf:type skos:Concept ;
+    skos:prefLabel "Microchip"@en ;
+    skos:broader podcat:PetRecords ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "A pet's microchip number and the registry it is enrolled with."@en .
+
+podcat:PetOrigin rdf:type skos:Concept ;
+    skos:prefLabel "Adoption & Pedigree"@en ;
+    skos:broader podcat:PetRecords ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Where a pet came from — adoption papers, breeder, purchase records, and pedigree."@en .
+
+podcat:PetThings rdf:type skos:Concept ;
+    skos:prefLabel "Things"@en ;
+    skos:broader podcat:Pet ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "A pet's belongings and supplies — crate, carrier, bed, collar, and toys."@en .
+
+podcat:PetTravel rdf:type skos:Concept ;
+    skos:prefLabel "Travel"@en ;
+    skos:broader podcat:Pet ;
+    skos:inScheme podcat:PodCategoryScheme ;
+    rdfs:comment "Traveling with a pet — pet passport, health certificates for travel, and airline or hotel pet rules."@en .
 
 #################################################################
 #    Organizational concepts

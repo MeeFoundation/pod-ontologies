@@ -2,7 +2,7 @@
 """
 validate.py — the project's SHACL validation, run one pod at a time.
 
-Every pod-databook under example/Pods/ is validated in isolation from every
+Every pod-databook under example/pods/ is validated in isolation from every
 other pod: no two pods' extracted data ever reach the same `shacl validate`
 call. (The shared foundation/application ontologies merged in below are
 schema, not another pod's instance data, so merging those in doesn't violate
@@ -360,7 +360,7 @@ def main():
 
     pods = checked = skipped = violations = unresolved = 0
 
-    for pod_path in sorted(glob.glob("example/Pods/**/*.databook.md", recursive=True)):
+    for pod_path in sorted(glob.glob("example/pods/**/*.databook.md", recursive=True)):
         if "under-development" in pod_path.split(os.sep):
             continue
         fm, body = frontmatter(pod_path)

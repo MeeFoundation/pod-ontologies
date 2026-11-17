@@ -20,7 +20,7 @@ set -euo pipefail
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
-staged=$(git diff --cached --name-only --diff-filter=ACM | grep '^example/Pods/.*\.databook\.md$' || true)
+staged=$(git diff --cached --name-only --diff-filter=ACM | grep '^example/pods/.*\.databook\.md$' || true)
 [ -z "$staged" ] && exit 0
 
 command -v mmdc >/dev/null 2>&1 || echo "[draw] warning: mmdc not found — .png files will not be regenerated"

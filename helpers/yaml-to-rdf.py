@@ -56,7 +56,7 @@ def main(root):
     triples = []
 
     for path in sorted(
-        glob.glob(os.path.join(root, "example", "Pods", "**", "*.databook.md"), recursive=True)
+        glob.glob(os.path.join(root, "example", "pods", "**", "*.databook.md"), recursive=True)
     ):
         if "under-development" in path.split(os.sep):
             continue

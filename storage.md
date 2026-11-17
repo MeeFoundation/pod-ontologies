@@ -80,8 +80,8 @@ them too.
 | Ships as Tellipod | Development scaffolding |
 |---|---|
 | Every `*.ttl` ontology — `persona.ttl`, `pod.ttl`, `pod-categories.ttl`, `pod-category-templates.ttl`, `service.ttl`, `organization.ttl`, and every `other/`, `persona-ext/` and `pod-category-ext/` peer file (possibly expressed differently in the app) | Every `*.databook.md` file, and the whole format specified in [pod-databook.md](pod-databook.md) |
-| Every `**/shacl/*.ttl` shapes file | The `example/Pods/` directory, and every folder in it |
-| The concepts the ontologies model — pods, members, owners, tools, graphs, categories, tags, notes, attachments, chat | Pods as flat folders, one per pod, none inside another; the `_pod-attachments` marker; folder notes named after their folder, with no file for an empty note; private files as loose files; the filename convention |
+| Every `**/shacl/*.ttl` shapes file | The `example/pods/` directory, and every folder in it |
+| The concepts the ontologies model — pods, members, owners, tools, graphs, categories, tags, notes, attachments, chat | Pods as folders, one per pod, grouped in one folder per pod space, no pod folder inside another; the `_pod-attachments` marker; folder notes named after their folder, with no file for an empty note; private files as loose files; the filename convention |
 | The app-level rules in [app-behavior.md](app-behavior.md) — lifecycle, sharing, permissions, naming, tagging | The `helpers/` scripts, and the [integrity.md](integrity.md) checks that read the files and folders on disk |
 
 The scaffolding is genuinely useful and is not going away before the app arrives: it is how the

@@ -35,7 +35,7 @@ Every other kind **must not** use `rdflib`, because it asks about something that
 
 ## Scaffolding checks
 
-Many checks read the filesystem — the folders under `example/Pods/`, the `*.databook.md` files in it, and the PNGs under `example/graphs/images/`. All of that is **development scaffolding**: Tellipod persists no data in the user's filesystem at all (see [storage.md](storage.md)), and the on-disk layout exists only so that real pod content can be carried, validated and diagrammed before there is an app to hold it. Every `FS-n` check is a scaffolding check in that sense, along with `YAML-5` and `PNG-1a`: they keep this repo internally consistent and say nothing about how a running Tellipod stores anything. The rest test content that survives unchanged whatever the app does.
+Many checks read the filesystem — the folders under `example/pods/`, the `*.databook.md` files in it, and the PNGs under `example/graphs/images/`. All of that is **development scaffolding**: Tellipod persists no data in the user's filesystem at all (see [storage.md](storage.md)), and the on-disk layout exists only so that real pod content can be carried, validated and diagrammed before there is an app to hold it. Every `FS-n` check is a scaffolding check in that sense, along with `YAML-5` and `PNG-1a`: they keep this repo internally consistent and say nothing about how a running Tellipod stores anything. The rest test content that survives unchanged whatever the app does.
 
 ## Renumbering
 
@@ -50,7 +50,7 @@ Retired checks `17`, `22`, `24`, `31`, `32` and sub-check `10f` had already been
 These read a **PNG**: either its pixels, or the drawing itself compared by eye against the data it depicts. They are the largest group because most of this project's conventions are expressed in a diagram first. Most are visual — the script under each one prints the correct values for cross-reference rather than comparing the image automatically.
 
 
-**PNG-1 — Example pod diagrams**: Each of the 13 pod diagrams in `example/images/` draws one persistent view as the desktop app would display it: a flat list of pod boxes, plus display-only elements the app generates from the pods' tags. None of those elements is a pod, and none is stored anywhere. The diagrams draw no nesting, and none should ever be added: pods are a flat set. Each pod box corresponds to a pod in `example/Pods/`, the folder `example/Pods/<Name>/` holding its one pod-databook, `<Name>.databook.md`. The box's bold black first line is the pod's name, mirrored in its pod-databook's `title:`. A pod box reads, top to bottom:
+**PNG-1 — Example pod diagrams**: Each of the 13 pod diagrams in `example/images/` draws one persistent view as the desktop app would display it: a flat list of pod boxes, plus display-only elements the app generates from the pods' tags. None of those elements is a pod, and none is stored anywhere. The diagrams draw no nesting, and none should ever be added: pods are a flat set. Each pod box corresponds to a pod in `example/pods/`, the folder `example/pods/<Name>/` holding its one pod-databook, `<Name>.databook.md`. The box's bold black first line is the pod's name, mirrored in its pod-databook's `title:`. A pod box reads, top to bottom:
 
 1. the pod's name, in bold black;
 2. its category tags on one green line, each as `#<prefLabel>`, if it has any (PNG-1f);
@@ -59,9 +59,9 @@ These read a **PNG**: either its pixels, or the drawing itself compared by eye a
 
 A pod box never names its pod space. In an all-spaces view the space is shown by the space panel the box is drawn inside (PNG-1i), since from the UI's point of view the pod is *in* the space, not labeled with it.
 
-The display-only elements are an italic two-line **view header** at the top left (`Pod space: <space name>`, then `View tags: #<tag>`), grey **space panels** in an all-spaces view, and green **group headers** (PNG-1i). Where a diagram and the DataBooks disagree, the DataBooks are authoritative: fix the diagram, unless the data is actually wrong. After any change to `example/Pods/` DataBooks or to the 13 diagrams, verify all of the following:
+The display-only elements are an italic two-line **view header** at the top left (`Pod space: <space name>`, then `View tags: #<tag>`), grey **space panels** in an all-spaces view, and green **group headers** (PNG-1i). Where a diagram and the DataBooks disagree, the DataBooks are authoritative: fix the diagram, unless the data is actually wrong. After any change to `example/pods/` DataBooks or to the 13 diagrams, verify all of the following:
 
-- **PNG-1a — Every pod box has a pod DataBook**: Every pod box shown in any of the 13 diagrams must have a corresponding pod in `example/Pods/` whose pod-databook's `title:` equals the box's name line verbatim. A green group header, a space panel or the view header is not a pod box and has no DataBook. Report any pod box with no DataBook rather than creating a pod to match it. PNG-10's `DIAGRAM` table records which pods each diagram draws, and its script reports any pod drawn in none, except those its `UNDRAWN_OK` set names: the *Things* pod (pod-11), which no view of Alice's needs, its graph 22 being documented in example.md instead.
+- **PNG-1a — Every pod box has a pod DataBook**: Every pod box shown in any of the 13 diagrams must have a corresponding pod in `example/pods/` whose pod-databook's `title:` equals the box's name line verbatim. A green group header, a space panel or the view header is not a pod box and has no DataBook. Report any pod box with no DataBook rather than creating a pod to match it. PNG-10's `DIAGRAM` table records which pods each diagram draws, and its script reports any pod drawn in none, except those its `UNDRAWN_OK` set names: the *Things* pod (pod-11), which no view of Alice's needs, its graph 22 being documented in example.md instead.
 
 - **PNG-1b — Retired.** It required every pod-databook other than an invisible root pod to appear as a box in some branch diagram. Pods do not nest, so there is no root pod and no branch to place a pod under; whether every pod is drawn somewhere is settled by the redraw itself (PNG-1).
 
@@ -79,7 +79,7 @@ def local_names(entries):
     entries = entries if isinstance(entries, list) else ([entries] if entries else [])
     return [e['id'].rsplit('/', 1)[-1] for e in entries]
 
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
@@ -94,9 +94,9 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
     print(f"{fm.get('title')!r:30} member(circle)={members}  tool(square)={tool_graphs}")
 ```
 
-- **PNG-1d — Numbered graph circles/squares have matching embedded graphs**: Every numbered graph circle or square (e.g. `[10]`, `[17]`) shown in a diagram must correspond to a `tpod.member` entry or a tool's own graph (equivalently, a `### Graph NN` body section) in some pod-databook under `example/Pods/` whose id contains that number (e.g. `(10)`, `(17)`).
+- **PNG-1d — Numbered graph circles/squares have matching embedded graphs**: Every numbered graph circle or square (e.g. `[10]`, `[17]`) shown in a diagram must correspond to a `tpod.member` entry or a tool's own graph (equivalently, a `### Graph NN` body section) in some pod-databook under `example/pods/` whose id contains that number (e.g. `(10)`, `(17)`).
 
-- **PNG-1e — Retired.** It matched each diagram's child arrows to folder nesting under `example/Pods/`. Pods do not nest and `example/Pods/` is flat (FS-5), so there are no child links to match. The grey connectors the 13 diagrams draw join a group header to the pods listed under it (PNG-1i); they are display-only and say nothing about nesting.
+- **PNG-1e — Retired.** It matched each diagram's child arrows to folder nesting under `example/pods/`. Pods do not nest, and in `example/pods/` no pod folder sits inside another (FS-5), so there are no child links to match. The grey connectors the 13 diagrams draw join a group header to the pods listed under it (PNG-1i); they are display-only and say nothing about nesting.
 
 - **PNG-1f — Green category-tag lines and grey user-tag text match the pod's tags**: Below the name, a pod box shows its own tags, with the hash the UI uses for a tag. The **category tags** share one green line, each written `#<prefLabel>` and separated by a space, in `tpod.categoryTag` order, giving each concept's `skos:prefLabel`, from `pod-categories.ttl` or from a category extension's own file under `pod-category-ext/`. The label must match its concept's `skos:prefLabel` verbatim, no more and no fewer words, and never abbreviated. The line is shown even when the label equals the pod's own name: `gov-federal.png`'s "SSN" box shows `#SSN`, and `groups.png`'s "Boston Hub Society" box shows `#Boston Hub Society`. No green line is drawn only for a pod with no category tags. The **user tags** follow in grey, each as `#<tag>`, one per `tpod.userTag` value, and none for a pod with none: `pets.png`'s three boxes each show `#Ginger`, and `work.png`'s three each show `#Acme`. A box shows no implied (broader) tag. The broader concepts appear only as group headers (PNG-1i). This is a visual check. PNG-1i's script prints every pod's green and grey lines for cross-reference: for example, `home.png`'s "Paradise" box shows `#Home` and its "Boston" box `#Previous`, matching their tags `podcat:Home` and `podcat:Previous`, and `travel.png`'s "Kyoto Trip 2027" box shows `#Trips`.
 
@@ -105,7 +105,7 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
 ```python
 import glob, re
 
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     text = open(path).read()
@@ -163,7 +163,7 @@ def headers(tag):
 def as_list(v):
     return v if isinstance(v, list) else ([v] if v else [])
 
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     text = open(path, encoding='utf-8').read()
@@ -194,7 +194,7 @@ The 13 diagrams are: `example/images/people.png`, `example/images/people2.png`, 
 - `vehicles.png`'s "RAV4" (pod-44, `{44}`, graphs `[62]`/`[63]`) is Alice's car, and its "Honda" (pod-55, `{55}`, graphs `[107]`/`[108]`) her mother Paula's.
 - `travel.png`'s "Kyoto Trip 2027" (pod-47, `{47}`, graphs `[66]`/`[68]`/`[69]`/`[91]`) has two member circles ("Self" `[66]`, "Dave" `[68]`) and two tool-graph squares sharing one subject ("Kyoto" `[69]`/`[91]`, claimed by Self and Dave respectively). With one tool graph per member, it is the first worked example to reach `pod:formGraph`'s real upper bound (YAML-8).
 
-**PNG-2 — Diagram ↔ files ↔ example.md coverage**: Every numbered graph circle in any of the 13 pod diagrams (`example/images/`) must have (a) a corresponding embedded graph section — a `tpod.member` or `tpod.tool[].graph` entry plus its `### Graph NN` body section — inside a pod-databook file under `example/Pods/`, and (b) a row in one of the tables in the **Graphs** section of `example.md`. Conversely, every row in those tables must correspond to an embedded graph that actually exists — and to that alone: a row does **not** need a numbered circle in any diagram. The 13 diagrams are not required to draw every graph; every graph is documented — a row in `example.md`'s **Graphs** section and a PNG in `example/graphs/images/` (FS-2 and FS-3) — whether or not any diagram draws it. If a circle exists in a diagram but has no embedded graph or `example.md` row, report it rather than creating a graph to match: the DataBooks are authoritative (PNG-1).
+**PNG-2 — Diagram ↔ files ↔ example.md coverage**: Every numbered graph circle in any of the 13 pod diagrams (`example/images/`) must have (a) a corresponding embedded graph section — a `tpod.member` or `tpod.tool[].graph` entry plus its `### Graph NN` body section — inside a pod-databook file under `example/pods/`, and (b) a row in one of the tables in the **Graphs** section of `example.md`. Conversely, every row in those tables must correspond to an embedded graph that actually exists — and to that alone: a row does **not** need a numbered circle in any diagram. The 13 diagrams are not required to draw every graph; every graph is documented — a row in `example.md`'s **Graphs** section and a PNG in `example/graphs/images/` (FS-2 and FS-3) — whether or not any diagram draws it. If a circle exists in a diagram but has no embedded graph or `example.md` row, report it rather than creating a graph to match: the DataBooks are authoritative (PNG-1).
 
 **PNG-3 — `pod.ttl` matches `images/pod-ontology/pod.png`**: `Pod` shows `attachment` (to a `sources:SourceItem` box, drawn **0..N**, matching `pod:attachment`'s range — `other/sources.ttl`, referenced by name with no `owl:imports` — and its unbounded cardinality: the files every member of the pod receives, never a member's own private ones). The two classification properties, `pod:category` and `pod:categoryTag`, both range over the classificatory `skos:Concept` (a concept in `podcat:PodCategoryScheme`, pod-categories.ttl, or in a category extension's own scheme); pods do not nest, so there is no tree-position class for either to be confused with. Both record what kind of thing a pod is, and neither needs `owl:imports pod-categories.ttl` (referenced by name only, mirroring `pod:creator`'s identical pattern). The diagram shows two arrows off `Pod` with no counterpart in `pod.ttl` — `note` (to a placeholder box, `(note data object) 1..1` — the note is held in the app's own internal format, not as a Markdown file) and `chat` (to a placeholder box, `(a chat stream) 1..1` — every pod always has a chat stream, possibly empty, held inside the app rather than in the pod's folder) — this is a deliberate, accepted exception to 12a/12b below: README.md already describes both properties' intended semantics (see the Documentation-only Properties section) as planned, but `pod.ttl` itself has no `pod:note`/`pod:chat` declaration yet — neither is ever reified as a triple in any real graph. `Pod` (abstract, blue) carries `attachment` (plus the still-open `note`/`chat` arrows above). `Pod` splits into two disjoint kinds (`owl:disjointWith` — a pod is always exactly one, never both): `TemplatePod` (abstract, blue, a reusable class-level template) carries `category` (to a `skos:Concept` box, **0..1** — the one concept the template is for, carried by every template except `ctpl:UserDefinedTemplatePod`, which carries none), `memberShape` (to a `sh:NodeShape` box, 0..N) and `declaresTool` (to a `pod:Tool` box, 0..N); `InstancePod` (concrete, black, a pod a user actually has) carries `member` (to a `pod:MemberGraph` box, 1..N, no fixed upper bound), `tool` (to a `pod:Tool` box, 0..N), `creator` (to a `p:Person` box, 1..1), `owner` (to its own `p:Person` box, 1..N, no fixed upper bound — every arrow in this diagram carries its own target label, so `creator` and `owner` are drawn as two separate `p:Person` boxes rather than sharing one), `space` (to a `pod:PodSpace` box, **1..1**, which in turn carries `spaceRoot` (to a `skos:Concept` box, 1..1), `spaceName` (to an `xsd:string` box, 1..1) and `spaceSubject` (to an `xsd:anyURI` box, 0..1) — `pod.ttl`'s Pod Spaces section), and the three tag properties `categoryTag` (to a `skos:Concept` box, **0..N**), `userTag` (to an `xsd:string` box, 0..N) and `serviceTag` (to a `pod:ServiceTag` box, 0..N) — `pod.ttl`'s Pod Tags section. The three tag arrows hang off `InstancePod`, never off `Pod`: their domain is `pod:InstancePod` deliberately, since a `TemplatePod` seeds no tags. `category` and `categoryTag` hang off different boxes for the same reason: `category` names the one concept a template is for and never appears on an instance pod, while `categoryTag` is a member's own classification of a pod, zero or more concepts. The three tags point at different kinds of target because they are different shapes: a category tag is a concept, a user tag is a bare literal, and a service tag is a value node. `ServiceTag` and the `Tool` hierarchy are **not** drawn in this diagram: each has its own, `images/pod-ontology/tag.png` (PNG-6) and `images/pod-ontology/tool.png` (PNG-7). Here they appear only as arrow targets — a `pod:ServiceTag` box off `serviceTag`, and a `pod:Tool` box off both `tool` and `declaresTool` — never as members of the `Pod` hierarchy, which neither has an `rdfs:subClassOf` relation to. There is no `shape` arrow off `InstancePod` at all — a pod stores no shape of its own; the `shape` property that does exist has domain `pod:Graph` and is drawn in `graph.png` (PNG-4) (each graph's own `pod:shape`, set from the template that supplied the graph, is the validation authority for that graph; there is no single template of a pod to derive a pod-level shape from, a pod carrying zero or more category tags) — and no pod-level `subject` arrow off `InstancePod` either — there is no such property (a pod's own subject is derived from its tools' own `pod:formTopic` values, or failing those from `member`'s own `pod:subject` values, rather than stored on the pod itself; those two are real, surviving properties, scoped to `pod:Tool` and `pod:MemberGraph` rather than to `InstancePod` — see PNG-4). `TemplatePod` has no subclasses of its own, and no individual is ever typed both `TemplatePod` and `InstancePod` — every template individual in `pod-category-templates.ttl` is typed solely `TemplatePod`. No arrow points from `Pod`, `TemplatePod`, or `InstancePod` to any tree-position box at all — pods do not nest, and both classification arrows point to `skos:Concept`. This diagram is the ontology-level (not example-data) picture of `pod:Pod`'s structure — the member-composition hierarchy and its content-linking properties. A single "Key" box in the lower right carries three swatches, in this order — blue "Abstract", black "Concrete and visible", green "Concrete but hidden" — and the class-box colors track them exactly: blue is `pod:abstract true` in `pod.ttl` (`Pod` and `TemplatePod`, and nothing else here) and black is every remaining concrete class. The Key lists exactly the swatches this diagram actually uses — two here, since the one green ("concrete but hidden") class, `ServiceTag`, is drawn in `tag.png` instead. A concrete class may only be green where `pod.ttl` or `README.md` actually says the user never sees it; absent that, it is black. Unlike PNG-1 (example diagrams, where the diagram always wins), this check does not presume which side is authoritative when the two disagree — surface the discrepancy and ask:
 
@@ -262,7 +262,7 @@ Its legend is the same six titled boxes the 13 example diagrams carry, stacked i
 
   Each pod box shows no icon of any kind, no folder icon and no separate "note" or "chat" icon (see PNG-3's `pod:note`/`pod:chat` planned-property note, which concerns `pod.png` only), just the filled box itself. Re-verify each box's circles and squares remain a valid illustration of the properties and cardinalities described in the Pod and Graph Ontology sections of `README.md` after any change to those properties.
 
-**PNG-9 — a pod carries no category tag if and only if it is drawn with the Custom fill**: Every pod drawn in `images/folder-mapping.png`, `representative-pods.png` and the 13 example diagrams (PNG-1h) carries a **fill** set by its category type: tan/Person, light blue/Organization, pale yellow/Pet, or purple/None (Custom), from the top concept its `pod:categoryTag` values reach — always one, its pod space's root (TTL-9). The Custom case is the one this check pins down: a pod is drawn purple **exactly when** its pod-databook carries no `tpod.categoryTag` value at all, the Custom category being identified by that absence and nothing else. A pod carrying any category tag is never purple, and a pod carrying none is never anything else. In `folder-mapping.png` the fill sits on the folder icon itself. That diagram pictures the repo's development scaffolding rather than a pod as the app holds it, which is also why it draws a Pod DataBook file, unlike the 13 example diagrams. It draws `example/Pods/` as a white folder holding two sibling pod folders, "Bob Johnson" and "Fred Flintstone" (both tag `podcat:Others`, so both tan). Fred Flintstone is expanded to show its DataBook, note file and `_pod-attachments` folder, with three attachments A, B and C. Only a folder that is a pod carries fill at all: `Pods` and `_pod-attachments` stay white, and the key names that distinction, the tan/white split being exactly the pod/not-a-pod test. Every folder name is black. The diagram carries no Custom or Organization pod, so its key lists only the tan swatch, labeled "Folder that is a pod (category tag under Person)". That is the rule for this diagram's key generally, matching PNG-3's for `pod.png`: the key lists exactly the swatches the drawing actually uses, so a swatch whose case is not drawn comes out rather than standing as an unexercised entry. This is a visual check (no automated pixel/OCR comparison), but the script below computes, for every real pod, its category tags and their labels, its category type, and the fill the rule calls for, for direct cross-reference against whichever diagram box or folder is being checked. It reports `UNRESOLVED` for a tag it cannot follow to `podcat:Person` or `podcat:Organization`, and `MIXED` for a pod whose tags reach both, which TTL-9 also flags. Run:
+**PNG-9 — a pod carries no category tag if and only if it is drawn with the Custom fill**: Every pod drawn in `images/folder-mapping.png`, `representative-pods.png` and the 13 example diagrams (PNG-1h) carries a **fill** set by its category type: tan/Person, light blue/Organization, pale yellow/Pet, or purple/None (Custom), from the top concept its `pod:categoryTag` values reach — always one, its pod space's root (TTL-9). The Custom case is the one this check pins down: a pod is drawn purple **exactly when** its pod-databook carries no `tpod.categoryTag` value at all, the Custom category being identified by that absence and nothing else. A pod carrying any category tag is never purple, and a pod carrying none is never anything else. In `folder-mapping.png` the fill sits on the folder icon itself. That diagram pictures the repo's development scaffolding rather than a pod as the app holds it, which is also why it draws a Pod DataBook file, unlike the 13 example diagrams. It draws `example/pods/` as a white folder holding two sibling pod folders, "Bob Johnson" and "Fred Flintstone" (both tag `podcat:Others`, so both tan). Fred Flintstone is expanded to show its DataBook, note file and `_pod-attachments` folder, with three attachments A, B and C. Only a folder that is a pod carries fill at all: `Pods` and `_pod-attachments` stay white, and the key names that distinction, the tan/white split being exactly the pod/not-a-pod test. Every folder name is black. The diagram carries no Custom or Organization pod, so its key lists only the tan swatch, labeled "Folder that is a pod (category tag under Person)". That is the rule for this diagram's key generally, matching PNG-3's for `pod.png`: the key lists exactly the swatches the drawing actually uses, so a swatch whose case is not drawn comes out rather than standing as an unexercised entry. This is a visual check (no automated pixel/OCR comparison), but the script below computes, for every real pod, its category tags and their labels, its category type, and the fill the rule calls for, for direct cross-reference against whichever diagram box or folder is being checked. It reports `UNRESOLVED` for a tag it cannot follow to `podcat:Person` or `podcat:Organization`, and `MIXED` for a pod whose tags reach both, which TTL-9 also flags. Run:
 
 ```python
 import glob, re, yaml
@@ -304,7 +304,7 @@ FILL = {'Person': 'tan/Person', 'Organization': 'light-blue/Organization',
 def as_list(v):
     return v if isinstance(v, list) else ([v] if v else [])
 
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     text = open(path, encoding='utf-8').read()
@@ -349,6 +349,7 @@ from PIL import Image
 
 PAL = {(220, 250, 221): 'green', (235, 235, 235): 'gray'}
 MIN_AREA = 2000   # a real graph shape is ~96x96px; legend swatches are far smaller
+MAX_SIDE = 130    # nor larger: a grey space panel (#EBEBEB, PNG-1i) is no graph shape
 
 def frontmatter(path):
     text = open(path, encoding='utf-8').read()
@@ -367,21 +368,23 @@ def filled_shapes(path):
             if seen[x][y] or PAL.get(px[x, y]) is None:
                 continue
             colour = PAL[px[x, y]]
-            stack, area = [(x, y)], 0
+            stack, area, xs, ys = [(x, y)], 0, [x, x], [y, y]
             seen[x][y] = True
             while stack:
                 a, b = stack.pop()
                 area += 1
+                xs = [min(xs[0], a), max(xs[1], a)]
+                ys = [min(ys[0], b), max(ys[1], b)]
                 for da, db in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     m, n = a + da, b + db
                     if 0 <= m < W and 0 <= n < H and not seen[m][n] and PAL.get(px[m, n]) == colour:
                         seen[m][n] = True
                         stack.append((m, n))
-            if area >= MIN_AREA:
+            if area >= MIN_AREA and max(xs[1] - xs[0], ys[1] - ys[0]) < MAX_SIDE:
                 counts[colour] += 1
     return counts
 
-# The pods each diagram draws, by pod name (its folder under example/Pods/).
+# The pods each diagram draws, by pod name (its folder under example/pods/).
 # people.png/people2.png draw one set of pods between them.
 DIAGRAM = {
     'groups':      ['Boston Hub Society', 'Chestnut Hill Village Association'],
@@ -408,7 +411,7 @@ for d, pods in DIAGRAM.items():
         DRAWN_IN.setdefault(pod, []).append(d)
 
 expected = Counter()
-for f in glob.glob('example/Pods/**/*.databook.md', recursive=True):
+for f in glob.glob('example/pods/**/*.databook.md', recursive=True):
     if 'under-development' in f.split('/'):
         continue
     fmatter, _ = frontmatter(f)
@@ -475,7 +478,7 @@ print('Every diagram\'s claim-fill colors match their graphs\' own claimants.'
 
 If a violation is found, the diagram is the authoritative side for *which pods and shapes exist* (PNG-1), but the DataBook is authoritative for *who claimed a graph* — a `claimant` is a fact about the data, not a drawing choice. So recolor the shape to match its graph's own `claimant` under the three-way rule above. A count that is short by one green usually means a non-`:Self`-claimed shape was left unfilled; a count long by one usually means a `:Self`-claimed shape was filled. The check reports counts rather than naming the offending shape, since matching a specific circle to a specific graph number would require reading the diagram's own `[NN]` labels; with per-diagram counts the candidates are few enough to spot by eye.
 
-**PNG-11 — no diagram still carries the retired "Delegate" legend swatch**: The 13 example diagrams plus `images/representative-pods.png` each carry their own copy of the legend, so a change to it has to be applied fourteen times by hand. (`images/folder-mapping.png` is also scanned below, but carries a key of its own, two folder swatches, rather than this legend.) That legend is six titled boxes, "UI View", "Pod name", "Category tags", "Claimant", "Other" and "Members" (see PNG-8 for the full box-by-box contents). The ones that matter here are **Claimant**, holding two claim-fill swatches (green "Other", dashed "Self"), **Other**, holding the "Attachment" document icon and the square "Form", and **Members**, holding a circle "Human" and an octagon "Service"; it no longer holds the gray "Delegate" swatch that a third claim-fill state once needed (see PNG-8 and PNG-10 — claim fill is now a two-state self/not-self fact, and a member's identity type is carried by shape instead). A diagram left on the older key is mechanically detectable, because that swatch is the only place a filled `(235, 235, 235)` block of any size appears: the current legend has no gray fill, its grey `#User tag(s)` text and `#Heading` connector being a darker grey and thin, and the incidental `(235, 235, 235)` in these PNGs is antialiasing a few dozen pixels in size, far below the threshold below. This catches the stale-legend case that PNG-10 cannot — PNG-10 compares fills against the DataBooks and so passes happily on a diagram whose *shapes* are all correct but whose *legend* still advertises a retired state. Requires `pip install pillow`. Run:
+**PNG-11 — no diagram still carries the retired "Delegate" legend swatch**: The retired swatch's gray, `#EBEBEB`, is also the fill of the space panels in an all-spaces view (PNG-1i), so this check scans only the legend column, and PNG-10 counts a gray region only when it is the size of a graph shape. The 13 example diagrams plus `images/representative-pods.png` each carry their own copy of the legend, so a change to it has to be applied fourteen times by hand. (`images/folder-mapping.png` is also scanned below, but carries a key of its own, two folder swatches, rather than this legend.) That legend is six titled boxes, "UI View", "Pod name", "Category tags", "Claimant", "Other" and "Members" (see PNG-8 for the full box-by-box contents). The ones that matter here are **Claimant**, holding two claim-fill swatches (green "Other", dashed "Self"), **Other**, holding the "Attachment" document icon and the square "Form", and **Members**, holding a circle "Human" and an octagon "Service"; it no longer holds the gray "Delegate" swatch that a third claim-fill state once needed (see PNG-8 and PNG-10 — claim fill is now a two-state self/not-self fact, and a member's identity type is carried by shape instead). A diagram left on the older key is mechanically detectable, because that swatch is the only place a filled `(235, 235, 235)` block of any size appears: the current legend has no gray fill, its grey `#User tag(s)` text and `#Heading` connector being a darker grey and thin, and the incidental `(235, 235, 235)` in these PNGs is antialiasing a few dozen pixels in size, far below the threshold below. This catches the stale-legend case that PNG-10 cannot — PNG-10 compares fills against the DataBooks and so passes happily on a diagram whose *shapes* are all correct but whose *legend* still advertises a retired state. Requires `pip install pillow`. Run:
 
 ```python
 from PIL import Image
@@ -483,6 +486,7 @@ import os
 
 GRAY = (235, 235, 235)      # the retired "Delegate" swatch fill
 MIN_AREA = 200              # far above antialiasing, far below a real swatch (~1150px)
+LEGEND_X = 1420             # the legend column; a grey space panel left of it is not the swatch
 
 KEYED = ['example/images/' + n + '.png' for n in
          ('people', 'people2', 'work', 'companies', 'finances', 'gov-state', 'gov-federal',
@@ -497,7 +501,7 @@ def gray_blocks(path):
     found = []
     for x in range(W):
         for y in range(H):
-            if seen[x][y] or px[x, y] != GRAY:
+            if seen[x][y] or px[x, y] != GRAY or x < LEGEND_X:
                 continue
             stack, area, xs, ys = [(x, y)], 0, [], []
             seen[x][y] = True
@@ -537,7 +541,7 @@ If a violation is found, the diagram is still on an older legend and needs it re
 These read a `.ttl` file and ask a question about **triples**, so every one parses with `rdflib` rather than regex. See [Which checks use `rdflib`](#which-checks-use-rdflib) above for why that matters and why no other kind may follow suit.
 
 
-**TTL-1 — No orphan Persons**: Every `persona:Person` individual other than `:Self` must be reachable via `BFO_0000115` (has member part) from a Social Network individual linked to another `persona:Person` via `persona:hasSocialNetwork`. `:Self` is always the root and needs no incoming link. Since graphs are embedded graph sections across every pod-databook under `example/Pods/**`, this check's scope is the merged whole-example dump (example.md's "Merged whole-example dump"), which spans every embedded graph. **Exception**: a `persona:Person` referenced only via a professional/service-designation property (`medicalappointments:hasPrimaryCarePhysician` is the only one so far) rather than social-network membership is exempt — it represents a service relationship (e.g. a physician), not a social connection, so it has no social network to be reachable from. Example: `:Jane_Starostina`, Sophia Walker's primary care physician — introduced as a `persona:Person` in graph #25 and reached by that property from graph #26. A `persona:Person` that itself carries a professional property is exempt for the same reason — `persona:specialty`, which only the Primary Care Physician form records, is the only one so far. Example: `:Marcus_Bell` and `:Ruth_Alvarez`, Alice's and her mother's primary care physicians, each introduced in a form graph of its own (graphs #110 and #112) that no appointment record yet points at. The exempting properties are listed in `DESIGNATION` and `PROFESSIONAL` in the script below, and those lists are the whole of what keeps the exemption honest: a property minted later and left out of it will surface its subject as an orphan, which is the intended failure rather than a false positive. Run:
+**TTL-1 — No orphan Persons**: Every `persona:Person` individual other than `:Self` must be reachable via `BFO_0000115` (has member part) from a Social Network individual linked to another `persona:Person` via `persona:hasSocialNetwork`. `:Self` is always the root and needs no incoming link. Since graphs are embedded graph sections across every pod-databook under `example/pods/**`, this check's scope is the merged whole-example dump (example.md's "Merged whole-example dump"), which spans every embedded graph. **Exception**: a `persona:Person` referenced only via a professional/service-designation property (`medicalappointments:hasPrimaryCarePhysician` is the only one so far) rather than social-network membership is exempt — it represents a service relationship (e.g. a physician), not a social connection, so it has no social network to be reachable from. Example: `:Jane_Starostina`, Sophia Walker's primary care physician — introduced as a `persona:Person` in graph #25 and reached by that property from graph #26. A `persona:Person` that itself carries a professional property is exempt for the same reason — `persona:specialty`, which only the Primary Care Physician form records, is the only one so far. Example: `:Marcus_Bell` and `:Ruth_Alvarez`, Alice's and her mother's primary care physicians, each introduced in a form graph of its own (graphs #110 and #112) that no appointment record yet points at. The exempting properties are listed in `DESIGNATION` and `PROFESSIONAL` in the script below, and those lists are the whole of what keeps the exemption honest: a property minted later and left out of it will surface its subject as an orphan, which is the intended failure rather than a false positive. Run:
 
 ```python
 import subprocess, sys
@@ -583,7 +587,7 @@ else:
 
 This is the one check script that uses `rdflib` rather than regex/YAML parsing like the rest: the question is genuine graph reachability over a merged dump whose `BFO_0000115` values are written as multi-object lists, which a regex would read wrong. `rdflib` is already a dependency of `helpers/draw.py` and `helpers/validate.py`, so this adds nothing new to install.
 
-**TTL-2 — IRI roots: `mee.foundation/ontologies` for foundational files, `www.example.org` for example data**: Every foundational ontology and SHACL shapes file — `persona.ttl`, `pod.ttl`, `pod-categories.ttl`, `pod-category-templates.ttl`, `organization.ttl`, `service.ttl`, every `*-shacl.ttl` companion (each living in a `shacl/` subfolder directly below the ontology file it validates — the foundational ones under the repo-root `shacl/`, each `other/*.ttl` peer ontology's own under `other/shacl/`, one recursive glob covers all of them), and every `other/*.ttl` peer ontology (`other/pets.ttl`, `other/vehicles.ttl`, `other/identity-documents.ttl`, globbed the same way) — must declare its `owl:Ontology` IRI under `http://mee.foundation/ontologies/`. There is no separate canonical category/pod DataBook tree to check — the canonical tree's IRI roots are covered by `pod-categories.ttl`/`pod-category-templates.ttl` themselves. Every DataBook under `example/Pods/` (excluding `under-development/`) represents Alice's own example instance data, so both its own `id:` and every `tpod.member[]`/`tpod.tool[].graph[].id` value it carries must be grounded under `http://www.example.org/` — `https://` is deliberately rejected here, not just accepted alongside it, since every identifier in the example data (pod ids and graph ids alike) was standardized on the plain `http://` scheme for consistency; a stray `https://` is exactly the kind of drift this check exists to catch. Run:
+**TTL-2 — IRI roots: `mee.foundation/ontologies` for foundational files, `www.example.org` for example data**: Every foundational ontology and SHACL shapes file — `persona.ttl`, `pod.ttl`, `pod-categories.ttl`, `pod-category-templates.ttl`, `organization.ttl`, `service.ttl`, every `*-shacl.ttl` companion (each living in a `shacl/` subfolder directly below the ontology file it validates — the foundational ones under the repo-root `shacl/`, each `other/*.ttl` peer ontology's own under `other/shacl/`, one recursive glob covers all of them), and every `other/*.ttl` peer ontology (`other/pets.ttl`, `other/vehicles.ttl`, `other/identity-documents.ttl`, globbed the same way) — must declare its `owl:Ontology` IRI under `http://mee.foundation/ontologies/`. There is no separate canonical category/pod DataBook tree to check — the canonical tree's IRI roots are covered by `pod-categories.ttl`/`pod-category-templates.ttl` themselves. Every DataBook under `example/pods/` (excluding `under-development/`) represents Alice's own example instance data, so both its own `id:` and every `tpod.member[]`/`tpod.tool[].graph[].id` value it carries must be grounded under `http://www.example.org/` — `https://` is deliberately rejected here, not just accepted alongside it, since every identifier in the example data (pod ids and graph ids alike) was standardized on the plain `http://` scheme for consistency; a stray `https://` is exactly the kind of drift this check exists to catch. Run:
 
 ```python
 import os, re, glob, yaml
@@ -645,14 +649,14 @@ def check_pod_tree_id_roots(pattern, expected_prefixes):
                 print(f'WRONG GRAPH ID ROOT: {path} -> {tid}')
                 errors += 1
 
-check_pod_tree_id_roots('example/Pods/**/*.databook.md', ['http://www.example.org/'])
+check_pod_tree_id_roots('example/pods/**/*.databook.md', ['http://www.example.org/'])
 
 print('OK — no IRI-root violations found.' if errors == 0 else f'{errors} violation(s) found.')
 ```
 
 If a violation is found, rename the offending file's `owl:Ontology`/`id:` IRI to the correct root, and update every catalog entry and cross-reference that pointed at the old IRI to match (see FS-1's validation commands, which also hardcode these IRIs).
 
-**TTL-3 — `pod:shape`'s declared shape must resolve to an `rdf:type` actually asserted in the graph's own embedded Turtle body**: `pod:shape` (`pod.ttl`) is a real `owl:AnnotationProperty` (domain `pod:Graph`, range `sh:NodeShape`, cardinality 0..N), synthesized into RDF from each `tpod.member[]`/`tpod.tool[].graph[].shape` YAML value by `helpers/yaml-to-rdf.py`. But SHACL validation of a templated graph never actually reads this synthesized triple — each per-template shape (e.g. `:PassportShape`) fires purely via its own `sh:targetClass`, matching whatever `rdf:type` is asserted directly in the graph's body (e.g. `:Alice_US_Passport rdf:type identitydocuments:Passport`), completely independent of `shape:`. So nothing else cross-checks that a graph's declared `shape:` shape's own `sh:targetClass` actually names a class asserted on an individual in its own body — a typo'd or stale `shape:` value would go undetected, silently decoupled from what SHACL is actually validating. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8 — it requires dereferencing the graph's own embedded Turtle content, not just its YAML frontmatter), so it's checked here instead. For every pod-databook under `example/Pods/` (excluding `under-development/`) with a `tpod.member[]`/`tpod.tool[].graph[].shape` value, resolve that shape CURIE to its own `sh:targetClass` (scanning `shacl/persona-shacl.ttl`/`shacl/contactinfo-shacl.ttl` and every `other/shacl/`, `persona-ext/shacl/`, and `pod-category-ext/shacl/` shapes file for the matching shape — the recursive `**/shacl/*.ttl` glob TTL-2 already describes, and the same scan TTL-4 runs), then verify that same graph's own embedded Turtle body asserts `rdf:type` (directly, on some individual) to that resolved class. **Exempt**: `pshapes:ContactInfoShape` and `bhsshapes:MemberShape` — per `helpers/validate.py`'s own module docstring, these are the broad, class-wide shapes (`sh:targetClass persona:Person`) that `helpers/validate.py` re-targets, at actual validation time, at only the *substantive* `persona:Person` individual(s) present in a graph, precisely because it's legitimate for a `pod:member`-list graph (required to carry this shape unconditionally, per TTL-7) to contain none at all — e.g. graph-01 (`Boston Hub Society.databook.md`, whose member shape is `bhsshapes:MemberShape` rather than `ContactInfoShape` — the exemption covers both for exactly the same reason) is the society's own member stub, typing `:BHS_Service` as `service:ServiceProvider` and `:BHS` as `o:Organization`, never `persona:Person`; graph-27 (`Citibank.databook.md`) is the bank's own member stub, carrying its name, website, and institutional self-description, typing `:Citibank_Service`/`:Citibank` the same way; and graph-96 (`Arca.databook.md`) is a backup service's own member stub, typing `:Arca_Backup` as `service:ArcaBackup` and `:Arca` as `o:Organization` — both correctly, vacuously satisfy `ContactInfoShape` in real SHACL validation with zero `persona:Person` individuals present. Every other shape (e.g. `idocshapes:PassportShape`, `bankingshapes:DebitCardShape`) targets a narrow, specific document/account class that a declaring graph always does instantiate for real (e.g. the real Citibank debit-card graph asserts `rdf:type cco:ent00000051` directly, alongside `banking:DebitCard`), so no other exemption is needed. Run:
+**TTL-3 — `pod:shape`'s declared shape must resolve to an `rdf:type` actually asserted in the graph's own embedded Turtle body**: `pod:shape` (`pod.ttl`) is a real `owl:AnnotationProperty` (domain `pod:Graph`, range `sh:NodeShape`, cardinality 0..N), synthesized into RDF from each `tpod.member[]`/`tpod.tool[].graph[].shape` YAML value by `helpers/yaml-to-rdf.py`. But SHACL validation of a templated graph never actually reads this synthesized triple — each per-template shape (e.g. `:PassportShape`) fires purely via its own `sh:targetClass`, matching whatever `rdf:type` is asserted directly in the graph's body (e.g. `:Alice_US_Passport rdf:type identitydocuments:Passport`), completely independent of `shape:`. So nothing else cross-checks that a graph's declared `shape:` shape's own `sh:targetClass` actually names a class asserted on an individual in its own body — a typo'd or stale `shape:` value would go undetected, silently decoupled from what SHACL is actually validating. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8 — it requires dereferencing the graph's own embedded Turtle content, not just its YAML frontmatter), so it's checked here instead. For every pod-databook under `example/pods/` (excluding `under-development/`) with a `tpod.member[]`/`tpod.tool[].graph[].shape` value, resolve that shape CURIE to its own `sh:targetClass` (scanning `shacl/persona-shacl.ttl`/`shacl/contactinfo-shacl.ttl` and every `other/shacl/`, `persona-ext/shacl/`, and `pod-category-ext/shacl/` shapes file for the matching shape — the recursive `**/shacl/*.ttl` glob TTL-2 already describes, and the same scan TTL-4 runs), then verify that same graph's own embedded Turtle body asserts `rdf:type` (directly, on some individual) to that resolved class. **Exempt**: `pshapes:ContactInfoShape` and `bhsshapes:MemberShape` — per `helpers/validate.py`'s own module docstring, these are the broad, class-wide shapes (`sh:targetClass persona:Person`) that `helpers/validate.py` re-targets, at actual validation time, at only the *substantive* `persona:Person` individual(s) present in a graph, precisely because it's legitimate for a `pod:member`-list graph (required to carry this shape unconditionally, per TTL-7) to contain none at all — e.g. graph-01 (`Boston Hub Society.databook.md`, whose member shape is `bhsshapes:MemberShape` rather than `ContactInfoShape` — the exemption covers both for exactly the same reason) is the society's own member stub, typing `:BHS_Service` as `service:ServiceProvider` and `:BHS` as `o:Organization`, never `persona:Person`; graph-27 (`Citibank.databook.md`) is the bank's own member stub, carrying its name, website, and institutional self-description, typing `:Citibank_Service`/`:Citibank` the same way; and graph-96 (`Arca.databook.md`) is a backup service's own member stub, typing `:Arca_Backup` as `service:ArcaBackup` and `:Arca` as `o:Organization` — both correctly, vacuously satisfy `ContactInfoShape` in real SHACL validation with zero `persona:Person` individuals present. Every other shape (e.g. `idocshapes:PassportShape`, `bankingshapes:DebitCardShape`) targets a narrow, specific document/account class that a declaring graph always does instantiate for real (e.g. the real Citibank debit-card graph asserts `rdf:type cco:ent00000051` directly, alongside `banking:DebitCard`), so no other exemption is needed. Run:
 
 ```python
 import yaml, glob, sys
@@ -698,7 +702,7 @@ def load(path):
     return yaml.safe_load(fm_text), body
 
 violations = 0
-for f in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for f in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in f.split('/'):
         continue
     fm, body = load(f)
@@ -746,7 +750,7 @@ print('All shape-declaring graphs assert a matching rdf:type.'
 
 If a violation is found: fix whichever side is wrong — either the `shape:` YAML value (if the graph's own asserted `rdf:type` is correct and `template:` names the wrong shape), or the body's `rdf:type` (if `template:` reflects the intended classification and the body was never updated to match).
 
-**TTL-4 — a `member` graph's `shape:` value, and a declared tool's graph's, must be among the shapes its category tags' templates declare**: TTL-3 only compares a graph's `shape:` value against its own body content — this check goes one level higher, comparing it against what the pod's category tags declare as authoritative. For every pod-databook under `example/Pods/` (excluding `under-development/`), `tpod.categoryTag` is read as a list (zero or more values), and each tag is looked up by the reverse lookup `?tc pod:category X` (README's Lazy Instantiation pattern) among the `pod:TemplatePod` individuals of `pod-category-templates.ttl` and every category extension bundle under `pod-category-ext/`. A pod carrying no category tag is looked up instead against `ctpl:UserDefinedTemplatePod`, the one template carrying no `pod:category`, which is what such a pod takes its member baseline from. The templates reached are pooled: every `tpod.member`-list graph carrying a `shape:` value must have that value among the union of their `pod:memberShape` values; and, **only when at least one of them declares a tool**, every tool graph carrying a `shape:` value must be among the union of their declared tools' `pod:formShape` values — direct CURIE-set membership, since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the same range `pod:memberShape`/`pod:formShape` already carry, so no `sh:targetClass` resolution and no named exemptions are needed. A tool on a pod none of whose templates declares one is **not** checked against any shape at all: any pod may gain a tool no template declared, and the user picks that tool's shape themselves — from the app's full list of shapes — so no template has authority over it. A tag whose concept has no template contributes nothing — a defensive branch, not a live case, since TTL-6 and TTL-8's 39d guarantee every concept has one. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8/TTL-3 — it requires dereferencing values across the template files, not just pod-databook YAML), so it's checked here instead. Run:
+**TTL-4 — a `member` graph's `shape:` value, and a declared tool's graph's, must be among the shapes its category tags' templates declare**: TTL-3 only compares a graph's `shape:` value against its own body content — this check goes one level higher, comparing it against what the pod's category tags declare as authoritative. For every pod-databook under `example/pods/` (excluding `under-development/`), `tpod.categoryTag` is read as a list (zero or more values), and each tag is looked up by the reverse lookup `?tc pod:category X` (README's Lazy Instantiation pattern) among the `pod:TemplatePod` individuals of `pod-category-templates.ttl` and every category extension bundle under `pod-category-ext/`. A pod carrying no category tag is looked up instead against `ctpl:UserDefinedTemplatePod`, the one template carrying no `pod:category`, which is what such a pod takes its member baseline from. The templates reached are pooled: every `tpod.member`-list graph carrying a `shape:` value must have that value among the union of their `pod:memberShape` values; and, **only when at least one of them declares a tool**, every tool graph carrying a `shape:` value must be among the union of their declared tools' `pod:formShape` values — direct CURIE-set membership, since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the same range `pod:memberShape`/`pod:formShape` already carry, so no `sh:targetClass` resolution and no named exemptions are needed. A tool on a pod none of whose templates declares one is **not** checked against any shape at all: any pod may gain a tool no template declared, and the user picks that tool's shape themselves — from the app's full list of shapes — so no template has authority over it. A tag whose concept has no template contributes nothing — a defensive branch, not a live case, since TTL-6 and TTL-8's 39d guarantee every concept has one. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7/YAML-8/TTL-3 — it requires dereferencing values across the template files, not just pod-databook YAML), so it's checked here instead. Run:
 
 ```python
 import glob, re, yaml
@@ -799,7 +803,7 @@ def reached_templates(tpod):
     return [templates[k] for k in keys if k in templates]
 
 violations = 0
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
@@ -904,7 +908,7 @@ def reached_templates(tpod):
     return [templates[k] for k in keys if k in templates]
 
 violations = 0
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
@@ -1172,9 +1176,9 @@ If a violation is found: for **9a**–**9c**, fix the `tpod.space` mapping of th
 These read a pod DataBook's **YAML frontmatter**, and sometimes its Markdown body, exactly as written — before any triple is synthesized from it. That is the point: several of them hunt malformations that synthesis would coerce, drop, or collapse away.
 
 
-**YAML-1 — Graph id naming convention**: Every `tpod.member[]`/`tpod.tool[].graph[]` entry's own `id` value's local-name (the string after the final `/`) — across all pod-databooks in `example/Pods/` — must follow the flat pattern `graph-<NN>`, where `<NN>` is the graph's own number — zero-padded to two digits up to `graph-99`, three digits from `graph-100` on — matching the graph's own diagram label, `### Graph NN` body heading, and `<a id="graph-NN">` anchor. If an id does not match this pattern, flag it rather than silently renaming — the entry's `id` also doubles as the graph's own named-graph identity (`{id}#graph`), so changing it is a bigger operation than a file rename ever was.
+**YAML-1 — Graph id naming convention**: Every `tpod.member[]`/`tpod.tool[].graph[]` entry's own `id` value's local-name (the string after the final `/`) — across all pod-databooks in `example/pods/` — must follow the flat pattern `graph-<NN>`, where `<NN>` is the graph's own number — zero-padded to two digits up to `graph-99`, three digits from `graph-100` on — matching the graph's own diagram label, `### Graph NN` body heading, and `<a id="graph-NN">` anchor. If an id does not match this pattern, flag it rather than silently renaming — the entry's `id` also doubles as the graph's own named-graph identity (`{id}#graph`), so changing it is a bigger operation than a file rename ever was.
 
-**YAML-2 — `member`/`tool` entry well-formedness** (the format itself is specified in [pod-databook.md](pod-databook.md#the-tpod-block)): Each `tpod.member` entry carries a graph's full metadata directly (`id`, `claimant`, `subject`, and optionally `shape`), and each `tpod.tool` entry carries its own `id`/`type`/`formTopic` plus a nested `graph` list whose entries carry `id`, `claimant` and optionally `shape` — rather than a bare local-name reference into a separate list, so there's no cross-list consistency left to check. A tool graph carries no about-ness field of its own: its topic is the tool's single `formTopic`, which is exactly what makes several members' claims unable to disagree about what they are about. `formTopic` and the nested `graph` list are both scoped to a **form** tool (`pod:Form` is the one tool class with a content model — see `pod.ttl`'s Pod Tools section), so an entry of any other type (`calendar`, `canvas`, `contacts`, `map`, `browser`) carries neither. But a malformed entry (e.g. a stray bare string left over from a hand edit, or a missing required field) would otherwise go unnoticed. Which about-ness field an entry carries depends on which list it sits in, since the two lists hold different classes of graph (`pod.ttl`): a `tpod.member` entry is a `pod:MemberGraph` and carries `subject`, while a `tpod.tool[].graph` entry is a `pod:FormGraph` and carries no about-ness field of its own — its topic is the holding tool's single `formTopic`. Neither kind ever carries the other's field — they are `owl:disjointWith`, enforced by `shacl/pod-shacl.ttl`'s `:FormGraphShape` `sh:maxCount 0` guard. For every pod-databook under `example/Pods/`, verify that every tool entry carries an `id` (its pattern and uniqueness are YAML-10's), that every `tpod.member` entry and every tool graph is a mapping (never a bare string), that its `id` matches the `graph-<NN>` id pattern (see YAML-1), that `claimant` is present (required on both kinds, per `:CGraphShape`), and that the entry carries exactly its own list's about-ness field and not the other's; `template` stays optional (see TTL-5 for when it's actually required). Run:
+**YAML-2 — `member`/`tool` entry well-formedness** (the format itself is specified in [pod-databook.md](pod-databook.md#the-tpod-block)): Each `tpod.member` entry carries a graph's full metadata directly (`id`, `claimant`, `subject`, and optionally `shape`), and each `tpod.tool` entry carries its own `id`/`type`/`formTopic` plus a nested `graph` list whose entries carry `id`, `claimant` and optionally `shape` — rather than a bare local-name reference into a separate list, so there's no cross-list consistency left to check. A tool graph carries no about-ness field of its own: its topic is the tool's single `formTopic`, which is exactly what makes several members' claims unable to disagree about what they are about. `formTopic` and the nested `graph` list are both scoped to a **form** tool (`pod:Form` is the one tool class with a content model — see `pod.ttl`'s Pod Tools section), so an entry of any other type (`calendar`, `canvas`, `contacts`, `map`, `browser`) carries neither. But a malformed entry (e.g. a stray bare string left over from a hand edit, or a missing required field) would otherwise go unnoticed. Which about-ness field an entry carries depends on which list it sits in, since the two lists hold different classes of graph (`pod.ttl`): a `tpod.member` entry is a `pod:MemberGraph` and carries `subject`, while a `tpod.tool[].graph` entry is a `pod:FormGraph` and carries no about-ness field of its own — its topic is the holding tool's single `formTopic`. Neither kind ever carries the other's field — they are `owl:disjointWith`, enforced by `shacl/pod-shacl.ttl`'s `:FormGraphShape` `sh:maxCount 0` guard. For every pod-databook under `example/pods/`, verify that every tool entry carries an `id` (its pattern and uniqueness are YAML-10's), that every `tpod.member` entry and every tool graph is a mapping (never a bare string), that its `id` matches the `graph-<NN>` id pattern (see YAML-1), that `claimant` is present (required on both kinds, per `:CGraphShape`), and that the entry carries exactly its own list's about-ness field and not the other's; `template` stays optional (see TTL-5 for when it's actually required). Run:
 
 ```python
 import glob, re, yaml
@@ -1190,7 +1194,7 @@ def as_list(v):
     return [] if v is None else (v if isinstance(v, list) else [v])
 
 errors = 0
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
@@ -1260,7 +1264,7 @@ if not errors:
 
 If a malformed entry is found, fix it directly (turn a stray bare string back into a full mapping, correct the id, or add the missing `id`/`claimant`/`subject`/`formTopic`).
 
-**YAML-3 — Pod id naming convention**: This check applies only to `example/Pods/` — the example user's own pods — since there is no separate canonical-instance file tree: the canonical tree is the `podcat:PodCategoryScheme` SKOS concept scheme in `pod-categories.ttl` itself, with class-level templates in `pod-category-templates.ttl`. A pod-databook's `id:` is deliberately independent of its filename — the filename stays the folder's own verbatim name per the [Filename Convention](pod-databook.md#filename-convention), but the `id:` value is a flat, opaque, globally-unique identifier, following the same reasoning and pattern as the [Graph Ids and Named Graphs](pod-databook.md#graph-ids-and-named-graphs)'s `graph-<NN>`: a pod's name need not be unique, so encoding it into the id would risk a collision the moment two pods shared a name, and nothing in the repo actually depends on the id's string *structure* — it's purely a self-contained RDF subject identifier for that one pod, never cross-referenced by another pod, a graph, or a catalog file. Every `id:` value — across all pod-databooks in `example/Pods/` — must follow the flat pattern `http://www.example.org/tpod/pods/pod-<NN>`, where `<NN>` is a zero-padded two-digit number, assigned once at creation and never reused or renumbered. Every `<NN>` must be globally unique across `example/Pods/`. Run:
+**YAML-3 — Pod id naming convention**: This check applies only to `example/pods/` — the example user's own pods — since there is no separate canonical-instance file tree: the canonical tree is the `podcat:PodCategoryScheme` SKOS concept scheme in `pod-categories.ttl` itself, with class-level templates in `pod-category-templates.ttl`. A pod-databook's `id:` is deliberately independent of its filename — the filename stays the folder's own verbatim name per the [Filename Convention](pod-databook.md#filename-convention), but the `id:` value is a flat, opaque, globally-unique identifier, following the same reasoning and pattern as the [Graph Ids and Named Graphs](pod-databook.md#graph-ids-and-named-graphs)'s `graph-<NN>`: a pod's name need not be unique, so encoding it into the id would risk a collision the moment two pods shared a name, and nothing in the repo actually depends on the id's string *structure* — it's purely a self-contained RDF subject identifier for that one pod, never cross-referenced by another pod, a graph, or a catalog file. Every `id:` value — across all pod-databooks in `example/pods/` — must follow the flat pattern `http://www.example.org/tpod/pods/pod-<NN>`, where `<NN>` is a zero-padded two-digit number, assigned once at creation and never reused or renumbered. Every `<NN>` must be globally unique across `example/pods/`. Run:
 
 ```python
 import glob, re
@@ -1268,7 +1272,7 @@ import glob, re
 pattern = re.compile(r'^http://www\.example\.org/tpod/pods/pod-(\d{2})$')
 seen = {}
 errors = 0
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     text = open(path).read()
@@ -1288,7 +1292,7 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
 print('YAML-3: OK' if errors == 0 else f'YAML-3: {errors} issue(s) found')
 ```
 
-If a malformed id is found, fix it to match the pattern. If a duplicate `<NN>` is found, assign the newer pod the next unused number — never renumber an existing pod's id, since (like a graph id) it may already be referenced by an external peer over the PDN. This rule has no exceptions for `example/Pods/`, fictional as its data is — treat every id there exactly as if a real external PDN peer might already hold a reference to it.
+If a malformed id is found, fix it to match the pattern. If a duplicate `<NN>` is found, assign the newer pod the next unused number — never renumber an existing pod's id, since (like a graph id) it may already be referenced by an external peer over the PDN. This rule has no exceptions for `example/pods/`, fictional as its data is — treat every id there exactly as if a real external PDN peer might already hold a reference to it.
 
 Note: this check's `^id:\s*(\S+)` regex is anchored at true line-start with no leading whitespace, so it only ever matches a file's own top-level `id:` line — a nested, indented `tpod.member[]`/`tpod.tool[].graph[].id` value never matches this anchor and is intentionally out of scope here (a graph's `id` is not expected to relate to its owning pod file's name at all; see YAML-1 for that). This imposes a requirement on any script that writes `tpod.member`/`tpod.tool`: never emit an unindented `id:` at column 0.
 
@@ -1302,7 +1306,7 @@ def frontmatter(path):
     m = re.match(r'^---\n(.*?)\n---', text, re.DOTALL)
     return yaml.safe_load(m.group(1)) if m else None
 
-for f in glob.glob('example/Pods/**/*.databook.md', recursive=True):
+for f in glob.glob('example/pods/**/*.databook.md', recursive=True):
     fm = frontmatter(f)
     if not fm:
         continue
@@ -1328,7 +1332,7 @@ print()
 print('Derived subjects listed above for every pod — member/tool subject overlap is allowed, not a violation.')
 ```
 
-**YAML-5 — Pod-databook `title:` is the pod's name and matches its own folder's OS name** (a scaffolding check — at runtime there is no folder at all, and the app's own record of the name is authoritative outright): `title:` is defined as the pod's own name — it is always exactly the name of the filesystem folder that holds the pod-databook, and the two are kept in sync (a folder rename means updating `title:` to match, never the reverse); `title:` is never an independent display-name override of the folder's name. The [Filename Convention](pod-databook.md#filename-convention) already requires a pod-databook's *filename root* to be an exact copy of its folder's own name, but that convention is about the filename — not the separate `title:` YAML field, which several other checks (notably PNG-1a's box-label match) treat as authoritative for what a pod "is called." The invariant: for every pod-databook under `example/Pods/`, `title:` must equal `os.path.basename` of the folder it directly lives in, verbatim (same case/spacing/punctuation rule as the filename convention — no kebab-casing, no paraphrasing). The one allowance is the filename convention's space suffix: a pod carrying a `tpod.space` (one outside the default space) may instead sit in a folder named `<title> (<space name>)`, the space's name being its `tpod.space.name` — `Things (Paula Walker)` for a pod titled `Things` in a space named *Paula Walker* whose title would collide with another pod's. Run:
+**YAML-5 — Pod-databook `title:` is the pod's name and matches its own folder's OS name, and the folder sits in its space's folder** (a scaffolding check — at runtime there is no folder at all, and the app's own record of the name is authoritative outright): `title:` is defined as the pod's own name — it is always exactly the name of the filesystem folder that holds the pod-databook, and the two are kept in sync (a folder rename means updating `title:` to match, never the reverse); `title:` is never an independent display-name override of the folder's name. The [Filename Convention](pod-databook.md#filename-convention) already requires a pod-databook's *filename root* to be an exact copy of its folder's own name, but that convention is about the filename — not the separate `title:` YAML field, which several other checks (notably PNG-1a's box-label match) treat as authoritative for what a pod "is called." The invariant: for every pod-databook under `example/pods/`, `title:` must equal `os.path.basename` of the folder it directly lives in, verbatim (same case/spacing/punctuation rule as the filename convention — no kebab-casing, no paraphrasing). The pod folder in turn must sit directly in the folder of the pod space the pod sits in: a folder named for its `tpod.space.name`, or, for a pod with no `tpod.space`, `Alice Walker (default)`, the default space's name as the app shows it (`DEFAULT_SPACE_NAME` in `helpers/databook_graphs.py`, plus ` (default)`). Run:
 
 ```python
 import os, re, yaml
@@ -1339,7 +1343,7 @@ def frontmatter(path):
     return yaml.safe_load(m.group(1)) if m else None
 
 found = []
-for dirpath, _, filenames in os.walk('example/Pods'):
+for dirpath, _, filenames in os.walk('example/pods'):
     if 'under-development' in dirpath.split(os.sep):
         continue
     for fname in filenames:
@@ -1349,22 +1353,26 @@ for dirpath, _, filenames in os.walk('example/Pods'):
             if fm:
                 found.append((path, os.path.basename(dirpath), fm))
 
+DEFAULT_FOLDER = 'Alice Walker (default)'
+
 errors = 0
 for path, folder_name, fm in found:
     title = fm.get('title')
-    allowed = {title}
-    space = (fm.get('tpod') or {}).get('space')
-    if isinstance(space, dict) and space.get('name'):
-        allowed.add(f"{title} ({space['name']})")
-    if folder_name not in allowed:
-        print(f'MISMATCH  {path}  folder={folder_name!r}  title={title!r}  allowed={sorted(allowed)!r}')
+    if folder_name != title:
+        print(f'MISMATCH  {path}  folder={folder_name!r}  title={title!r}')
         errors += 1
-print('OK — title: matches its own folder name for every pod-databook.' if errors == 0 else f'{errors} mismatch(es) found.')
+    space = (fm.get('tpod') or {}).get('space')
+    want = space.get('name') if isinstance(space, dict) else DEFAULT_FOLDER
+    have = os.path.basename(os.path.dirname(os.path.dirname(path)))
+    if have != want:
+        print(f'WRONG SPACE FOLDER  {path}  is in {have!r}, its space folder is {want!r}')
+        errors += 1
+print('OK — title: matches its folder, and every pod folder sits in its space folder.' if errors == 0 else f'{errors} mismatch(es) found.')
 ```
 
 If a mismatch is found, the folder name is authoritative within this scaffolding — update `title:` to match it exactly, even when the existing `title:` reads more naturally (e.g. an honorific like `Dr. Jane Starostina` vs. folder `Jane Starostina`, or an expansion like `AT&T` vs. folder `ATT`): `title:` is not an independent display-name override, so it cannot legitimately diverge from the folder's own name — the mismatch is drift, not a deliberate choice, since the folder name is also what PNG-1a's diagram-box match keys off. If the *folder's* name is what's actually wrong (e.g. it should have been named `AT&T` all along), rename the folder itself instead, then update the pod-databook's filename and `title:` together to match the new folder name.
 
-**YAML-6 — `:Self` must be a member of every one of the user's pods**: A pod-databook under `example/Pods/` — the example user's own pods — can only ever have gotten there one of two ways: (1) the user created it themselves, in which case they (`:Self`) are trivially a member, or (2) someone else shared it with the user, in which case the share necessarily made `:Self` a member (a pod can't be "shared with" someone without them becoming a member of it). Either way, `:Self` must be one of the pod's active members — i.e. `:Self` must be the `pod:subject` of at least one of that pod's `member` — for **every** pod in `example/Pods/`, regardless of how many members the pod has or what the pod's derived subject (YAML-4) is. This is strictest for a pod with only one `member` entry: that entry's subject must be `:Self`, full stop — never a tool's own `pod:formTopic` (see YAML-4's placement rule above), even when the pod's derived-from-tool subject is a third party (e.g. `Jane_Starostina`, `Sophia_Walker`, `Ginger`) and no other graph happens to exist yet. Pods with more members have more room, so `:Self` just needs to be one of the members alongside whichever other real members the pod has (already satisfied by every existing example, e.g. Bob Johnson, Fred Flintstone, Appointment, Boston Hub Society). This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4 — it requires dereferencing each `member` value's own `subject`, not just counting or matching cardinalities), so it's checked here instead. Run:
+**YAML-6 — `:Self` must be a member of every one of the user's pods**: A pod-databook under `example/pods/` — the example user's own pods — can only ever have gotten there one of two ways: (1) the user created it themselves, in which case they (`:Self`) are trivially a member, or (2) someone else shared it with the user, in which case the share necessarily made `:Self` a member (a pod can't be "shared with" someone without them becoming a member of it). Either way, `:Self` must be one of the pod's active members — i.e. `:Self` must be the `pod:subject` of at least one of that pod's `member` — for **every** pod in `example/pods/`, regardless of how many members the pod has or what the pod's derived subject (YAML-4) is. This is strictest for a pod with only one `member` entry: that entry's subject must be `:Self`, full stop — never a tool's own `pod:formTopic` (see YAML-4's placement rule above), even when the pod's derived-from-tool subject is a third party (e.g. `Jane_Starostina`, `Sophia_Walker`, `Ginger`) and no other graph happens to exist yet. Pods with more members have more room, so `:Self` just needs to be one of the members alongside whichever other real members the pod has (already satisfied by every existing example, e.g. Bob Johnson, Fred Flintstone, Appointment, Boston Hub Society). This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4 — it requires dereferencing each `member` value's own `subject`, not just counting or matching cardinalities), so it's checked here instead. Run:
 
 ```python
 import re, yaml, glob
@@ -1375,7 +1383,7 @@ def frontmatter(path):
     return yaml.safe_load(m.group(1)) if m else None
 
 violations = 0
-for f in glob.glob('example/Pods/**/*.databook.md', recursive=True):
+for f in glob.glob('example/pods/**/*.databook.md', recursive=True):
     if 'under-development' in f.split('/'):
         continue
     fm = frontmatter(f)
@@ -1395,7 +1403,7 @@ print('All pods have :Self as a member.' if violations == 0 else f'{violations} 
 
 If a violation is found, add a new minimal graph claimed by and about `:Self` (following the pattern in `Medical.databook.md`, `Jane Starostina.databook.md`, or `About Sophia.databook.md` — a single `designated by` → `GivenName` triple is enough), assign it the next free `graph-<NN>`, put it in `member`, and move whatever was in that slot under a `tool` entry instead.
 
-**YAML-7 — `pod:owner`'s two subset invariants: creator ⊆ owner, and owner ⊆ member-subjects**: There is no OWL/SHACL-expressible way to check either invariant, since both require dereferencing values or comparing across fields rather than counting/matching a single path's cardinality — the same reasoning as YAML-4/YAML-6. For every pod-databook under `example/Pods/` (excluding `under-development/`) with a `tpod.owner` value: (a) `tpod.creator`'s own value must appear among `tpod.owner`'s values — the creator is always at least the pod's initial owner, and this repo's example data never demonstrates a promotion, so today `tpod.owner` always equals exactly `[tpod.creator]`, but the check only requires creator ⊆ owner, not equality, so a future example demonstrating promotion (owner as a proper superset of creator) would still pass; (b) every value in `tpod.owner` must equal the `pod:subject` of at least one of that pod's `tpod.member` graphs — an owner must always be one of the pod's actual members, never a non-member. Run:
+**YAML-7 — `pod:owner`'s two subset invariants: creator ⊆ owner, and owner ⊆ member-subjects**: There is no OWL/SHACL-expressible way to check either invariant, since both require dereferencing values or comparing across fields rather than counting/matching a single path's cardinality — the same reasoning as YAML-4/YAML-6. For every pod-databook under `example/pods/` (excluding `under-development/`) with a `tpod.owner` value: (a) `tpod.creator`'s own value must appear among `tpod.owner`'s values — the creator is always at least the pod's initial owner, and this repo's example data never demonstrates a promotion, so today `tpod.owner` always equals exactly `[tpod.creator]`, but the check only requires creator ⊆ owner, not equality, so a future example demonstrating promotion (owner as a proper superset of creator) would still pass; (b) every value in `tpod.owner` must equal the `pod:subject` of at least one of that pod's `tpod.member` graphs — an owner must always be one of the pod's actual members, never a non-member. Run:
 
 ```python
 import re, yaml, glob
@@ -1406,7 +1414,7 @@ def frontmatter(path):
     return yaml.safe_load(m.group(1)) if m else None
 
 violations = 0
-for f in glob.glob('example/Pods/**/*.databook.md', recursive=True):
+for f in glob.glob('example/pods/**/*.databook.md', recursive=True):
     if 'under-development' in f.split('/'):
         continue
     fm = frontmatter(f)
@@ -1434,7 +1442,7 @@ print('All pods satisfy the owner subset invariants.' if violations == 0 else f'
 
 If a violation is found: for (a), add the missing creator value to `tpod.owner`. For (b), either add a `tpod.member` graph whose subject matches the owner value, or remove that value from `tpod.owner` if it doesn't actually belong.
 
-**YAML-8 — `pod:formGraph`'s real upper bound is the pod's own member count: one graph per member, each with a distinct claimant**: `pod:formGraph` carries no OWL/SHACL-expressible maximum — `shacl/pod-shacl.ttl`'s `:LiveToolShape` asserts only `sh:minCount 1` — but in practice its upper bound is exactly the pod's own member count, since every value represents one of the pod's own members making their own claim about the tool's single `pod:formTopic` (see README.md's Tools section). Concretely, two things must both hold for every tool on every pod-databook under `example/Pods/` (excluding `under-development/`): (a) each tool graph's `pod:claimant` must resolve to one of that same pod's own members — a tool's graph is never claimed by a non-member; and (b) within one tool, no two graphs may share the same claimant — each member gets at most one claim on that tool's topic. Together these two facts are what actually cap the count at the member count, rather than any cardinality restriction. The cap is per tool, not per pod: a pod carrying several tools may hold as many graphs in total as it has tools times members. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7 — it requires dereferencing each graph's own `claimant`, and each `member` value's own `subject`, not just counting or matching cardinalities), so it's checked here instead.
+**YAML-8 — `pod:formGraph`'s real upper bound is the pod's own member count: one graph per member, each with a distinct claimant**: `pod:formGraph` carries no OWL/SHACL-expressible maximum — `shacl/pod-shacl.ttl`'s `:LiveToolShape` asserts only `sh:minCount 1` — but in practice its upper bound is exactly the pod's own member count, since every value represents one of the pod's own members making their own claim about the tool's single `pod:formTopic` (see README.md's Tools section). Concretely, two things must both hold for every tool on every pod-databook under `example/pods/` (excluding `under-development/`): (a) each tool graph's `pod:claimant` must resolve to one of that same pod's own members — a tool's graph is never claimed by a non-member; and (b) within one tool, no two graphs may share the same claimant — each member gets at most one claim on that tool's topic. Together these two facts are what actually cap the count at the member count, rather than any cardinality restriction. The cap is per tool, not per pod: a pod carrying several tools may hold as many graphs in total as it has tools times members. This is not itself an OWL/SHACL-expressible constraint (same reasoning as YAML-4/YAML-6/YAML-7 — it requires dereferencing each graph's own `claimant`, and each `member` value's own `subject`, not just counting or matching cardinalities), so it's checked here instead.
 
 "Resolves to one of the pod's members" is satisfied two ways, because a claimant is the party *really* making the claim rather than the member that mechanically carries it (see `pod.ttl`'s `pod:claimant` comment). Either the claimant **is** a `tpod.member` subject directly — the ordinary case, covering every `p:Person` and every `service:Service` that claims under its own IRI — or it is the `service:providedBy` organization **of** a member subject, which is how a `service:ServiceProvider` member's content gets attributed to the organization behind it. Both of the example data's organization claimants take the second route: `Boston Hub Society.databook.md`'s graph-92 is claimed by `:BHS` while the member subject is `:BHS_Service`, and `Citibank.databook.md`'s graph-76 is claimed by `:Citibank` while the member subject is `:Citibank_Service`. The `providedBy` link lives in the graph Turtle, not the frontmatter, so the script below reads it out of the pod's own embedded graph bodies. Run:
 
@@ -1447,7 +1455,7 @@ def frontmatter(path):
     return yaml.safe_load(m.group(1)) if m else None
 
 violations = 0
-for f in glob.glob('example/Pods/**/*.databook.md', recursive=True):
+for f in glob.glob('example/pods/**/*.databook.md', recursive=True):
     if 'under-development' in f.split('/'):
         continue
     fm = frontmatter(f)
@@ -1509,7 +1517,7 @@ def as_list(v):
     return [] if v is None else (v if isinstance(v, list) else [v])
 
 violations = 0
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
@@ -1610,7 +1618,7 @@ print('Every pod tag is well-formed.' if violations == 0 else f'{violations} vio
 
 If a violation is found: quote a value that parsed as a number, trim the padding, drop the duplicate, restore a flat-string `serviceTag` entry to the three-sub-key mapping form, or delete a tag field that carries nothing rather than leaving it present and empty. Never "fix" a duplicate by moving one copy to a different tag kind just to silence the check — if the same label genuinely belongs to two kinds that is legal and this check already permits it, but a duplicate *within* one kind is always an editing slip. Nor should a repeated `(namespace, key)` pair be "fixed" by inventing a second key: a contact in two Apple Contacts Groups is two entries differing only in `value`, which is exactly right.
 
-**YAML-10 — Tool id naming convention and uniqueness**: A live tool is named by its own IRI, carried as its `tpod.tool` entry's `id` — the id a block link in the pod's note resolves by (see [Tool Ids](pod-databook.md#tool-ids)). In `example/Pods/` that id follows the flat pattern `http://www.example.org/tpod/tools/tool-<NN>`, padded the way graph ids are — two digits up to `tool-99`, three from `tool-100` — and numbered in a single sequence across `example/Pods/`, so no number is used twice. YAML-2 checks that every tool entry carries an `id` at all; this check checks what it says. The id is not related to the tool's kind, topic, position or pod, so nothing beyond the pattern and uniqueness is checked. Run:
+**YAML-10 — Tool id naming convention and uniqueness**: A live tool is named by its own IRI, carried as its `tpod.tool` entry's `id` — the id a block link in the pod's note resolves by (see [Tool Ids](pod-databook.md#tool-ids)). In `example/pods/` that id follows the flat pattern `http://www.example.org/tpod/tools/tool-<NN>`, padded the way graph ids are — two digits up to `tool-99`, three from `tool-100` — and numbered in a single sequence across `example/pods/`, so no number is used twice. YAML-2 checks that every tool entry carries an `id` at all; this check checks what it says. The id is not related to the tool's kind, topic, position or pod, so nothing beyond the pattern and uniqueness is checked. Run:
 
 ```python
 import glob, re, yaml
@@ -1627,7 +1635,7 @@ def as_list(v):
 
 seen = {}
 errors = 0
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
@@ -1651,7 +1659,7 @@ for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
 print('YAML-10: OK' if errors == 0 else f'YAML-10: {errors} issue(s) found')
 ```
 
-If a malformed id is found, fix it to match the pattern. If a duplicate number is found, give the newer tool the next unused number — never renumber an existing tool's id, since a block link in some member's copy of the note may already resolve by it. As with YAML-3, this holds for `example/Pods/` too, fictional as its data is.
+If a malformed id is found, fix it to match the pattern. If a duplicate number is found, give the newer tool the next unused number — never renumber an existing tool's id, since a block link in some member's copy of the note may already resolve by it. As with YAML-3, this holds for `example/pods/` too, fictional as its data is.
 
 **YAML-11 — `tpod.space` well-formedness**: A pod in any space but the default carries `tpod.space`, a mapping of three required string keys and one optional one — `id`, the space's own IRI, following the flat pattern `http://www.example.org/tpod/spaces/space-<N>`; `name`, the space's name; `root`, `"podcat:Person"`, `"podcat:Organization"` or `"podcat:Pet"`; and, optionally, `subject`, the party whose life the space holds (see [The `tpod` Block](pod-databook.md#the-tpod-block)). A pod in the default space carries no `tpod.space` at all: `space-0`, its name and its subject `:Self` are synthesized by `helpers/databook_graphs.py` and never written, so no written mapping may name `:Self`. Every pod in one space restates the same mapping, so that each pod's synthesis is self-contained; this check verifies they agree. TTL-9 checks the rest over the synthesized triples. Run:
 
@@ -1669,7 +1677,7 @@ def frontmatter(path):
     return yaml.safe_load(m.group(1)) if m else None
 
 spaces, errors = defaultdict(set), 0
-for path in sorted(glob.glob('example/Pods/**/*.databook.md', recursive=True)):
+for path in sorted(glob.glob('example/pods/**/*.databook.md', recursive=True)):
     if 'under-development' in path.split('/'):
         continue
     fm = frontmatter(path)
@@ -1715,7 +1723,7 @@ If an issue is found, copy the space's mapping from another pod already in it, o
 These read the **filesystem** — folder structure, filenames, which image files exist — and the documentation prose that refers to them. All of it is development scaffolding (see [storage.md](storage.md)): these keep this repo internally consistent and say nothing about how a running Tellipod stores anything.
 
 
-**FS-1 — Validation documentation completeness**: The `## Validation` section of `example.md` must document a single validator, `helpers/validate.py`, run from the repo root as `python3 helpers/validate.py`. There are no "tiers" — that two-tier split (a global merged-data run plus a per-graph run) was retired because merging every pod into one default graph unions facts that the self-containment convention deliberately keeps per-graph, manufacturing violations no real query would see (the same reasoning as the [Named graph scoping of `BFO_0000115`](CLAUDE.md#key-architectural-patterns) note). The script walks every pod-databook under `example/Pods/` (skipping `under-development/`), validating **each pod in isolation from every other pod** — no two pods' data ever reach the same `shacl validate` call — and gives each pod two passes:
+**FS-1 — Validation documentation completeness**: The `## Validation` section of `example.md` must document a single validator, `helpers/validate.py`, run from the repo root as `python3 helpers/validate.py`. There are no "tiers" — that two-tier split (a global merged-data run plus a per-graph run) was retired because merging every pod into one default graph unions facts that the self-containment convention deliberately keeps per-graph, manufacturing violations no real query would see (the same reasoning as the [Named graph scoping of `BFO_0000115`](CLAUDE.md#key-architectural-patterns) note). The script walks every pod-databook under `example/pods/` (skipping `under-development/`), validating **each pod in isolation from every other pod** — no two pods' data ever reach the same `shacl validate` call — and gives each pod two passes:
 
 1. **Pod pass** — data is the pod's whole content at once: every one of its embedded graphs' Turtle (via `databook_graphs.iter_graph_blocks()`) plus the `pod:` triples synthesized from that pod's own `tpod.*` frontmatter (via `databook_graphs.process_pod_databook()`, shared with `helpers/yaml-to-rdf.py`). Shapes are the four general shapes files merged into one graph with `owl:imports` stripped: `shacl/pod-shacl.ttl`, `shacl/persona-shacl.ttl`, `shacl/organization-shacl.ttl`, `shacl/service-shacl.ttl`. The graph Turtle must be in this data, not just the frontmatter triples — `:InstancePodShape` constrains `creator`/`owner` with `sh:class p:Person` and `:CGraphShape` constrains `claimant` with `sh:or ( [sh:class p:Person] [sh:class o:Organization] [sh:class service:Service] )`, and those individuals are typed only in the graph Turtle. This pass is the only thing that validates `pod-shacl` against real instance data.
 2. **Template pass** — each graph carrying a `shape:` value, checked on its own against the shape that value names. Since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the value already names the shape directly, with no label-to-shape resolution; the script's `SHAPE_TO_FILE` table only maps that shape's local name to which physical `*-shacl.ttl` file defines it, since `pshapes:` shapes are split across `shacl/persona-shacl.ttl` and `shacl/contactinfo-shacl.ttl`. A graph with no `template:` value is skipped. Each resolved shape is scoped so it can't fire outside the one graph being checked: every other shape co-located in the same physical file is deactivated, and — only for `ContactInfoShape` (`sh:targetClass persona:Person`, the one class broad enough to risk an incidental same-type individual, e.g. a bare `:Self` reasserted by the self-containment convention) — the shape is re-targeted (`sh:targetNode`) at only the *substantive* `persona:Person` individual(s) in that graph.
@@ -1724,7 +1732,7 @@ The two passes use **different base merges**, both built once per run: `pod-cate
 
 `example.md` must also document the **merged whole-example dump** (`helpers/extract-all.py` + `helpers/yaml-to-rdf.py` + `riot`) separately from validation, with the warning that the general shapes must never be run against it. That dump exists for the questions that genuinely need the union — TTL-1's cross-pod reachability, and loading the example into a triplestore — not for SHACL. If the algorithm changes, update `example.md`'s Validation section and `helpers/validate.py` to match.
 
-**FS-2 — PNG file location**: The diagram PNG for every embedded graph (each `tpod.member`/`tpod.tool[].graph` entry across every pod-databook under `example/Pods/`) must be stored directly in `example/graphs/images/` (flat, no subfolders — not `images/example/`). Files in `under-development/` are excluded. There is no exemption: **every** embedded graph gets a PNG, whether or not any of the 13 diagrams draws it (PNG-2) — being undrawn has no bearing on whether a graph is diagrammed individually or documented.
+**FS-2 — PNG file location**: The diagram PNG for every embedded graph (each `tpod.member`/`tpod.tool[].graph` entry across every pod-databook under `example/pods/`) must be stored directly in `example/graphs/images/` (flat, no subfolders — not `images/example/`). Files in `under-development/` are excluded. There is no exemption: **every** embedded graph gets a PNG, whether or not any of the 13 diagrams draws it (PNG-2) — being undrawn has no bearing on whether a graph is diagrammed individually or documented.
 
 **FS-3 — PNG filename convention**: Every diagram PNG in `example/graphs/images/` must use the same base filename as the graph's own `tpod.member[]`/`tpod.tool[].graph[].id` local-name (the string after the final `/`), with `.png` appended. For example, id local-name `graph-14` → `graph-14.png`. If the PNG does not yet exist, the graph's Diagram cell in `example.md` must be marked `*(todo)*` rather than left blank. This applies uniformly to every graph.
 
@@ -1743,21 +1751,22 @@ missing = [p for p in sorted(set(pngs)) if not os.path.exists(p)]
 
 If any `MISSING:` lines appear, either add the file or update the link.
 
-**FS-5 — `example/Pods/` is flat: one folder per pod, none nested**: **This whole check is a scaffolding check.** Tellipod persists nothing in the user's filesystem (see [storage.md](storage.md)), so at runtime there are no folders and no marker; every rule below governs `example/Pods/`, the layout this repo carries on disk so that real pod content can be validated and diagrammed before there is an app to hold it (see [Development Scaffolding](pod-databook.md#development-scaffolding) in pod-databook.md). There is no `tpod.child`/`tpod.pod` YAML list to cross-check, so the check reads no frontmatter at all. Pods do not nest, and the scaffolding mirrors that: every pod-databook sits at exactly `example/Pods/<Name>/<Name>.databook.md` — one level below `example/Pods/`, in a folder whose name equals the databook's filename stem verbatim (no disambiguator or suffix of any kind; see the [Filename Convention](pod-databook.md#filename-convention)) — and no pod folder sits inside another. A folder is a **pod** iff it directly contains a `_pod-attachments` folder — that folder is simultaneously the pod's attachments and its marker — and the `*.databook.md` carrying the pod's structured content must agree with it in both directions, which is what keeps the scaffolding from drifting. Like everything else here, these rules are meaningless once the app ships. The rules:
+**FS-5 — `example/pods/` holds one folder per pod space, and in each one folder per pod, none nested**: **This whole check is a scaffolding check.** Tellipod persists nothing in the user's filesystem (see [storage.md](storage.md)), so at runtime there are no folders and no marker; every rule below governs `example/pods/`, the layout this repo carries on disk so that real pod content can be validated and diagrammed before there is an app to hold it (see [Development Scaffolding](pod-databook.md#development-scaffolding) in pod-databook.md). Pods do not nest, and neither do pod spaces, and the scaffolding mirrors both: every pod-databook sits at exactly `example/pods/<Space>/<Name>/<Name>.databook.md` — in a space folder directly under `example/pods/`, then a pod folder directly in that, whose name equals the databook's filename stem verbatim (see the [Filename Convention](pod-databook.md#filename-convention)) — and no pod folder sits inside another. A space folder is not a pod: it holds pod folders and nothing else. A folder is a **pod** iff it directly contains a `_pod-attachments` folder — that folder is simultaneously the pod's attachments and its marker — and the `*.databook.md` carrying the pod's structured content must agree with it in both directions, which is what keeps the scaffolding from drifting. This check reads no frontmatter; that each pod folder sits in the folder of the space its `tpod.space` names is YAML-5. Like everything else here, these rules are meaningless once the app ships. The rules:
 
-1. **Nothing sits loose in `example/Pods/` itself** — every pod has its own folder, so a (non-hidden) file directly in `example/Pods/` is an error.
-2. **Every folder directly in `example/Pods/` is a pod**, holding exactly one pod-databook: never more, since a `pod:Pod` is self-contained and two pods sharing a folder would make a file in it ambiguously part of both; and never none, a folder with nothing in it being an empty/placeholder folder and one holding files but no databook being stray content outside any pod.
-3. **The databook's stem equals its folder's name**, verbatim: `<Name>.databook.md` in `<Name>/`.
-4. **No pod folder nests inside another**: no subfolder of a pod folder, at any depth, holds a pod-databook or a `_pod-attachments` folder. A pod folder holds, besides its databook, an optional `<Name>.md` note, an optional `<Name>.meta.md` meta note, its `_pod-attachments`, and the member's own private files, which they may arrange in subfolders however they like.
-5. **`_pod-attachments` sits directly inside its pod folder and is flat** — plain files only, no subfolder and no pod-databook.
-6. **Every pod has a `_pod-attachments` folder**, empty or not; since git cannot track an empty directory, a pod with no attachments carries a `.gitkeep` in it.
+1. **Nothing sits loose in `example/pods/` or in a space folder** — a (non-hidden) file directly in either is an error.
+2. **Every folder directly in `example/pods/` is a space folder**: it holds no pod-databook and no `_pod-attachments` of its own, and at least one pod folder.
+3. **Every folder directly in a space folder is a pod**, holding exactly one pod-databook: never more, since a `pod:Pod` is self-contained and two pods sharing a folder would make a file in it ambiguously part of both; and never none, a folder with nothing in it being an empty/placeholder folder and one holding files but no databook being stray content outside any pod.
+4. **The databook's stem equals its folder's name**, verbatim: `<Name>.databook.md` in `<Name>/`.
+5. **No pod folder nests inside another**: no subfolder of a pod folder, at any depth, holds a pod-databook or a `_pod-attachments` folder. A pod folder holds, besides its databook, an optional `<Name>.md` note, an optional `<Name>.meta.md` meta note, its `_pod-attachments`, and the member's own private files, which they may arrange in subfolders however they like.
+6. **`_pod-attachments` sits directly inside its pod folder and is flat** — plain files only, no subfolder and no pod-databook.
+7. **Every pod has a `_pod-attachments` folder**, empty or not; since git cannot track an empty directory, a pod with no attachments carries a `.gitkeep` in it.
 
 Hidden files — any whose name begins with a dot — are neither attachments nor private content, so they never make an otherwise empty folder count as occupied. Run:
 
 ```python
 import os
 
-ROOT = 'example/Pods'
+ROOT = 'example/pods'
 ATTACH = '_pod-attachments'   # the one reserved subfolder name, and the pod marker
 SUFFIX = '.databook.md'
 
@@ -1766,57 +1775,69 @@ def visible(names):
 
 errors = []
 
-# 1. Nothing loose in example/Pods/ itself.
-for name in sorted(visible(os.listdir(ROOT))):
-    if os.path.isfile(os.path.join(ROOT, name)):
-        errors.append(f'LOOSE FILE: {name!r} sits directly in {ROOT} (every pod has its own folder)')
+def loose_files(folder):
+    for name in sorted(visible(os.listdir(folder))):
+        if os.path.isfile(os.path.join(folder, name)):
+            errors.append(f'LOOSE FILE: {name!r} sits directly in {folder} (only folders belong here)')
 
-for folder in sorted(visible(os.listdir(ROOT))):
-    full = os.path.join(ROOT, folder)
-    if not os.path.isdir(full) or folder == 'under-development':
+# 1. Nothing loose in example/pods/ itself.
+loose_files(ROOT)
+pods = 0
+for space in sorted(visible(os.listdir(ROOT))):
+    sfull = os.path.join(ROOT, space)
+    if not os.path.isdir(sfull) or space == 'under-development':
         continue
+    # 2. A space folder is not a pod, and holds at least one pod folder.
+    loose_files(sfull)
+    if any(f.endswith(SUFFIX) for f in os.listdir(sfull)) or os.path.isdir(os.path.join(sfull, ATTACH)):
+        errors.append(f'NOT A SPACE: {space!r} directly holds a pod-databook or {ATTACH} (pods sit one level deeper)')
+    folders = [f for f in sorted(visible(os.listdir(sfull)))
+               if os.path.isdir(os.path.join(sfull, f)) and f != 'under-development']
+    if not folders:
+        errors.append(f'EMPTY SPACE: {space!r} holds no pod folder')
 
-    # 2. Every top-level folder is a pod: exactly one databook directly in it.
-    books = sorted(f for f in os.listdir(full) if f.endswith(SUFFIX))
-    if not books:
-        has_file = any(visible(fns) for _, _, fns in os.walk(full))
-        errors.append(f'NOT A POD: {folder!r} holds no {SUFFIX}'
-                      + (' but holds files' if has_file else ' and no files (empty/placeholder)'))
-        continue
-    if len(books) > 1:
-        errors.append(f'TOO MANY PODS: {folder!r} has {len(books)} pod-databooks (expected exactly 1): {books}')
-
-    # 3. The databook's stem is the folder's name, verbatim.
-    for b in books:
-        if b[:-len(SUFFIX)] != folder:
-            errors.append(f'STEM MISMATCH: {folder}/{b} (expected {folder}{SUFFIX})')
-
-    # 6. Every pod has its marker folder.
-    if not os.path.isdir(os.path.join(full, ATTACH)):
-        errors.append(f'MISSING {ATTACH}: pod {folder!r} has none (every pod has one, empty or not)')
-
-    # 4 and 5. Below the pod folder: no nested pod, and a flat _pod-attachments.
-    for dirpath, dirnames, filenames in os.walk(full):
-        dirnames[:] = [d for d in dirnames if d != 'under-development']
-        if dirpath == full:
+    for folder in folders:
+        full = os.path.join(sfull, folder)
+        where = f'{space}/{folder}'
+        # 3. Every folder in a space folder is a pod: exactly one databook directly in it.
+        books = sorted(f for f in os.listdir(full) if f.endswith(SUFFIX))
+        if not books:
+            has_file = any(visible(fns) for _, _, fns in os.walk(full))
+            errors.append(f'NOT A POD: {where!r} holds no {SUFFIX}'
+                          + (' but holds files' if has_file else ' and no files (empty/placeholder)'))
             continue
-        rel = os.path.relpath(dirpath, ROOT)
-        if os.path.basename(dirpath) == ATTACH:
-            if os.path.dirname(dirpath) != full:
-                errors.append(f'NESTED POD: {rel!r} is a pod marker below pod {folder!r} (pods do not nest)')
-            if dirnames:
-                errors.append(f'NESTED FOLDER IN {ATTACH}: {rel!r} contains {sorted(dirnames)} (attachments are flat)')
-        stray = sorted(f for f in filenames if f.endswith(SUFFIX))
-        if stray:
-            errors.append(f'NESTED POD: {rel!r} holds {stray} below pod {folder!r} (pods do not nest)')
+        pods += 1
+        if len(books) > 1:
+            errors.append(f'TOO MANY PODS: {where!r} has {len(books)} pod-databooks (expected exactly 1): {books}')
+        # 4. The databook's stem is the folder's name, verbatim.
+        for b in books:
+            if b[:-len(SUFFIX)] != folder:
+                errors.append(f'STEM MISMATCH: {where}/{b} (expected {folder}{SUFFIX})')
+        # 7. Every pod has its marker folder.
+        if not os.path.isdir(os.path.join(full, ATTACH)):
+            errors.append(f'MISSING {ATTACH}: pod {where!r} has none (every pod has one, empty or not)')
+        # 5 and 6. Below the pod folder: no nested pod, and a flat _pod-attachments.
+        for dirpath, dirnames, filenames in os.walk(full):
+            dirnames[:] = [d for d in dirnames if d != 'under-development']
+            if dirpath == full:
+                continue
+            rel = os.path.relpath(dirpath, ROOT)
+            if os.path.basename(dirpath) == ATTACH:
+                if os.path.dirname(dirpath) != full:
+                    errors.append(f'NESTED POD: {rel!r} is a pod marker below pod {where!r} (pods do not nest)')
+                if dirnames:
+                    errors.append(f'NESTED FOLDER IN {ATTACH}: {rel!r} contains {sorted(dirnames)} (attachments are flat)')
+            stray = sorted(f for f in filenames if f.endswith(SUFFIX))
+            if stray:
+                errors.append(f'NESTED POD: {rel!r} holds {stray} below pod {where!r} (pods do not nest)')
 
 print(f'{ROOT}: ' + (f'{len(errors)} issue(s) found:' if errors
-                     else 'OK — flat, one pod per folder, none nested.'))
+                     else f'OK — {pods} pods, one folder each, in their space folders, none nested.'))
 for e in errors:
     print(' -', e)
 ```
 
-If a `TOO MANY PODS` or `NESTED POD` issue is found, move the extra pod out to its own new folder directly in `example/Pods/`, named after the pod. A `STEM MISMATCH` means the databook's filename or its folder is misnamed; rename whichever is wrong, and keep `title:` in step (YAML-5). An empty/placeholder folder is not necessarily an error — flag it to the user rather than deleting it, since it may be a deliberate placeholder for content not yet added. Pod-databook files routinely carry substantial body content (one `### Graph NN` section per embedded graph) — this is expected and not itself a violation of this check, which only validates folder layout, not file size or content.
+If a `TOO MANY PODS` or `NESTED POD` issue is found, move the extra pod out to its own new folder in the folder of its space, named after the pod. A `STEM MISMATCH` means the databook's filename or its folder is misnamed; rename whichever is wrong, and keep `title:` in step (YAML-5). An empty/placeholder folder is not necessarily an error — flag it to the user rather than deleting it, since it may be a deliberate placeholder for content not yet added. Pod-databook files routinely carry substantial body content (one `### Graph NN` section per embedded graph) — this is expected and not itself a violation of this check, which only validates folder layout, not file size or content.
 
 **FS-6 — every image on disk is referenced by the documentation**: FS-4 verifies the forward direction — that every image a document references actually exists. This is the inverse: that every PNG under `images/` and `example/images/` is referenced by at least one Markdown file. An unreferenced image is normally a misplaced export or a leftover from a renamed diagram, invisible to every other check precisely because nothing points at it; without this check such a file can sit in the tree indefinitely and be committed by accident. Note this deliberately covers only the two diagram directories, not `example/graphs/images/`, whose per-graph PNGs are generated by `helpers/draw.py` and linked from example.md's graph tables rather than embedded. Run:
 

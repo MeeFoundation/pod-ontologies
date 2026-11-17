@@ -44,7 +44,7 @@ pod:abstract rdf:type owl:AnnotationProperty ;
 #    filesystem: no folder stands for a pod, no file holds its note,
 #    and no directory holds its attachments (storage.md).
 #    This repo carries the example pods on disk instead, as one
-#    flat folder per pod holding a pod-databook file, a note file, a
+#    folder per pod, grouped by pod space, holding a pod-databook file, a note file, a
 #    _pod-attachments folder and the member's own private files. All
 #    of that is development scaffolding and none of it exists in a
 #    running Tellipod (pod-databook.md's Development Scaffolding section).
@@ -790,7 +790,7 @@ pod:member rdf:type owl:ObjectProperty ;
 #    every other member's side, since a private file never travels.
 #
 #    This repo carries all of the above on disk as development
-#    scaffolding — one flat folder per pod, holding a pod-databook file,
+#    scaffolding — one folder per pod, grouped by pod space, holding a pod-databook file,
 #    a note file named after the folder, a reserved _pod-attachments
 #    folder and the member's own private files loose beside it — which
 #    is where the folder-shaped vocabulary in this project's checks

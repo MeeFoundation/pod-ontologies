@@ -9,7 +9,7 @@ chat and the member's own private files — lives in a protected, app-managed st
 rest. See [storage.md](storage.md) for that decision and the reasoning behind it. A running Tellipod
 produces no folders, no `.databook.md` file, and no files of any kind.
 
-The app does not exist yet, and `example/Pods/` is how this project carries, validates and diagrams
+The app does not exist yet, and `example/pods/` is how this project carries, validates and diagrams
 real pod content in the meantime. So the DataBook lives on disk here, as **development
 scaffolding**: three helpers read those files (`helpers/validate.py`, `helpers/yaml-to-rdf.py` and
 `helpers/extract-all.py` discover them by globbing `*.databook.md`; `helpers/extract-graph.py` and
@@ -17,8 +17,10 @@ scaffolding**: three helpers read those files (`helpers/validate.py`, `helpers/y
 app ships, all of that has to move to whatever the app exposes instead.
 
 The scaffolding is not only the file. The folder around it is scaffolding too, and so is everything
-in that folder. The layout is flat: every pod is one folder directly under `example/Pods/`,
-`example/Pods/<Name>/`, matching the flat set of pods the app holds.
+in that folder. Every pod is one folder, `example/pods/<Space>/<Name>/`, inside a folder for the
+[pod space](README.md#pod-spaces) it sits in. The space folders mirror the user's flat set of
+spaces, and the pod folders inside each mirror that space's flat set of pods: a space folder is not
+a pod, and no pod folder sits inside another.
 
 - **A folder stands for a pod, and the reserved `_pod-attachments` folder directly inside it is
   what marks the folder as one.** This gives the repo a pod/not-a-pod test decidable from a single
@@ -41,8 +43,9 @@ in that folder. The layout is flat: every pod is one folder directly under `exam
   directory it sits in.
 - **The [Filename Convention](#filename-convention) below is scaffolding-only.** At runtime there is
   no file, so there is no filename, and nothing depends on one.
-- **A user's pods are a flat set, here and at runtime,** gathered by their tags (see
-  [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag) in app-behavior.md).
+- **A user's pods are a flat set within each pod space, here and at runtime,** gathered by their tags (see
+  [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag) in app-behavior.md). The space folders
+  stand for the spaces, which are themselves a flat set; they are not pods.
 
 Everything below therefore describes the repo's filesystem, not a user's. Where this repo's layout
 and the model appear to disagree, this document is the one to read; [storage.md](storage.md) draws
@@ -113,7 +116,7 @@ and never written as a triple by anything (integrity.md's PNG-3).
 
 This document specifies the DataBook file and the folder this repo wraps it in; for what a pod
 holds in the app, see [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md, and for the
-boundary between the two, [storage.md](storage.md). For real files, see `example/Pods/` and
+boundary between the two, [storage.md](storage.md). For real files, see `example/pods/` and
 [example.md](example.md).
 
 ## Why This Format
@@ -146,7 +149,7 @@ between real instances. The largest known gap is tools: four of the six kinds ha
 at all yet. See [Open Questions](#open-questions) at the end for that and the rest of what is
 still unsettled. This document tracks the format as it stands rather than freezing it; what
 keeps a proposed change honest is that [integrity.md](integrity.md)'s checks and the pods under
-`example/Pods/` make its blast radius visible before it is made.
+`example/pods/` make its blast radius visible before it is made.
 
 ## Filename Convention
 
@@ -154,29 +157,29 @@ keeps a proposed change honest is that [integrity.md](integrity.md)'s checks and
 depends on any of this section. It governs the DataBooks in this repo, and it is what integrity.md's
 FS-5 and YAML-5 read.
 
-Every pod is one folder directly under `example/Pods/`, and its DataBook sits inside that folder
-under the same name:
+Every pod is one folder inside the folder of its pod space, and its DataBook sits inside that
+folder under the same name:
 
 ```
-example/Pods/<Name>/<Name>.databook.md
+example/pods/<Space>/<Name>/<Name>.databook.md
 ```
+
+`<Space>` is the space's `pod:spaceName` — its `tpod.space.name`, or for a pod with no `tpod.space`
+the default space's name, `Alice Walker`, followed by ` (default)` as the app shows it: the folder
+`example/pods/Alice Walker (default)/`. The five space folders are `Alice Walker (default)`,
+`Sophia Walker`, `Paula Walker`, `Acme` and `Ginger`. Nothing goes directly in `example/pods/`
+but space folders, and nothing directly in a space folder but pod folders.
 
 `<Name>` is the pod's own name, exactly as the DataBook's `title:` field gives it — verbatim, same
 case, spacing and punctuation (e.g. `Acme`, `Paula Walker`, `Health & Wellness`) — and the
-folder carries the same name. The one exception is a pod in a [pod space](README.md#pod-spaces)
-other than the default: its `<Name>` may instead be its `title:` followed by a space and the pod
-space's name in parentheses — `Things (Paula Walker)` for a pod titled `Things` in a space
-named *Paula Walker* (its `tpod.space.name`). The suffix is
-there only because two folders cannot share a name, and is used only where the bare title would
-collide; the pod's name is still its `title:`. Nothing else goes into the filename: not the pod's
+folder carries the same name. Nothing else goes into the filename: not the pod's
 category tags, not a role, and no numeric disambiguator. A folder holds **at most one** DataBook, and FS-5 requires
 it to agree with the folder's `_pod-attachments` marker, so a pod folder carries exactly one.
 
 Pod names need not be unique in the app, which resolves every reference to a pod by its id (see
 [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
-Folders here must differ, though. Two pods in different spaces that share a name are told apart
-by the space suffix above. Two in the same space — or in the default space, which has no suffix —
-are given distinguishing names instead, since no space supplies the difference. A pod's `id:` is deliberately *not* derived from its name — see [`id`](#id)
+Folders here must differ only within one space folder. Two pods in different spaces may share a
+name, each in its own space folder; two in the same space are given distinguishing names. A pod's `id:` is deliberately *not* derived from its name — see [`id`](#id)
 below.
 
 ## Frontmatter
@@ -241,7 +244,7 @@ member's copy, and any member may rename the pod — see
 [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md for
 the one exception, a bare two-member pod, whose name is instead independent per member.
 `title:` is always present, because a pod always has a name: one its creator left unnamed carries
-the `Untitled-N` the app assigned it, so its folder here is `example/Pods/Untitled-1/`, and
+the `Untitled-N` the app assigned it, so its folder here is `example/pods/Ginger/Untitled-1/`, and
 YAML-5 applies to it unchanged.
 
 ### `type`
@@ -518,7 +521,7 @@ own type declaration. Every substantive fact lives in the graph it belongs to.
 ## Skeleton
 
 A complete, minimal pod DataBook — one member entry and one form tool with one graph — saved as
-`example/Pods/Pod Name/Pod Name.databook.md`:
+`example/pods/Pod Name/Pod Name.databook.md`:
 
 ````markdown
 ---

@@ -7,18 +7,22 @@ flowchart TD
 
     subgraph ctx["Graph"]
         direction LR
-        ctx_meta["claimant: :Self\nformTopic: :Paula_Walker\nshape: pshapes:ContactInfoShape"]:::meta
+        ctx_meta["claimant: :Self\nformTopic: :Paula_Honda\nshape: vehicleshapes:VehicleShape"]:::meta
     end
 
-    n1d7e95f2a0b8[":Paula_DriversLicense\n(PhysicalDriversLicense)"]
-    n7c2a346dbe9e[":Paula_Wallet\n(Wallet)"]
-    na5ee14d8129a[":Paula_PaymentCard\n(PhysicalPaymentCard)"]
+    n13e757bc53ad[":Paula_Honda\n(Vehicle)"]
+    nd87e43c75de4("Car"):::lit
+    nec4a85fb5780("Q9584"):::lit
+    ne80b37a7ad33("Q1135125"):::lit
+    n2fe1419ba081("2015"):::lit
+    n817b1cfb0415("Blue"):::lit
+    n4b165108c359("Hatchback"):::lit
     n0a19bd2dbd74[":Paula_Walker\n(Person)"]:::person
-    n0e3e62db5889("Paula"):::lit
 
-    n1d7e95f2a0b8 -->|"continuantPartOf"| n7c2a346dbe9e
-    na5ee14d8129a -->|"continuantPartOf"| n7c2a346dbe9e
-    n0a19bd2dbd74 -->|"GivenName"| n0e3e62db5889
-    n0a19bd2dbd74 -->|"hasWallet"| n7c2a346dbe9e
-    n0a19bd2dbd74 -->|"hasPhysicalCard"| n1d7e95f2a0b8
-    n0a19bd2dbd74 -->|"hasPhysicalCard"| na5ee14d8129a
+    n13e757bc53ad -->|"hasVehicleType"| nd87e43c75de4
+    n13e757bc53ad -->|"hasMake"| nec4a85fb5780
+    n13e757bc53ad -->|"hasModel"| ne80b37a7ad33
+    n13e757bc53ad -->|"modelYear"| n2fe1419ba081
+    n13e757bc53ad -->|"color"| n817b1cfb0415
+    n13e757bc53ad -->|"bodyType"| n4b165108c359
+    n0a19bd2dbd74 -->|"hasVehicle"| n13e757bc53ad

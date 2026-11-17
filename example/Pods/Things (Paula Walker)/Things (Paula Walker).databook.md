@@ -2,13 +2,13 @@
 id: http://www.example.org/tpod/pods/pod-55
 title: "Things"
 type: pod-databook
-version: 1.0.0
+version: 1.2.0
 created: 2026-11-16
 description: >
-  Pod DataBook for the "Things" pod (category tag: podcat:Things) in Alice's pod space for Paula. Its name and its podcat:Things tag mean Paula's things rather than Alice's own, which are in the other "Things" pod, in her default space; the space is what tells the two apart. Its folder carries the space name as a suffix only because two folders cannot share a name (pod-databook.md's Filename Convention). It is a one-member pod with one member entry about :Self, plus a form tool about :Paula_Walker that Alice added with the Contact Info form, since podcat:Things' own template pod declares no tool.
+  Pod DataBook for the "Things" pod (category tag: podcat:Vehicles) in Alice's pod space for Paula, where Alice keeps track of Paula's car. Its podcat:Vehicles tag means Paula's vehicles rather than Alice's own, whose RAV4 pod carries the same tag in her default space; the space is what tells the two apart. Its folder carries the space name as a suffix only because two folders cannot share a name (pod-databook.md's Filename Convention). It is a one-member pod with one member entry about :Self, plus the Vehicle form tool podcat:Vehicles' template pod declares, about :Paula_Honda, Paula's car.
 tpod:
   categoryTag:
-    - "podcat:Things"
+    - "podcat:Vehicles"
   space:
     id: "http://www.example.org/tpod/spaces/space-2"
     name: "Paula Walker"
@@ -24,11 +24,11 @@ tpod:
   tool:
     - id: "http://www.example.org/tpod/tools/tool-37"
       type: "form"
-      formTopic: ":Paula_Walker"
+      formTopic: ":Paula_Honda"
       graph:
         - id: "http://www.example.org/tpod/graphs/graph-108"
           claimant: ":Self"
-          shape: "pshapes:ContactInfoShape"
+          shape: "vehicleshapes:VehicleShape"
 ---
 
 ## Graphs
@@ -38,7 +38,7 @@ tpod:
 
 #### Overview
 
-This graph is the pod's required `member` entry, claimed by and about Alice: her given name, which `ContactInfoShape`, the `podcat:Things` template's member shape, requires. Paula has no instance of the app and is not a member of the pod, so this stub is the only member entry.
+This graph is the pod's required `member` entry, claimed by and about Alice: her given name, which `ContactInfoShape`, the `podcat:Vehicles` template's member shape, requires. Paula has no instance of the app and is not a member of the pod, so this stub is the only member entry.
 
 #### Graph
 
@@ -65,7 +65,7 @@ This graph is the pod's required `member` entry, claimed by and about Alice: her
 
 #### Overview
 
-This graph captures Alice's record of her mother Paula's day-to-day possessions: her wallet, with her driver's license and debit card in it. It mirrors the possessions pattern of the Things pod's graph 22, with `:Paula_Walker` in place of `:Self`, which is what the pod's space makes plain at the pod level: these are Paula's things. The graph also carries Paula's given name, which the Contact Info form Alice chose requires. Alice is the claimant.
+This graph captures Alice's record of her mother Paula's car, a 2015 Honda Fit, and backs the pod's form tool, the one `podcat:Vehicles`' template declares, whose topic is `:Paula_Honda`. It follows the RAV4 pod's graph 63, validated by `vehicles:Vehicle`'s SHACL shape (`other/shacl/vehicles-shacl.ttl`'s `:VehicleShape`): vehicle type (`vehicles:Car`), make and model (real Wikidata individuals vendored in `project_files/wikidata-vehicle-makes-subset.ttl`/`project_files/wikidata-vehicle-models-subset.ttl`), model year, color and body type. `:Paula_Walker persona:hasVehicle :Paula_Honda` says whose car it is, which the pod's space already makes plain at the pod level: its `podcat:Vehicles` tag means Paula's vehicles. Alice is the claimant.
 
 #### Graph
 
@@ -74,38 +74,26 @@ This graph captures Alice's record of her mother Paula's day-to-day possessions:
 <!-- databook:graph: http://www.example.org/tpod/graphs/graph-108#graph -->
 @prefix : <http://www.example.org/tpod#> .
 @prefix persona: <http://mee.foundation/ontologies/persona#> .
-@prefix cco: <https://w3id.org/cco-domains/cco/> .
+@prefix vehicles: <http://mee.foundation/ontologies/vehicles#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :Paula_Walker rdf:type owl:NamedIndividual ,
-                       persona:Person ;
+                       persona:Person .
 
-    <https://w3id.org/cco-domains/cco/ont00001879> [  # designated by → GivenName (ContactInfoShape)
-        rdf:type cco:ent00000002 ;
-        <https://w3id.org/cco-domains/cco/ont00001765> "Paula"
-    ] ;
+:Paula_Honda rdf:type owl:NamedIndividual ,
+                      vehicles:Vehicle ;
+    rdfs:label "Paula Walker's Honda"@en ;
 
-    persona:hasWallet :Paula_Wallet ;
-    persona:hasPhysicalCard :Paula_DriversLicense ;   # in wallet
-    persona:hasPhysicalCard :Paula_PaymentCard .      # in wallet
+    vehicles:hasVehicleType vehicles:Car ;
+    vehicles:hasMake wd:Q9584 ;      # Honda
+    vehicles:hasModel wd:Q1135125 ;  # Honda Fit
+    vehicles:modelYear "2015"^^xsd:gYear ;
+    vehicles:color "Blue" ;
+    vehicles:bodyType "Hatchback" .
 
-
-:Paula_Wallet rdf:type owl:NamedIndividual ,
-                       persona:Wallet ;
-    rdfs:label "Paula Walker's Wallet"@en .
-
-
-:Paula_DriversLicense rdf:type owl:NamedIndividual ,
-                               persona:PhysicalDriversLicense ;
-    rdfs:label "Paula Walker's Driver's License"@en ;
-    <http://purl.obolibrary.org/obo/BFO_0000176> :Paula_Wallet .            # continuant part of → in wallet
-
-
-:Paula_PaymentCard rdf:type owl:NamedIndividual ,
-                            persona:PhysicalPaymentCard ;
-    rdfs:label "Paula Walker's Payment Card"@en ;
-    rdfs:comment "Paula Walker's physical debit card."@en ;
-    <http://purl.obolibrary.org/obo/BFO_0000176> :Paula_Wallet .            # continuant part of → in wallet
+:Paula_Walker persona:hasVehicle :Paula_Honda .
 ```

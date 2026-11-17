@@ -1,11 +1,11 @@
 ---
 id: http://www.example.org/tpod/pods/pod-15
-title: "Medical Appointment"
+title: "Appointment"
 type: pod-databook
-version: 2.3.0
+version: 2.4.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Medical Appointment" pod (category tag: podcat:MedicalAppointment; user tag: "Sophia"). It sits in Alice's pod space for Sophia; Dave places it in a space of his own. It is a two-member pod with two members about :Dave and :Self and one tool graph about :Sophia_Walker, Alice and Dave's daughter.
+  Pod DataBook for the "Appointment" pod (category tag: podcat:MedicalAppointment; user tag: "Sophia"). It sits in Alice's pod space for Sophia; Dave places it in a space of his own. It is a two-member pod with two members about :Dave and :Self and one tool graph about :Sophia_Walker, Alice and Dave's daughter.
 tpod:
   categoryTag:
     - "podcat:MedicalAppointment"

@@ -102,7 +102,7 @@ This graph captures Alice's Contact Info record of her daughter Sophia Walker. S
 
 #### Overview
 
-This graph captures Alice Walker's family relationships. It records that Sophia Walker is her daughter and her family social network, which includes Sophia Walker and Dave (Alice's husband) as members, plus her own given name, required by the `ContactInfoShape` the pod's category template names as `pod:memberShape`. Dave's own family graph (`graph-05`) is the peer record in this relationship; his own claimed record about their daughter appears separately in the "Medical Appointment" pod (graph 28). Alice is the claimant.
+This graph captures Alice Walker's family relationships. It records that Sophia Walker is her daughter and her family social network, which includes Sophia Walker and Dave (Alice's husband) as members, plus her own given name, required by the `ContactInfoShape` the pod's category template names as `pod:memberShape`. Dave's own family graph (`graph-05`) is the peer record in this relationship; his own claimed record about their daughter appears separately in the "Appointment" pod (graph 28). Alice is the claimant.
 
 #### Graph
 

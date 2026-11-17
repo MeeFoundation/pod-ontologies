@@ -109,15 +109,15 @@ Every graph below is an embedded section (a `tpod.member`/`tpod.tool[].graph` en
 | Graph 79 — `example/Pods/Drivers License/Drivers License.databook.md` | Alice's California driver's license — legal name, DOB, DL#, expiry, photo; the pod's tool graph, typed `identitydocuments:DriversLicense` |
 | Graph 19 — `example/Pods/Passport/Passport.databook.md` | The Passport pod's required `member` entry, claimed by Alice — carries her given name (required by `ContactInfoShape`, the template's `pod:memberShape`) |
 | Graph 81 — `example/Pods/Passport/Passport.databook.md` | Alice's US passport — legal name, DOB, passport#, issue/expiry, place of birth, gender marker, photo; the pod's tool graph, typed `identitydocuments:Passport` |
-| Graph 17 — `example/Pods/Health & Wellness/Health & Wellness.databook.md` | Sophia's physical characteristics — height, eye color, hair color — as recorded by Alice; held by the pod's form tool (Sophia is the pod's subject, not its member) |
-| Graph 35 — `example/Pods/Health & Wellness/Health & Wellness.databook.md` | Alice's bare given-name claim — the pod's required `member` entry, claimed by Alice |
+| Graph 17 — `example/Pods/About Sophia/About Sophia.databook.md` | Sophia's physical characteristics — height, eye color, hair color — as recorded by Alice; held by the pod's form tool (Sophia is the pod's subject, not its member) |
+| Graph 35 — `example/Pods/About Sophia/About Sophia.databook.md` | Alice's bare given-name claim — the pod's required `member` entry, claimed by Alice |
 | Graph 36 — `example/Pods/Ginger/Ginger.databook.md` | The Ginger pod (category tag `podcat:Pets`)'s required `member` entry, claimed by Alice — carries her given name (required by `ContactInfoShape`, the template's `pod:memberShape`), plus an optional organization name and email |
 | Graph 37 — `example/Pods/Ginger/Ginger.databook.md` | Alice's basic claim identifying Ginger — as the Ginger pod's sole tool graph, its tool's own `formTopic: ":Ginger"` is what the pod's derived subject resolves to (see integrity.md's YAML-4) |
 | Graph 25 — `example/Pods/Jane Starostina/Jane Starostina.databook.md` | Alice's record of Dr. Jane Starostina, Sophia Walker's primary care physician, including her medical specialty (Endocrinology) — claimed by Alice; held by the pod's form tool (Jane is the pod's subject, not its member) |
 | Graph 34 — `example/Pods/Jane Starostina/Jane Starostina.databook.md` | Alice's bare given-name claim — the pod's required `member` entry, claimed by Alice |
-| Graph 26 — `example/Pods/Medical Appointment/Medical Appointment.databook.md` | Alice and Dave's shared claims for Sophia's medical appointment — medications, allergies, insurance, PCP reference — claimed by Alice |
-| Graph 28 — `example/Pods/Medical Appointment/Medical Appointment.databook.md` | Dave's own self-claimed persona and contact info — one of this pod's two members, alongside Alice (graph 30) |
-| Graph 30 — `example/Pods/Medical Appointment/Medical Appointment.databook.md` | Alice's own self-claimed contact info — the other of this pod's two members, alongside Dave (graph 28) |
+| Graph 26 — `example/Pods/Appointment/Appointment.databook.md` | Alice and Dave's shared claims for Sophia's medical appointment — medications, allergies, insurance, PCP reference — claimed by Alice |
+| Graph 28 — `example/Pods/Appointment/Appointment.databook.md` | Dave's own self-claimed persona and contact info — one of this pod's two members, alongside Alice (graph 30) |
+| Graph 30 — `example/Pods/Appointment/Appointment.databook.md` | Alice's own self-claimed contact info — the other of this pod's two members, alongside Dave (graph 28) |
 | Graph 29 — `example/Pods/Fred Flintstone/Fred Flintstone.databook.md` | Alice's 1:1 graph with Fred; social network with Fred as member — claimed by Alice |
 | Graph 31 — `example/Pods/Fred Flintstone/Fred Flintstone.databook.md` | Fred's self-claimed Fred persona |
 | Graph 32 — `example/Pods/Medical/Medical.databook.md` | Alice's record of her cat Ginger's medications — amoxicillin/clavulanate course, ongoing glucosamine/chondroitin supplement — claimed by Alice; held by the pod's form tool (Ginger has no `p:Person` individual); in Alice's pod space for Ginger, rooted at `podcat:Pet` |
@@ -155,7 +155,7 @@ Triplestore (Fuseki) — loads all DataBook files directly:
   ├─ example/Pods/Paula Walker/Paula Walker.databook.md      (embeds graphs 06, 20)
   ├─ example/Pods/Sophia Walker/Sophia Walker.databook.md  (embeds graphs 05, 07, 21)
   ├─ … (all other pod-databooks, each embedding one or more numbered graphs via tpod.member/tpod.tool)
-  └─ example/Pods/Health & Wellness/Health & Wellness.databook.md  (embeds graph 17)
+  └─ example/Pods/About Sophia/About Sophia.databook.md  (embeds graph 17)
 
 shacl/persona-shacl.ttl — no owl:imports of data; validated against the loaded dataset
 shacl/contactinfo-shacl.ttl — per-template shapes for ContactInfo files (only template with no category concept of its own)

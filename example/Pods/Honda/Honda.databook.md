@@ -1,11 +1,11 @@
 ---
 id: http://www.example.org/tpod/pods/pod-55
-title: "Things"
+title: "Honda"
 type: pod-databook
-version: 1.2.0
+version: 1.3.0
 created: 2026-11-16
 description: >
-  Pod DataBook for the "Things" pod (category tag: podcat:Vehicles) in Alice's pod space for Paula, where Alice keeps track of Paula's car. Its podcat:Vehicles tag means Paula's vehicles rather than Alice's own, whose RAV4 pod carries the same tag in her default space; the space is what tells the two apart. Its folder carries the space name as a suffix only because two folders cannot share a name (pod-databook.md's Filename Convention). It is a one-member pod with one member entry about :Self, plus the Vehicle form tool podcat:Vehicles' template pod declares, about :Paula_Honda, Paula's car.
+  Pod DataBook for the "Honda" pod (category tag: podcat:Vehicles) in Alice's pod space for Paula, where Alice keeps track of Paula's car. Its podcat:Vehicles tag means Paula's vehicles rather than Alice's own, whose RAV4 pod carries the same tag in her default space; the space is what tells the two apart. It is a one-member pod with one member entry about :Self, plus the Vehicle form tool podcat:Vehicles' template pod declares, about :Paula_Honda, Paula's car.
 tpod:
   categoryTag:
     - "podcat:Vehicles"

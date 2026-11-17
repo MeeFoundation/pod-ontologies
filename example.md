@@ -17,7 +17,7 @@ Alice keeps nine persistent views. A view is scoped to all spaces unless she nar
 | People | category tag `podcat:People` | Sophia Walker and Paula Walker (via `podcat:ImmediateFamily`), Bob Johnson and Fred Flintstone (both via `podcat:Others`) |
 | Government | category tag `podcat:Government` | Passport and SSN (via `podcat:Federal`), Birth Certificate and Drivers License (via `podcat:State`) |
 | Companies | category tag `podcat:Companies` | Google, ATT, Arca and Facenook directly, and PRIVO via `podcat:IdVerification` |
-| Things | category tag `podcat:Things`, all spaces | Things (her own), and via `podcat:Vehicles` her RAV4 and the Things pod in her space for Paula, which records Paula's car |
+| Vehicles | category tag `podcat:Vehicles`, all spaces | RAV4, and Honda in her space for Paula |
 | Medical | category tag `podcat:Medical`, all spaces | Marcus Bell, Ruth Alvarez and Jane Starostina (via `podcat:PrimaryCarePhysician`), and Medical Appointment (via `podcat:MedicalAppointment`) |
 | Groups | category tag `podcat:Groups` | Chestnut Hill Village Association directly, and Boston Hub Society via `bhscat:BostonHubSociety`'s `skos:broadMatch` |
 | Sophia | user tag "Sophia", all spaces | Sophia Walker, Health & Wellness, Jane Starostina, Medical Appointment |
@@ -38,7 +38,7 @@ A category tag says what kind of thing a pod is about, never whose (see README's
 |---|---|---|---|
 | Alice Walker (default) | `podcat:Person` | `:Self` | every pod not listed below, Sophia Walker, Paula Walker and Acme included |
 | Sophia Walker | `podcat:Person` | `:Sophia_Walker` | Health & Wellness, Jane Starostina, Medical Appointment |
-| Paula Walker | `podcat:Person` | `:Paula_Walker` | Things, Ruth Alvarez |
+| Paula Walker | `podcat:Person` | `:Paula_Walker` | Honda, Ruth Alvarez |
 | Acme | `podcat:Organization` | `:Acme` | Alice Walker |
 | Ginger | `podcat:Pet` | `:Ginger` | Medical, Care & Feeding |
 
@@ -46,7 +46,7 @@ Each of the four spaces Alice created names its subject, the person, organizatio
 
 Two of Alice's views show why spaces are needed: in each, a category tag says what kind of thing a pod is about, and only the space says whose.
 
-- **Things.** Alice keeps a pod for her own car, [*RAV4*](<example/Pods/RAV4/RAV4.databook.md>), in her default space, and one for her mother's car, a [*Things*](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md>) pod, in her space for Paula. Both are tagged `podcat:Vehicles` and hold the same Vehicle form, so nothing in the tag or the form says whose car each is. In her default space, a Things search finds only her own things; her all-spaces Things view shows both cars, each in the panel of its own space, beside her own *Things* pod.
+- **Vehicles.** Alice keeps a pod for her own car, [*RAV4*](<example/Pods/RAV4/RAV4.databook.md>), in her default space, and one for her mother's car, [*Honda*](<example/Pods/Honda/Honda.databook.md>), in her space for Paula. Both are tagged `podcat:Vehicles` and hold the same Vehicle form, so nothing in the tag or the form says whose car each is. In her default space, a Vehicles search finds only her own; her all-spaces Vehicles view shows both cars, each in the panel of its own space.
 - **Primary care physicians.** Alice keeps a pod for her own doctor, [*Marcus Bell*](<example/Pods/Marcus Bell/Marcus Bell.databook.md>), in her default space; one for her mother's, [*Ruth Alvarez*](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md>), in her space for Paula; and one for her daughter's, *Jane Starostina*, in her space for Sophia. All three are tagged `podcat:PrimaryCarePhysician`, and each holds the same Primary Care Physician form ([graph 110](<example/Pods/Marcus Bell/Marcus Bell.databook.md#graph-110>), [graph 112](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>), [graph 25](<example/Pods/Jane Starostina/Jane Starostina.databook.md#graph-25>)), so nothing in the tag or the form says whose doctor each one is. The space does. Her all-spaces Medical view gathers all three, with Sophia's Medical Appointment, each in the panel of the space it sits in, beneath that space's own `#Provider` group header. Before spaces, the only way to tell them apart was to fold the patient into the pod's name or a user tag.
 
 In the repo, a pod in any space but the default carries a `tpod.space` mapping naming the space's id, name, root and subject (see [The `tpod` Block](pod-databook.md#the-tpod-block)).
@@ -153,10 +153,6 @@ Here are a few lines from [graph 22](<example/Pods/Things/Things.databook.md#gra
     BFO_0000176 :Alice_Wallet .                            # in the wallet
 ```
 
-Paula has things too, and Alice keeps track of one of them: a second [*Things*](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md>) pod, tagged `podcat:Vehicles` like her own RAV4, whose form tool ([graph 108](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-108>)) records Paula's car, a 2015 Honda Fit, with the same Vehicle form the RAV4 pod uses; its required `member` entry ([graph 107](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-107>)) is the usual given-name stub. It and the RAV4 pod carry the same tag and the same form, and what tells the two cars apart is the pod space each sits in: one in Alice's default space, the other in her space for Paula, so a Vehicles search in either space finds only the one (see [Pod Spaces](#pod-spaces) below).
-
-<p align="center"><img src="example/images/things.png" alt="Things pods"></p>
-
 #### Vehicles
 
 Alice has a pod for her car, named *RAV4* after the car itself and tagged `podcat:Vehicles`. Since `podcat:Vehicles` is narrower than `podcat:Things`, a search for `podcat:Things` finds it together with the *Things* pod. Tagging it `podcat:Vehicles` gave it the form tool that concept's template declares, whose graph ([graph 63](<example/Pods/RAV4/RAV4.databook.md#graph-63>)) records the car as a real `v:Vehicle` individual rather than a bare label: its vehicle type, make and model (real Wikidata individuals — Toyota and the Toyota RAV4), model year, VIN, color, body type, fuel type, drive wheel configuration, current odometer reading, and engine specification. Its required `member` entry ([graph 62](<example/Pods/RAV4/RAV4.databook.md#graph-62>)) is the usual given-name stub.
@@ -180,6 +176,10 @@ Here is a snippet from [graph 63](<example/Pods/RAV4/RAV4.databook.md#graph-63>)
     vehicles:hasOdometerReading :Alice_RAV4_Odometer ;
     vehicles:hasEngineSpecification :Alice_RAV4_Engine .
 ```
+
+Paula has a car too, and Alice keeps track of it in a [*Honda*](<example/Pods/Honda/Honda.databook.md>) pod in her space for Paula, tagged `podcat:Vehicles` like her own RAV4. Its form tool ([graph 108](<example/Pods/Honda/Honda.databook.md#graph-108>)), the one the `podcat:Vehicles` template declares, records Paula's car, a 2015 Honda Fit; its required `member` entry ([graph 107](<example/Pods/Honda/Honda.databook.md#graph-107>)) is the usual given-name stub. The two pods carry the same tag and the same form, and what tells the two cars apart is the pod space each sits in: one in Alice's default space, the other in her space for Paula, so a Vehicles search in either space finds only the one, and her all-spaces Vehicles view shows both (see [Pod Spaces](#pod-spaces) below).
+
+<p align="center"><img src="example/images/vehicles.png" alt="Vehicles pods — RAV4 in Alice's default space, Honda in her space for Paula"></p>
 
 ### Caring for Ginger
 
@@ -264,10 +264,10 @@ A summary of all thirty-three pods under `example/Pods/`, grouped by the subsect
 | Current and Previous Homes | Boston | [Boston.databook.md](<example/Pods/Boston/Boston.databook.md>) {7} | Self | `podcat:Previous` | — | — | 13, 82 |
 | Current and Previous Homes | Paradise | [Paradise.databook.md](<example/Pods/Paradise/Paradise.databook.md>) {8} | Self | `podcat:Home` | — | — | 18, 83 |
 | Possessions (Things) | Things | [Things.databook.md](<example/Pods/Things/Things.databook.md>) {11} | Self | `podcat:Things` | — | — | 22 |
-| Possessions (Things) | Things | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md>) {55} | Paula Walker | `podcat:Vehicles` | Paula Walker | — | 107, 108 |
 | Pod Spaces | Marcus Bell | [Marcus Bell.databook.md](<example/Pods/Marcus Bell/Marcus Bell.databook.md>) {56} | Marcus Bell | `podcat:PrimaryCarePhysician` | — | — | 109, 110 |
 | Pod Spaces | Ruth Alvarez | [Ruth Alvarez.databook.md](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md>) {57} | Ruth Alvarez | `podcat:PrimaryCarePhysician` | Paula Walker | — | 111, 112 |
 | Vehicles | RAV4 | [RAV4.databook.md](<example/Pods/RAV4/RAV4.databook.md>) {44} | Alice's RAV4 | `podcat:Vehicles` | — | — | 62, 63 |
+| Vehicles | Honda | [Honda.databook.md](<example/Pods/Honda/Honda.databook.md>) {55} | Paula's Honda | `podcat:Vehicles` | Paula Walker | — | 107, 108 |
 | Caring for Ginger | Ginger | [Ginger.databook.md](<example/Pods/Ginger/Ginger.databook.md>) {41} | Ginger | `podcat:Pets` | — | "Ginger" | 36, 37 |
 | Caring for Ginger | Medical | [Medical.databook.md](<example/Pods/Medical/Medical.databook.md>) {40} | Ginger | `podcat:PetsMedical` | — | "Ginger" | 32, 33, 57 |
 | Caring for Ginger | Care & Feeding | [Care & Feeding.databook.md](<example/Pods/Care & Feeding/Care & Feeding.databook.md>) {42} | Ginger | `podcat:PetsCareAndFeeding` | — | "Ginger" | 58, 59, 60 |
@@ -318,7 +318,7 @@ The graphs in the table below are *about* Alice and claimed *by* Alice. The "Pod
 | 99 | [Hilton.databook.md](<example/Pods/Hilton/Hilton.databook.md#graph-99>) {52} | `podcat:TravelProvider` | The Hilton pod's required `member` entry, claimed by and about Alice — her given name, satisfying `ContactInfoShape` | [view](example/graphs/images/graph-99.png) |
 | 102 | [PRIVO.databook.md](<example/Pods/PRIVO/PRIVO.databook.md#graph-102>) {53} | `podcat:IdVerification` | The PRIVO pod's own `:Self` member entry — carries her given name (required by `ContactInfoShape`, `pod:memberShape`) | [view](example/graphs/images/graph-102.png) |
 | 104 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-104>) {54} | `podcat:Companies` | The Facenook pod's own `:Self` member entry — carries her given name (required by `ContactInfoShape`, `pod:memberShape`) | [view](example/graphs/images/graph-104.png) |
-| 107 | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-107>) {55} | `podcat:Vehicles` | The required `member` entry of the Things pod in Alice's space for Paula — her given name (required by `ContactInfoShape`, the template's `pod:memberShape`) | [view](example/graphs/images/graph-107.png) |
+| 107 | [Honda.databook.md](<example/Pods/Honda/Honda.databook.md#graph-107>) {55} | `podcat:Vehicles` | The required `member` entry of the Honda pod in Alice's space for Paula — her given name (required by `ContactInfoShape`, the template's `pod:memberShape`) | [view](example/graphs/images/graph-107.png) |
 | 109 | [Marcus Bell.databook.md](<example/Pods/Marcus Bell/Marcus Bell.databook.md#graph-109>) {56} | `podcat:PrimaryCarePhysician` | The Marcus Bell pod's required `member` entry — Alice's given-name stub | [view](example/graphs/images/graph-109.png) |
 | 111 | [Ruth Alvarez.databook.md](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md#graph-111>) {57} | `podcat:PrimaryCarePhysician` | The Ruth Alvarez pod's required `member` entry — Alice's given-name stub | [view](example/graphs/images/graph-111.png) |
 
@@ -369,7 +369,7 @@ The following table lists graphs about anyone or anything else in Alice's pods: 
 | 103 | [PRIVO.databook.md](<example/Pods/PRIVO/PRIVO.databook.md#graph-103>) {53} | `podcat:IdVerification` | PRIVO's website as a pod member — `:PRIVO_Site`, typed `s:WebsiteService`, carrying `s:siteDomain "privo.com"`; also an `s:ServiceProvider` carrying `s:providedBy :PRIVO`, since PRIVO supports the Pod Interface natively; claimed by PRIVO Inc. | [view](example/graphs/images/graph-103.png) |
 | 105 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-105>) {54} | `podcat:Companies` | Facenook's website, a social network site, as a pod member — `:Facenook_Site`, typed `s:WebsiteService`, carrying `s:siteDomain "facenook.com"`; minted by Alice's app during the presenting flow and claimed by Alice | [view](example/graphs/images/graph-105.png) |
 | 106 | [Facenook.databook.md](<example/Pods/Facenook/Facenook.databook.md#graph-106>) {54} | `podcat:Companies` | Alice's basic claim about her Facenook account itself — service name, username, service URI, and password — backs the Facenook pod's form tool, whose `formTopic: ":Alice_Facenook_Account"` is the pod's derived subject; typed `sa:ServiceAccount` | [view](example/graphs/images/graph-106.png) |
-| 108 | [Things (Paula Walker).databook.md](<example/Pods/Things (Paula Walker)/Things (Paula Walker).databook.md#graph-108>) {55} | `podcat:Vehicles` | Alice's record of her mother Paula's car — a 2015 Honda Fit, typed `v:Vehicle`; the pod's form-tool graph, `formTopic: ":Paula_Honda"`, in Alice's pod space for Paula | [view](example/graphs/images/graph-108.png) |
+| 108 | [Honda.databook.md](<example/Pods/Honda/Honda.databook.md#graph-108>) {55} | `podcat:Vehicles` | Alice's record of her mother Paula's car — a 2015 Honda Fit, typed `v:Vehicle`; the pod's form-tool graph, `formTopic: ":Paula_Honda"`, in Alice's pod space for Paula | [view](example/graphs/images/graph-108.png) |
 | 110 | [Marcus Bell.databook.md](<example/Pods/Marcus Bell/Marcus Bell.databook.md#graph-110>) {56} | `podcat:PrimaryCarePhysician` | Alice's record of Dr. Marcus Bell, her own primary care physician — name and specialty (Internal Medicine); the pod's form-tool graph, in her default space | [view](example/graphs/images/graph-110.png) |
 | 112 | [Ruth Alvarez.databook.md](<example/Pods/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>) {57} | `podcat:PrimaryCarePhysician` | Alice's record of Dr. Ruth Alvarez, her mother Paula's primary care physician — name and specialty (Geriatrics); the pod's form-tool graph, in her space for Paula | [view](example/graphs/images/graph-112.png) |
 

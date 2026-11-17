@@ -165,7 +165,7 @@ example/Pods/<Name>/<Name>.databook.md
 case, spacing and punctuation (e.g. `Acme`, `Paula Walker`, `Care & Feeding`) — and the
 folder carries the same name. The one exception is a pod in a [pod space](README.md#pod-spaces)
 other than the default: its `<Name>` may instead be its `title:` followed by a space and the pod
-space's name in parentheses — `Things (Paula Walker)` for a pod titled `Things` in the space
+space's name in parentheses — `Things (Paula Walker)` for a pod titled `Things` in a space
 named *Paula Walker* (its `tpod.space.name`). The suffix is
 there only because two folders cannot share a name, and is used only where the bare title would
 collide; the pod's name is still its `title:`. Nothing else goes into the filename: not the pod's

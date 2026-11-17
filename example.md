@@ -10,7 +10,7 @@ This repo carries each pod as a folder inside a folder for its pod space, holdin
 
 ### Tags and Views
 
-Alice keeps nine persistent views. A view is scoped to all spaces unless she narrows it to one; the five marked "all spaces" are left that way, and the other four she has narrowed to her default space. The six category-tag views lean on broader-concept matching (see app-behavior.md's [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag)), as the table's "via" notes show:
+Alice keeps nine persistent views. A view is scoped to all spaces unless she narrows it to one; the five marked "all spaces" are left that way, and the other four she has narrowed to her default space. Four of the six category-tag views lean on broader-concept matching (see app-behavior.md's [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag)), as the table's "via" notes show:
 
 | View | Query | Pods it gathers |
 |---|---|---|
@@ -18,7 +18,7 @@ Alice keeps nine persistent views. A view is scoped to all spaces unless she nar
 | Government | category tag `podcat:Government` | Passport and SSN (via `podcat:Federal`), Birth Certificate and Drivers License (via `podcat:State`) |
 | Companies | category tag `podcat:Companies` | Google, ATT, Arca and Facenook directly, and PRIVO via `podcat:IdVerification` |
 | Vehicles | category tag `podcat:Vehicles`, all spaces | RAV4, and Honda in her space for Paula |
-| Medical | category tag `podcat:Medical`, all spaces | Marcus Bell, Ruth Alvarez and Jane Starostina (via `podcat:PrimaryCarePhysician`), and Appointment (via `podcat:MedicalAppointment`) |
+| Primary Care Physicians | category tag `podcat:PrimaryCarePhysician`, all spaces | Marcus Bell, Ruth Alvarez, Jane Starostina |
 | Groups | category tag `podcat:Groups` | Chestnut Hill Village Association directly, and Boston Hub Society via `bhscat:BostonHubSociety`'s `skos:broadMatch` |
 | Sophia | user tag "Sophia", all spaces | Sophia Walker, About Sophia, Jane Starostina, Appointment |
 | Ginger | user tag "Ginger", all spaces | Ginger, Medical, Untitled-1 |
@@ -26,7 +26,7 @@ Alice keeps nine persistent views. A view is scoped to all spaces unless she nar
 
 The user-tag views gather what no category can. Sophia's four pods carry four different category tags — `podcat:ImmediateFamily`, `podcat:HealthWellness`, `podcat:PrimaryCarePhysician`, `podcat:MedicalAppointment` — whose nearest common ancestor is the top concept `podcat:Person`, which would gather nearly everything Alice has. The "Acme" view likewise picks out one employer's pods. Both are left at all spaces, because their pods sit in more than one: the Sophia view's in her default space and her space for Sophia, the Acme view's in her default space and her space for Acme.
 
-The Things and Medical views are left at all spaces for the opposite reason: to put side by side pods a category tag alone cannot tell apart, which is the case for pod spaces made in the [section below](#pod-spaces).
+The Vehicles and Primary Care Physicians views are left at all spaces for the opposite reason: to put side by side pods a category tag alone cannot tell apart, which is the case for pod spaces made in the [section below](#pod-spaces).
 
 The diagrams embedded below show what the desktop app displays. A view's header has two lines: the pod space it is scoped to — `Pod space: Alice Walker (default)`, or `Pod space: all` for an all-spaces view, which draws each space as a grey panel holding its pods — and the tags it searches for. The green `#Tag` labels above groups of pods are UI-generated group headers, each naming a broader concept that the pods' own category tags fall under; they are not pods and are not stored in any data. A pod box's green `#tag` lines are its category tags, and its grey `#tag` its user tags.
 
@@ -47,7 +47,9 @@ Each of the four spaces Alice created names its subject, the person, organizatio
 Two of Alice's views show why spaces are needed: in each, a category tag says what kind of thing a pod is about, and only the space says whose.
 
 - **Vehicles.** Alice keeps a pod for her own car, [*RAV4*](<example/pods/Alice Walker (default)/RAV4/RAV4.databook.md>), in her default space, and one for her mother's car, [*Honda*](<example/pods/Paula Walker/Honda/Honda.databook.md>), in her space for Paula. Both are tagged `podcat:Vehicles` and hold the same Vehicle form, so nothing in the tag or the form says whose car each is. In her default space, a Vehicles search finds only her own; her all-spaces Vehicles view shows both cars, each in the panel of its own space.
-- **Primary care physicians.** Alice keeps a pod for her own doctor, [*Marcus Bell*](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md>), in her default space; one for her mother's, [*Ruth Alvarez*](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md>), in her space for Paula; and one for her daughter's, *Jane Starostina*, in her space for Sophia. All three are tagged `podcat:PrimaryCarePhysician`, and each holds the same Primary Care Physician form ([graph 110](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md#graph-110>), [graph 112](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>), [graph 25](<example/pods/Sophia Walker/Jane Starostina/Jane Starostina.databook.md#graph-25>)), so nothing in the tag or the form says whose doctor each one is. The space does. Her all-spaces Medical view gathers all three, with Sophia's Appointment pod, each in the panel of the space it sits in, beneath that space's own `#Provider` group header. Before spaces, the only way to tell them apart was to fold the patient into the pod's name or a user tag.
+- **Primary care physicians.** Alice keeps a pod for her own doctor, [*Marcus Bell*](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md>), in her default space; one for her mother's, [*Ruth Alvarez*](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md>), in her space for Paula; and one for her daughter's, *Jane Starostina*, in her space for Sophia. All three are tagged `podcat:PrimaryCarePhysician`, and each holds the same Primary Care Physician form ([graph 110](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md#graph-110>), [graph 112](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>), [graph 25](<example/pods/Sophia Walker/Jane Starostina/Jane Starostina.databook.md#graph-25>)), so nothing in the tag or the form says whose doctor each one is. The space does. Her all-spaces Primary Care Physicians view gathers all three, each in the panel of the space it sits in, beneath that space's own `#Provider` group header. Before spaces, the only way to tell them apart was to fold the patient into the pod's name or a user tag.
+
+<p align="center"><img src="example/images/medical.png" alt="Primary care physicians across spaces — Marcus Bell in Alice's default space, Ruth Alvarez in her space for Paula, Jane Starostina in her space for Sophia"></p>
 
 In the repo, a pod in any space but the default carries a `tpod.space` mapping naming the space's id, name, root and subject (see [The `tpod` Block](pod-databook.md#the-tpod-block)).
 

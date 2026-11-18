@@ -117,7 +117,7 @@ Two more concepts appear off `Pod` in `images/pod-ontology/pod.png`'s diagram, d
 
 #### Tags
 
-A pod can carry **tags**, shown in the app's **Tags area** — any number of each kind. Tags are what gathers pods: a user finds a set of pods by searching for a tag, and keeps a search they want to come back to as a **persistent view** — a stored tag query, per-member, never shared, and app-level only, with nothing of it modeled in RDF (see [Persistent Views](app-behavior.md#persistent-views) in app-behavior.md). The same tag can appear on any number of pods, and a pod can carry tags of every kind at once.
+A pod can carry **tags**, shown in the app's **Tags area** — any number of each kind. Tags are what gathers pods: a user finds a set of pods by searching for a tag, and keeps a search they want to come back to as a **persistent view** — a stored tag query whose tags must all match (a logical AND), per-member, never shared, and app-level only, with nothing of it modeled in RDF (see [Persistent Views](app-behavior.md#persistent-views) in app-behavior.md). The same tag can appear on any number of pods, and a pod can carry tags of every kind at once.
 
 Which kinds a user tags with is their own preference, and the model favors none. One user files every pod by category tag, another only by user tags, a third combines them, and a pod may carry neither. Each style is complete on its own: category tags bring template tools and broader-concept search, and user tags gather what the taxonomy does not. Because tags are per-member, members of the same shared pod may each tag it in a different style. For one user of each kind, see [example.md](example.md#three-ways-to-tag).
 

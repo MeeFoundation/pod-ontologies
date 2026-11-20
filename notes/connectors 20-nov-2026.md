@@ -75,7 +75,9 @@ Consequences:
   - app-behavior.md's Tools section becomes Connectors, and Lazy Instantiation, Add Tool and the module definition are updated;
   - pod-databook.md, CLAUDE.md, core-files.md, example.md, `service.ttl` and `other/sources.ttl` wording follows.
   - The Apple Contacts note is now `apple-contacts-connector.md`.
-- **Diagrams:** `images/pod-ontology/pod.png` needs a `connector` arrow off `SecretPod`, and `images/pod-ontology/tool.png` needs the second hierarchy. Both are hand-drawn and still to be redrawn.
+- **Diagrams** (both hand-drawn, both redrawn):
+  - `images/pod-ontology/pod.png` draws the `connector` arrow off `SecretPod` (to a `pod:Connector` box, 0..N), plus a documentation-only `toolData` placeholder (`TBD 0..1`) beside `metaNote`;
+  - `images/pod-ontology/tool.png` draws the `Connector` hierarchy (`Contacts`, `Browser`) beside `Tool`.
 
 ## Verification
 
@@ -86,4 +88,4 @@ Consequences:
   - a `pod:Form` reached by `pod:connector`;
   - a declared `pod:Browser` carrying `pod:formShape`.
 - TTL-5 flags a PRIVO pod with its connector removed.
-- All TTL, YAML and FS integrity checks pass. PNG-3 and PNG-7 will report the mismatch until the two diagrams are redrawn.
+- All TTL, YAML and FS integrity checks pass. PNG-3 and PNG-7 match the redrawn `pod.png` and `tool.png`.

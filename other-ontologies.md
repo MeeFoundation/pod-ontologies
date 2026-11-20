@@ -357,7 +357,7 @@ The Sources ontology (`other/sources.ttl`) is a small `other/` peer ontology for
 
 The metadata a source item carries is the metadata the app and the PDN already keep for any file: a pod attachment has a file name, a media type, and pre-extracted text that is either present or marked unread, and at the PDN layer it is an opaque, immutable payload addressed by its BLAKE3 content hash. Nothing here models OCR, transcription or document conversion themselves — only their result (`sources:extractedText`) and their record (`sources:Extraction`).
 
-`sources:SourceItem` is the range of `pod:attachment` (see [Pod Properties](README.md#pod-properties)): a pod links to each file every member receives with one `pod:attachment` triple, and a member's private file is never a value of it. `persona.ttl` carries no thin `hasX` link into this file: a source item is reached from the pod it is attached to, or from the content derived from it, never from the person directly.
+`sources:SourceItem` is the range of `pod:attachment` (see [Pod Properties](README.md#pod-properties)): a pod links to each file every member receives with one `pod:attachment` triple. `persona.ttl` carries no thin `hasX` link into this file: a source item is reached from the pod it is attached to, or from the content derived from it, never from the person directly.
 
 Throughout this section, `sources:` is both the file's real Turtle prefix and its doc alias (`http://mee.foundation/ontologies/sources#`).
 

@@ -40,7 +40,7 @@ Consequences:
 - **Templates use one property.** `pod:declaresTool` now ranges over the union of `pod:Tool` and `pod:Connector`, and Lazy Instantiation sorts each declaration by its class:
   - a declared tool goes on the shared pod and reaches every member;
   - a declared connector goes only on the copy of the member who added the tag, which fits the tag being theirs alone.
-- **Block links.** A live connector is named by its own IRI, like a live tool, so its owner's note can link to it. That link resolves only in the owner's copy and fails closed elsewhere, as a link to a private file does.
+- **Block links.** A live connector is named by its own IRI, like a live tool, so its owner's note can link to it. That link resolves only in the owner's copy and fails closed elsewhere.
 
 ## Decisions
 

@@ -12,7 +12,7 @@ point here rather than restating any of this.
 ## Where pod content lives
 
 A pod's entire content is app-internal: its members, tools, graphs, tags, name and id,
-together with its note, each member's own meta note, its attachments, its chat, and a member's own private files. None of it is
+together with its note, each member's own meta note, its attachments and its chat. None of it is
 written to the filesystem, in any form, at any point. There is no folder representing a pod, no
 file representing its note, and no directory holding its attachments.
 
@@ -56,9 +56,7 @@ of *all* Tellipod data, with no carve-out for the unstructured parts.
   since a pod is resolved by its stable id; a pod the user left unnamed is given `Untitled-N` by the
   app; and some pods share a name across members while others keep one per member (see
   [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md).
-- **Attachments versus private files.** The distinction is a rule about *propagation*: an
-  attachment is content every member receives, and a private file stays in one member's copy and
-  reaches no one else. The two are told apart by how the member added them in the app.
+- **Attachments.** Every attachment is content every member receives.
 - **The note.** Exactly one per pod. It supports links to other pods, resolved by target pod id,
   and to the pod's own tools, graphs and attachments. It is a rich-text document with Markdown-like
   formatting, held in the app's own internal format — one suited to those links and to merging
@@ -81,7 +79,7 @@ them too.
 |---|---|
 | Every `*.ttl` ontology — `persona.ttl`, `pod.ttl`, `pod-categories.ttl`, `pod-category-templates.ttl`, `service.ttl`, `organization.ttl`, and every `other/`, `persona-ext/` and `pod-category-ext/` peer file (possibly expressed differently in the app) | Every `*.databook.md` file, and the whole format specified in [pod-databook.md](pod-databook.md) |
 | Every `**/shacl/*.ttl` shapes file | The `example/pods/` directory, and every folder in it |
-| The concepts the ontologies model — pods, members, owners, tools, graphs, categories, tags, notes, attachments, chat | Pods as folders, one per pod, grouped in one folder per pod space, no pod folder inside another; the `_pod-attachments` marker; folder notes named after their folder, with no file for an empty note; private files as loose files; the filename convention |
+| The concepts the ontologies model — pods, members, owners, tools, graphs, categories, tags, notes, attachments, chat | Pods as folders, one per pod, grouped in one folder per pod space, no pod folder inside another; the `_pod-attachments` marker; folder notes named after their folder, with no file for an empty note; the filename convention |
 | The app-level rules in [app-behavior.md](app-behavior.md) — lifecycle, sharing, permissions, naming, tagging | The `helpers/` scripts, and the [integrity.md](integrity.md) checks that read the files and folders on disk |
 
 The scaffolding is genuinely useful and is not going away before the app arrives: it is how the

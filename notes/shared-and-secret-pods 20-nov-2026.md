@@ -39,8 +39,6 @@ Pod  (abstract: attachment, note*, chat*)
 
 `pod:metaNote` is each member's own private note about a pod. It has the same format as the note and is shown in the same Note area, but it is visible only to that member. Before this change the meta note existed in the app's behavior, but the ontology said that no property modeled it, not even a documentation-only one. It is now a documentation-only property, like `pod:note` and `pod:chat`, drawn off `SecretPod`. Being private is exactly why it sits there rather than on `pod:Pod` next to the shared note.
 
-A member's private files remain unmodeled. They are per-member too, but they have no property of their own.
-
 ## Placement decisions
 
 The first sketch of the split put `tool` on the secret side and left `space` and `serviceTag` on the shared side. The final diagram corrects all three:

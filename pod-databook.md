@@ -4,8 +4,8 @@
 
 **This file specifies an artifact that will not exist once the Tellipod app ships, and describes a
 filesystem layout that will not exist either.** Tellipod persists no data in the user's filesystem at all:
-a pod's entire content — everything this document describes, plus the note, the attachments, the
-chat and the member's own private files — lives in a protected, app-managed store, encrypted at
+a pod's entire content — everything this document describes, plus the note, the attachments and the
+chat — lives in a protected, app-managed store, encrypted at
 rest. See [storage.md](storage.md) for that decision and the reasoning behind it. A running Tellipod
 produces no folders, no `.databook.md` file, and no files of any kind.
 
@@ -37,10 +37,8 @@ a pod, and no pod folder sits inside another.
   Markdown for the same reason the note's file is. Every example pod is the copy Alice holds, so a
   `X.meta.md` is always hers: other members' meta notes never reach her copy, and so never appear.
   At runtime the meta note is app-internal, like the note.
-- **A pod's attachments are the plain files inside its `_pod-attachments` folder, and the member's
-  own private files are the ones loose beside it.** At runtime the same distinction is a rule about
-  what propagates on a share, decided by how the member added the file in the app, not by which
-  directory it sits in.
+- **A pod's attachments are the plain files inside its `_pod-attachments` folder.** At runtime
+  they are app-internal, like the note.
 - **The [Filename Convention](#filename-convention) below is scaffolding-only.** At runtime there is
   no file, so there is no filename, and nothing depends on one.
 - **A user's pods are a flat set within each pod space, here and at runtime,** gathered by their tags (see
@@ -95,10 +93,8 @@ the metadata about the pod itself; a pod's unstructured content sits beside it:
   reaches another member;
 - **the attachments** — the plain files inside the folder's own `_pod-attachments` subfolder, flat,
   like email attachments. Every pod has that subfolder, empty or not, and its contents are the part
-  of a pod's folder that travels when the pod is shared;
-- **the member's own private files** — every other plain file loose in the folder, and every
-  subfolder other than `_pod-attachments`, with whatever it holds. These stay in that member's copy
-  of the pod and never reach another member. No subfolder is ever another pod (integrity.md's FS-5);
+  of a pod's folder that travels when the pod is shared. No other subfolder is ever another pod
+  (integrity.md's FS-5);
 - **the chat** — a stream shared by the pod's members, not a file in the folder at all; like this
   file's own content, it lives inside the app.
 
@@ -665,8 +661,8 @@ in full. And a pod's chat area holds more than its group stream (see
 seen by those two alone, and a direct message between a user and their own personal agent (@Telli)
 by that user alone, so neither can live in shared, synced pod content the way the group stream can —
 whatever holds a pod's chat has to hold messages with different propagation rules. A pod already has
-three pieces of content that do not propagate on a share, `pod:serviceTag`, a member's own meta
-note and their own private files, so the precedent exists; what is particular here is that the split runs *within* one feature
+two pieces of content that do not propagate on a share, `pod:serviceTag` and a member's own meta
+note, so the precedent exists; what is particular here is that the split runs *within* one feature
 rather than between two properties.
 
 What is genuinely still open is the storage format the app uses for it, which is an app-internal
@@ -741,15 +737,13 @@ this repo a path relative to the pod's own folder is the scaffolding form of exa
 
 ### How a tool's own files are told apart from the user's
 
-A pod's files are already one of two things — an **attachment**, which every member receives, or one
-of the member's own private files, which no one else does — and both are shown to the user in the
-Attachments area. That is the whole definition. But a canvas's backing image is not something the
-user attached, nor something they chose to keep back, and showing it in either set alongside the
-files they did misrepresents both. So a tool's own files need a third disposition: neither the
-pod's attachments nor the member's private files, and not shown in that area at all.
+A pod's files are its **attachments**, which every member receives and which are shown to the user
+in the Attachments area. That is the whole definition. But a canvas's backing image is not something
+the user attached, and showing it alongside the files they did misrepresents it. So a tool's own
+files need a disposition of their own: not the pod's attachments, and not shown in that area at all.
 
 Now that a pod's content is app-internal, this is easier than it was — the app can simply hold a
-tool's blobs outside both sets, with no reserved name or manifest needed to keep them apart, because
+tool's blobs apart from the attachments, with no reserved name or manifest needed to keep them apart, because
 there is no shared directory for them to be found in by accident. What is still unsettled is the
 propagation rule: a tool's blob plainly has to travel with the pod the way an attachment does,
 without being one, and nothing yet says whether it follows the attachment rules exactly (immutable,

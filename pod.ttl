@@ -44,8 +44,8 @@ pod:abstract rdf:type owl:AnnotationProperty ;
 #    filesystem: no folder stands for a pod, no file holds its note,
 #    and no directory holds its attachments (storage.md).
 #    This repo carries the example pods on disk instead, as one
-#    folder per pod, grouped by pod space, holding a pod-databook file, a note file, a
-#    _pod-attachments folder and the member's own private files. All
+#    folder per pod, grouped by pod space, holding a pod-databook file, a note file and a
+#    _pod-attachments folder. All
 #    of that is development scaffolding and none of it exists in a
 #    running Tellipod (pod-databook.md's Development Scaffolding section).
 #
@@ -572,8 +572,7 @@ pod:formShape rdf:type owl:ObjectProperty ;
 #    copy only. A live connector is named by its own IRI, as a live
 #    tool is, so a block link in the note can name it; that link
 #    resolves only in its owner's copy and fails closed on every
-#    other member's side, as a link to a private file does. A
-#    declared connector is a blank node.
+#    other member's side. A declared connector is a blank node.
 #
 #    Two concrete connectors are defined, pod:Contacts and
 #    pod:Browser, neither with any property of its own.
@@ -819,26 +818,18 @@ pod:member rdf:type owl:ObjectProperty ;
 #    the files every member of the pod receives. They are the part
 #    of a pod's content that travels with it when it is shared, and
 #    they are flat, like email attachments.
-#    A file a member adds to the pod without attaching it is
-#    instead their own private file: it stays in their copy of the
-#    pod and never reaches another member. Both sets are shown in
-#    the Attachments tab, the private ones marked as such. The
-#    distinction is about propagation and nothing else, which is why
-#    it is still real for a single-member pod that shares nothing:
-#    it records what would travel if the pod were ever shared
-#    later.
 #    The pod's note keeps its own separate role and its own Note
-#    area, and is neither an attachment nor a private file.
+#    area, and is not an attachment.
 #    Beside it, each member has a meta note (pod:metaNote, drawn
 #    off SecretPod): their own personal note about the pod, in the
 #    same format as the note, shown in the same Note area but
-#    private to that member. Like a private file, it stays in their
+#    private to that member. It stays in their
 #    own copy of the pod and never reaches another member, owner
 #    included — which is why it sits on pod:SecretPod rather than
 #    on pod:Pod beside the note.
 #    pod:attachment, below, links a pod to each of its attachments,
 #    every one described as a sources:SourceItem (other/sources.ttl).
-#    A private file is never a pod:attachment value. The diagram
+#    The diagram
 #    (images/pod-ontology/pod.png) additionally sketches pod:note and
 #    pod:chat as arrows off Pod, and pod:metaNote and pod:toolData
 #    as arrows off SecretPod, for documentation purposes only — none
@@ -863,15 +854,12 @@ pod:member rdf:type owl:ObjectProperty ;
 #    limitation of cross-pod linking, not a defect — nothing in this
 #    ontology tracks link targets or attempts to keep them resolvable
 #    across a share, consistent with the "no ontology property"
-#    treatment of the note itself above. That boundary has an inner
-#    edge as well: a link whose target is one of the member's own
-#    private files resolves in their own copy and fails closed on
-#    every other member's side, since a private file never travels.
+#    treatment of the note itself above.
 #
 #    This repo carries all of the above on disk as development
 #    scaffolding — one folder per pod, grouped by pod space, holding a pod-databook file,
-#    a note file named after the folder, a reserved _pod-attachments
-#    folder and the member's own private files loose beside it — which
+#    a note file named after the folder and a reserved _pod-attachments
+#    folder — which
 #    is where the folder-shaped vocabulary in this project's checks
 #    and helper scripts comes from. None of it exists in a running Tellipod
 #    (pod-databook.md's Development Scaffolding section).
@@ -881,7 +869,7 @@ pod:attachment rdf:type owl:ObjectProperty ;
     rdfs:domain pod:Pod ;
     rdfs:range sources:SourceItem ;
     rdfs:label "attachment"@en ;
-    rdfs:comment """One of the pod's attachments — the files every member of the pod receives, shown in the app's Attachments area and travelling with the pod when it is shared. Each value is a sources:SourceItem (other/sources.ttl) — in practice one of its concrete kinds, sources:Image, sources:Document, sources:TextBlob or sources:Video — describing the file by its media type, file name, size, content hash and any text read off it. Zero or more values, no fixed upper bound. The set is flat, like email attachments. An attachment is immutable, exactly as a sources:SourceItem is: a correction is a new item, never an update in place (app-behavior.md's Attachment Permissions). A file a member adds to the pod without attaching it is that member's own private file and is never a pod:attachment value, so whether a file is attached or private is recorded by whether this triple exists, not by anything on the item itself. The pod's note and its chat stream are not attachments. Domain pod:Pod, matching pod.png's attachment arrow off Pod. Range sources:SourceItem is referenced by name without owl:imports, the same by-name pattern pod:category and pod:categoryTag use for skos:Concept."""@en .
+    rdfs:comment """One of the pod's attachments — the files every member of the pod receives, shown in the app's Attachments area and travelling with the pod when it is shared. Each value is a sources:SourceItem (other/sources.ttl) — in practice one of its concrete kinds, sources:Image, sources:Document, sources:TextBlob or sources:Video — describing the file by its media type, file name, size, content hash and any text read off it. Zero or more values, no fixed upper bound. The set is flat, like email attachments. An attachment is immutable, exactly as a sources:SourceItem is: a correction is a new item, never an update in place (app-behavior.md's Attachment Permissions). The pod's note and its chat stream are not attachments. Domain pod:Pod, matching pod.png's attachment arrow off Pod. Range sources:SourceItem is referenced by name without owl:imports, the same by-name pattern pod:category and pod:categoryTag use for skos:Concept."""@en .
 
 pod:category rdf:type owl:ObjectProperty ;
     rdfs:domain pod:TemplatePod ;

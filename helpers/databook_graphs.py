@@ -255,15 +255,19 @@ def process_pod_databook(fm, triples):
 
     emit_type(triples, subj, POD + "Pod")
 
-    # Every real pod-databook is always also typed pod:InstancePod — no
-    # pod with no member content; a pod with nothing substantive to say
+    # Every real pod-databook is a pod a user holds, so it is typed
+    # pod:SecretPod — the member's own copy, carrying their space and tags
+    # — and pod:SharedPod, its superclass, asserted alongside so that
+    # validation never depends on subclass inference. There is no pod
+    # with no member content; a pod with nothing substantive to say
     # yet still carries a minimal stub pod:member entry rather than
     # omitting member content. Member count
     # itself is never stored — it's simply the number of distinct
     # subject values among tpod.member, derivable by counting whenever
-    # needed. There is no second pod type to emit: a pod that carries
+    # needed. There is no further pod type to emit: a pod that carries
     # a tool holds pod:tool values, not a subclass.
-    emit_type(triples, subj, POD + "InstancePod")
+    emit_type(triples, subj, POD + "SharedPod")
+    emit_type(triples, subj, POD + "SecretPod")
 
     if tpod.get("creator"):
         emit_obj(triples, subj, POD + "creator", resolve(tpod["creator"]))
@@ -273,7 +277,7 @@ def process_pod_databook(fm, triples):
     for owner_iri in as_list(tpod.get("owner")):
         emit_obj(triples, subj, POD + "owner", resolve(owner_iri))
 
-    # pod:categoryTag — 0..N skos:Concept CURIEs, domain pod:InstancePod
+    # pod:categoryTag — 0..N skos:Concept CURIEs, domain pod:SecretPod
     # (pod.ttl's Pod Tags section), written as a YAML list. Only the
     # concepts written are emitted; broader concepts are implied tags,
     # derived at search time and never asserted. as_list() lets a single
@@ -308,8 +312,8 @@ def process_pod_databook(fm, triples):
         if space.get("subject"):
             emit_obj(triples, sid, POD + "spaceSubject", resolve(space["subject"]))
 
-    # pod:userTag — 0..N plain xsd:string values, domain pod:InstancePod
-    # (pod.ttl's Pod Tags section), so emitted after the pod:InstancePod
+    # pod:userTag — 0..N plain xsd:string values, domain pod:SecretPod
+    # (pod.ttl's Pod Tags section), so emitted after the pod:SecretPod
     # typing above. as_list() lets a single bare string stand in for a
     # one-element list, the same latitude tpod.owner and a graph entry's own
     # template already get. No resolve() here — a user tag is a literal, not

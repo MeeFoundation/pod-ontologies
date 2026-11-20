@@ -14,8 +14,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.4.0> ;
-    dc:date "2026-11-17"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.5.0> ;
+    dc:date "2026-11-20"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — and the pod:PodSpace each pod sits in, in the Pod Ontology."@en .
 
@@ -26,10 +26,11 @@
 #  kind: attachment. Pods do not nest, so there is no tree position
 #  to constrain. Classification is kind-specific: pod:category is
 #  constrained on :TemplatePodShape, pod:categoryTag on
-#  :InstancePodShape. Graph links (pod:member/
-#  pod:tool) live on :InstancePodShape below — since pod:TemplatePod
-#  and pod:InstancePod are disjoint (pod.ttl), that shape fires only
-#  on the InstancePod branch, not on template pods. The tool nodes
+#  :SecretPodShape. Graph links (pod:member/
+#  pod:tool) live on :SharedPodShape below — since pod:TemplatePod
+#  and pod:SharedPod are disjoint (pod.ttl), that shape and
+#  :SecretPodShape fire only on the SharedPod branch, never on
+#  template pods. The tool nodes
 #  themselves are constrained by :LiveToolShape and :DeclaredToolShape,
 #  which use sh:targetObjectsOf pod:tool / pod:declaresTool rather
 #  than a class, since the same tool classes serve both roles.
@@ -55,18 +56,19 @@
         sh:message "Each pod:attachment value must be a sources:SourceItem, typed as one of sources:Image, sources:Document, sources:TextBlob or sources:Video."@en
     ] ;
 
-    # rdf:type — exactly one of pod:TemplatePod/pod:InstancePod, never
+    # rdf:type — exactly one of pod:TemplatePod/pod:SharedPod, never
     # both and never neither, mirroring pod.ttl's owl:disjointWith
-    # pod:TemplatePod pod:InstancePod. A reusable class-level template
+    # pod:TemplatePod pod:SharedPod. A reusable class-level template
     # (pod-category-templates.ttl) is typed pod:TemplatePod only; every pod
-    # a user holds is typed pod:InstancePod only — there is no legal
-    # InstancePod with no member content (a pod with nothing
-    # substantive to say still carries a minimal stub pod:member entry,
-    # see integrity.md's YAML-6) and no pod legally carries both kinds
-    # at once.
+    # a user holds is typed pod:SecretPod and pod:SharedPod (its
+    # superclass, asserted alongside so this test needs no inference) —
+    # there is no legal SharedPod with no member content (a pod with
+    # nothing substantive to say still carries a minimal stub pod:member
+    # entry, see integrity.md's YAML-6) and no pod legally carries both
+    # kinds at once.
     sh:xone (
         [ sh:property [ sh:path rdf:type ; sh:hasValue pod:TemplatePod ] ]
-        [ sh:property [ sh:path rdf:type ; sh:hasValue pod:InstancePod ] ]
+        [ sh:property [ sh:path rdf:type ; sh:hasValue pod:SharedPod ] ]
     ) .
 
 
@@ -126,11 +128,14 @@
 
 
 #################################################################
-#  InstancePod
-#  pod:InstancePod is the actual/instantiated facet of a pod — real,
-#  member-classified content. :InstancePodShape constrains
-#  pod:creator/pod:owner/pod:member, plus the three tag properties
-#  pod:categoryTag/pod:userTag/pod:serviceTag (see their own comments below; the
+#  SharedPod and SecretPod
+#  pod:SharedPod is an actual pod as every member holds it alike;
+#  pod:SecretPod, its subclass, adds what one member alone holds. Every
+#  pod a user holds is typed both. :SharedPodShape constrains the shared
+#  part — pod:creator/pod:owner/pod:member/pod:tool — and :SecretPodShape
+#  the secret part — pod:space and the three tag properties
+#  pod:categoryTag/pod:userTag/pod:serviceTag (see their own comments
+#  below; the
 #  pod:ServiceTag value nodes pod:serviceTag points at are
 #  constrained by :ServiceTagShape, further below) — pod:owner and pod:member are
 #  each required, one or more values, no fixed upper bound (pod:creator
@@ -153,10 +158,10 @@
 #  created with).
 #################################################################
 
-:InstancePodShape
+:SharedPodShape
     a sh:NodeShape ;
-    sh:targetClass pod:InstancePod ;
-    sh:message "Instance Pod validation."@en ;
+    sh:targetClass pod:SharedPod ;
+    sh:message "Shared Pod validation."@en ;
 
     # pod:creator — exactly one value, required, must be a Person: a pod
     # is always created by a human, never by a service:Service and never by
@@ -167,7 +172,7 @@
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:class p:Person ;
-        sh:message "A pod:InstancePod must have exactly one pod:creator, a single p:Person."@en
+        sh:message "A pod:SharedPod must have exactly one pod:creator, a single p:Person."@en
     ] ;
 
     # pod:owner — one or more values, required, no fixed upper bound,
@@ -178,7 +183,7 @@
         sh:path pod:owner ;
         sh:minCount 1 ;
         sh:class p:Person ;
-        sh:message "A pod:InstancePod must have at least one pod:owner, each a p:Person."@en
+        sh:message "A pod:SharedPod must have at least one pod:owner, each a p:Person."@en
     ] ;
 
     # pod:member — one or more values, required, no fixed upper bound.
@@ -190,7 +195,7 @@
         sh:path pod:member ;
         sh:minCount 1 ;
         sh:class pod:MemberGraph ;
-        sh:message "A pod:InstancePod's pod:member is required, at least one value, and each must be a pod:MemberGraph."@en
+        sh:message "A pod:SharedPod's pod:member is required, at least one value, and each must be a pod:MemberGraph."@en
     ] ;
 
     # pod:tool — zero or more values, no minCount and no maxCount. A pod
@@ -202,8 +207,13 @@
     sh:property [
         sh:path pod:tool ;
         sh:class pod:Tool ;
-        sh:message "A pod:InstancePod's pod:tool values must each be a pod:Tool."@en
-    ] ;
+        sh:message "A pod:SharedPod's pod:tool values must each be a pod:Tool."@en
+    ] .
+
+:SecretPodShape
+    a sh:NodeShape ;
+    sh:targetClass pod:SecretPod ;
+    sh:message "Secret Pod validation."@en ;
 
     # pod:categoryTag — zero or more values, per member, no maxCount: a
     # pod may carry several category concepts, from different branches
@@ -233,7 +243,7 @@
         sh:minCount 1 ;
         sh:maxCount 1 ;
         sh:class pod:PodSpace ;
-        sh:message "A pod:InstancePod must sit in exactly one pod:space, a pod:PodSpace."@en
+        sh:message "A pod:SecretPod must sit in exactly one pod:space, a pod:PodSpace."@en
     ] ;
 
     # Every pod:categoryTag value must reach the pod's own space root,
@@ -359,7 +369,7 @@
 #  So these two shapes target sh:targetObjectsOf, never sh:targetClass:
 #
 #    :LiveToolShape     — a live tool, reached by pod:tool from a
-#                         pod:InstancePod. A live pod:Form
+#                         pod:SharedPod. A live pod:Form
 #                         carries pod:formTopic (exactly one) and
 #                         pod:formGraph (at least one), never a shape;
 #                         a live tool of any other kind
@@ -545,7 +555,7 @@
 #################################################################
 #  InSchemeConceptShape
 #  Shared by pod:category (:TemplatePodShape) and pod:categoryTag
-#  (:InstancePodShape): a category value must belong to some concept
+#  (:SecretPodShape): a category value must belong to some concept
 #  scheme — podcat:PodCategoryScheme (pod-categories.ttl) for a core
 #  category, or an extension's own scheme (pod-category-ext/), which
 #  must skos:broadMatch a core concept (integrity.md's TTL-8).

@@ -20,7 +20,7 @@ Each pod gets two passes:
    against the four general shapes files — pod-shacl (the pod model
    itself), persona-shacl, organization-shacl, service-shacl. The graph Turtle
    has to be in here, not just the frontmatter triples: pod-shacl's
-   :InstancePodShape constrains creator/owner with `sh:class p:Person` and
+   :SharedPodShape constrains creator/owner with `sh:class p:Person` and
    :CGraphShape constrains claimant with
    `sh:or ( [sh:class p:Person] [sh:class o:Organization] [sh:class service:Service] )`,
    and those individuals are typed only in the graph Turtle.

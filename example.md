@@ -446,11 +446,11 @@ Each pod gets two passes.
 plus the `pod:` triples synthesized from its own `tpod.*` frontmatter
 (`databook_graphs.process_pod_databook()`). This is validated against the four general shapes
 files — `shacl/pod-shacl.ttl` (the pod model itself: `pod:category` on a template and `pod:categoryTag` on an
-instance, each a concept in some scheme, the `pod:TemplatePod`/`pod:InstancePod` split, `pod:creator`/`pod:owner`/`pod:member`/`pod:tool`, and
+instance, each a concept in some scheme, the `pod:TemplatePod`/`pod:SharedPod` split and its `pod:SecretPod` subclass, `pod:creator`/`pod:owner`/`pod:member`/`pod:tool`, and
 `pod:CGraph`'s `pod:claimant` and `pod:MemberGraph`'s `pod:subject`), plus `shacl/persona-shacl.ttl`,
 `shacl/organization-shacl.ttl` and `shacl/service-shacl.ttl` — merged into one shapes graph with
 `owl:imports` stripped. The graph Turtle has to be in this data, not just the frontmatter triples:
-`:InstancePodShape` and `:CGraphShape` constrain `pod:creator`/`pod:owner`/`pod:claimant` with
+`:SharedPodShape` and `:CGraphShape` constrain `pod:creator`/`pod:owner`/`pod:claimant` with
 `sh:or ( [sh:class p:Person] [sh:class o:Organization] … )`, and those individuals are typed only
 in the graph Turtle.
 

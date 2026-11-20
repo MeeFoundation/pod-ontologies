@@ -109,13 +109,15 @@ Classification is kind-specific rather than sitting on `pod:Pod`: a `pod:Templat
 
 #### Documentation-only Properties
 
-Two more concepts appear off `Pod` in `images/pod-ontology/pod.png`'s diagram, and a third off `SecretPod`, described here for their intended semantics, but documentation only — none is an actual property declared in `pod.ttl`, and none is ever reified as a triple in any real graph (see integrity.md's PNG-3 for this open, accepted discrepancy):
+Two more concepts appear off `Pod` in `images/pod-ontology/pod.png`'s diagram, and two more off `SecretPod`, described here for their intended semantics, but documentation only — none is an actual property declared in `pod.ttl`, and none is ever reified as a triple in any real graph (see integrity.md's PNG-3 for this open, accepted discrepancy):
 
 - **`pod:note`** — a pod's single note, shown in the app's **Note area**, 1..1: a rich-text document with Markdown-like formatting that every member may edit concurrently. It is held in the app's own internal format rather than as Markdown, a format suited to its links and to merging concurrent edits, and it can be exported as a Markdown file. It carries two kinds of link: pod links to other pods, resolved by the target's id, and block links to the pod's own tools, graphs and attachments. See [Introduction to Pods](#introduction-to-pods) above, [Pod Contents](app-behavior.md#pod-contents) and [Note Area](app-behavior.md#note-area) in app-behavior.md, and [Wikilink-Triggered Pod Creation](app-behavior.md#wikilink-triggered-pod-creation). Beside it, each member also has a meta note of their own, `pod:metaNote` below.
 
 - **`pod:chat`** — a pod's single chat area, 1..1: its group chat stream, visible to every member, plus direct messages between two members. Every pod always has one, even if empty.
 
 - **`pod:metaNote`** — a member's own **meta note** about the pod, 1..1, drawn off `SecretPod`: a personal note in the same format as `pod:note`, shown in the same Note area but private to that member. It is per-member state in the member's own copy, like their private files, and never reaches another member, owner included — which is why it sits on `pod:SecretPod` rather than on `pod:Pod` beside `pod:note`, which is shared.
+
+- **`pod:toolData`** — a placeholder, 0..1, drawn off `SecretPod`: data of the member's own about the pod's tools, kept in their copy and never shared. What it holds, and its target type, are not yet defined (see `notes/open-items.md`).
 
 #### Tags
 

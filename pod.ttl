@@ -116,7 +116,9 @@ pod:Pod rdf:type owl:Class ;
 #    pod:space, pod:connector, pod:categoryTag, pod:userTag and
 #    pod:serviceTag, and
 #    (documentation only) pod:metaNote, their own private note about
-#    the pod. Every pod a user holds is typed pod:SecretPod: each
+#    the pod, and pod:toolData, a placeholder for whatever data of
+#    their own a member keeps for the pod's tools, still to be
+#    defined. Every pod a user holds is typed pod:SecretPod: each
 #    member's copy is the shared pod plus that member's own secret
 #    part. A pod:SharedPod not also typed pod:SecretPod is the shared
 #    part alone — what a joining member receives before choosing a
@@ -185,7 +187,7 @@ pod:SharedPod rdf:type owl:Class ;
 pod:SecretPod rdf:type owl:Class ;
     rdfs:subClassOf pod:SharedPod ;
     rdfs:label "Secret Pod"@en ;
-    rdfs:comment """A pod:SharedPod as one member holds it — the shared pod plus what that member alone holds of it, which no other member ever sees, owner included. Carries pod:space (required, exactly one value — the pod space the member keeps it in), pod:connector (zero or more pod:Connector nodes linking the member's own copy to capabilities on their own device — see the Pod Connectors section below) and the three tag properties pod:categoryTag (whose values are category concepts), pod:userTag (a plain xsd:string) and pod:serviceTag (whose values are pod:ServiceTag nodes), each zero or more values, no fixed upper bound — see the Pod Spaces and Pod Tags sections below. The diagram (images/pod-ontology/pod.png) also sketches pod:metaNote off it, the member's own private note about the pod, for documentation purposes only (see the Pod Content section below). Every pod a user holds is typed pod:SecretPod: each member's copy is one individual of this class, carrying everything shared through its superclass and the member's own secret part here. Nothing on this class is ever sent as pod content; the one crossing point is that a sender's category tags accompany an invitation as suggestions only, which the joining member adopts or not. Adding a category tag can nonetheless change shared content, since Lazy Instantiation gives the pod each tool the tag's template declares, and tools sit on pod:SharedPod; a connector the template declares stays on this class, with the member who added the tag."""@en .
+    rdfs:comment """A pod:SharedPod as one member holds it — the shared pod plus what that member alone holds of it, which no other member ever sees, owner included. Carries pod:space (required, exactly one value — the pod space the member keeps it in), pod:connector (zero or more pod:Connector nodes linking the member's own copy to capabilities on their own device — see the Pod Connectors section below) and the three tag properties pod:categoryTag (whose values are category concepts), pod:userTag (a plain xsd:string) and pod:serviceTag (whose values are pod:ServiceTag nodes), each zero or more values, no fixed upper bound — see the Pod Spaces and Pod Tags sections below. The diagram (images/pod-ontology/pod.png) also sketches two documentation-only arrows off it: pod:metaNote, the member's own private note about the pod (see the Pod Content section below), and pod:toolData, a placeholder (0..1, target still to be defined) for data of the member's own about the pod's tools. Every pod a user holds is typed pod:SecretPod: each member's copy is one individual of this class, carrying everything shared through its superclass and the member's own secret part here. Nothing on this class is ever sent as pod content; the one crossing point is that a sender's category tags accompany an invitation as suggestions only, which the joining member adopts or not. Adding a category tag can nonetheless change shared content, since Lazy Instantiation gives the pod each tool the tag's template declares, and tools sit on pod:SharedPod; a connector the template declares stays on this class, with the member who added the tag."""@en .
 
 pod:creator rdf:type owl:ObjectProperty ;
     rdfs:domain pod:SharedPod ;
@@ -838,9 +840,9 @@ pod:member rdf:type owl:ObjectProperty ;
 #    every one described as a sources:SourceItem (other/sources.ttl).
 #    A private file is never a pod:attachment value. The diagram
 #    (images/pod-ontology/pod.png) additionally sketches pod:note and
-#    pod:chat as arrows off Pod, and pod:metaNote as an arrow off
-#    SecretPod, for documentation purposes only — none of the three
-#    is an actual property declared here, and none is ever
+#    pod:chat as arrows off Pod, and pod:metaNote and pod:toolData
+#    as arrows off SecretPod, for documentation purposes only — none
+#    of the four is an actual property declared here, and none is ever
 #    reified as a triple in any real graph (see integrity.md's PNG-3
 #    and README.md's Documentation-only Properties section).
 #

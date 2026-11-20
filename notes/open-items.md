@@ -4,7 +4,7 @@
 
 ## Apple Contacts connector
 
-Raised 2026-11-20 while reviewing [apple-contacts-connector.md](apple-contacts-connector.md). Both open items affect `app-behavior.md`'s Apple Contacts section as well as the note.
+Raised 2026-11-20 while reviewing [apple-contacts-connector.md](apple-contacts-connector.md). Items 1 and 2 affect `app-behavior.md`'s Apple Contacts section as well as the note; item 3 affects the note alone.
 
 ### 1. Where an exported value's vCard label comes from
 
@@ -35,3 +35,26 @@ The anchor stores a person's IRI, which means something only in the user's own c
 - the note should say that re-identification works only when re-importing into that same copy;
 - a card exported for the user themselves needs separate handling;
 - `TPOD` in the field name should be confirmed or replaced.
+
+## Connectors
+
+Raised 2026-11-20 with the connector split ([connectors 20-nov-2026.md](<connectors 20-nov-2026.md>)).
+
+### 4. How a member adds a connector by hand
+
+A member gains a connector by Lazy Instantiation when a category tag they add declares one (`podcat:IdVerification` declares a `pod:Browser`), and the app adds a `pod:Browser` itself during the credential flows. Nothing settles how a member adds one deliberately, say to start syncing a pod with their address book. The Add Tool dialog offers tools only, and connectors are explicitly excluded from it. `app-behavior.md`'s Connectors section currently says a member adds one "from the pod's own menu", which was written without a decision. Options:
+
+- a separate **Add Connector** action beside Add Tool;
+- connectors offered in the Add Tool dialog, marked as the member's own;
+- no per-pod action at all: a connector is switched on once per device (in settings, say), and the app attaches it to whichever pods it applies to.
+
+Once decided, fix the wording in `app-behavior.md`.
+
+### 5. What `pod:toolData` holds
+
+`pod.png` draws a `toolData → TBD 0..1` arrow off `SecretPod`, documented for now as a documentation-only placeholder, like `pod:metaNote`. To decide:
+
+- what it holds: a member's own data about the pod's shared tools (such as private settings, or a draft not yet claimed), connector state, or both;
+- its target type, and whether 0..1 means one node for all of the pod's tools or should be one per tool;
+- whether it then becomes a real property in `pod.ttl`.
+

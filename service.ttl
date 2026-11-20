@@ -11,9 +11,9 @@
 @base <http://mee.foundation/ontologies/service> .
 
 <http://mee.foundation/ontologies/service> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/service/3.0.1> ;
-    dc:date "2026-10-28"^^xsd:date ;
-    owl:versionInfo "Version 3.0.1 - comments no longer describe an AI agent as a service or pod member: a pod member is only ever a person or a service, and a user's AI agent is a service:PersonalAgent"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/service/3.0.2> ;
+    dc:date "2026-11-20"^^xsd:date ;
+    owl:versionInfo "Version 3.0.2 - pod:Browser is described as a connector, not a tool"@en ;
     owl:imports <https://w3id.org/cco-domains/cco/AgentOntology> ,
                 <http://mee.foundation/ontologies/prov-upper-subset> ;
     rdfs:label "Service Ontology"@en ;
@@ -315,7 +315,7 @@ service:WebsiteService rdf:type owl:Class ;
                     requires one. Carries service:siteDomain, required exactly once (1..1,
                     shacl/service-shacl.ttl's :WebsiteServiceShape): that domain is what the app
                     matches on to find the pod a site's credentials belong in, during a
-                    credential issuance or presentation handled by the pod:Browser tool's
+                    credential issuance or presentation handled by the pod:Browser connector's
                     extension. A site takes part in its pod in one of two ways. Most do not
                     take part at all: the app mints the website service itself, knowing the
                     site by its domain and nothing else, and since the site never receives a

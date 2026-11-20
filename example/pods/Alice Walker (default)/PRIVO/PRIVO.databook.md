@@ -14,8 +14,8 @@ description: >
   as well as service:WebsiteService, provided by the organization :PRIVO (PRIVO Inc.), which claims
   the member entry, as every service:ServiceProvider's organization does. The credential itself is
   not in any graph: it is the pod's attachment privo-age-credential.json, kept exactly as PRIVO
-  Inc. issued and signed it. The pod:Browser tool comes from podcat:IdVerification's template and holds no
-  graph of its own.
+  Inc. issued and signed it. Alice's pod:Browser connector comes from podcat:IdVerification's
+  template and holds no graph of its own.
 tpod:
   categoryTag:
     - "podcat:IdVerification"
@@ -30,8 +30,8 @@ tpod:
       claimant: ":PRIVO"
       subject: ":PRIVO_Site"
       shape: "pshapes:ContactInfoShape"
-  tool:
-    - id: "http://www.example.org/tpod/tools/tool-08"
+  connector:
+    - id: "http://www.example.org/tpod/connectors/connector-02"
       type: "browser"
 ---
 

@@ -1,8 +1,8 @@
-# Apple Contacts Tool Notes
+# Apple Contacts Connector Notes
 
 ## Overview
 
-Apple Contacts is a **tool** (`pod:Contacts`), not a service: it never joins a pod as a member, it is a capability the pod carries. See app-behavior.md's Tools section.
+Apple Contacts is reached through a **connector** (`pod:Contacts`), not a service and not a tool. It never joins a pod as a member, and it is not shared content either: it links one member's own copy of a pod to the address book on that member's own device. See app-behavior.md's Connectors section.
 
 Tellipod can hold nearly everything an Apple Contacts card holds, and a great deal more: many graphs about one person, claims made by different people, and links to other people as real individuals rather than free-text names. Importing from Apple Contacts into the app is therefore mostly straightforward, but exporting from the app back to Apple Contacts means flattening, and that requires explicit design decisions. Round-tripping losslessly is achievable but requires an anchor strategy (see below).
 
@@ -42,9 +42,9 @@ There is no flattening to do in either direction. Because a group never correspo
 
 **Rename safety:** matching is by name, so a group renamed on the Apple side reads as a new group, leaving the old tag stale. A module that wants to survive renames stores the group's own identifier alongside the name under a second key — `groupID` — which is precisely what having a key rather than one opaque string buys.
 
-These tags are per-member state. A pod's service tags sit on `pod:SecretPod`, the part of a pod that one member holds and no other member ever sees, alongside the pod space and the user's own tags. So they never travel when a pod is shared, and the module's own bookkeeping cannot leak into another member's copy, where a different tool, or none, could neither interpret nor clear it.
+These tags are per-member state. A pod's service tags sit on `pod:SecretPod`, the part of a pod that one member holds and no other member ever sees, alongside the pod space and the user's own tags. So they never travel when a pod is shared, and the module's own bookkeeping cannot leak into another member's copy, where a different connector, or none, could neither interpret nor clear it.
 
-The tool itself is a different matter. `pod:tool` sits on `pod:SharedPod`, so every member of a shared pod gets the `pod:Contacts` tool and its sync action, but each member syncs with their own address book, and the group tags that sync writes stay in their own copy. Two members of the same pod may therefore hold the contact in different groups, or one may not sync it at all, with nothing to reconcile between them.
+The connector is per-member for the same reason. `pod:connector` sits on `pod:SecretPod`, so the `pod:Contacts` connector, its sync action and the group tags it writes all stay in the copy of the member who added it, and none of them is sent when the pod is shared. Each member connects their own address book, or none: a member on an iPhone uses this Apple Contacts connector, a member on an Android phone uses an Android one whose module writes under its own namespace, and a member with no address book to sync adds nothing. Two members of the same pod may therefore hold the contact in different groups, in different address books, or not at all, with nothing to reconcile between them.
 
 ---
 

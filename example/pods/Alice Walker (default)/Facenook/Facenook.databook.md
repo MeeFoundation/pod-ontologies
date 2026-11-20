@@ -15,10 +15,10 @@ description: >
   it here bit for bit as the attachment privo-age-credential.json, and presented it to
   facenook.com through the browser extension. A two-member pod: Alice (graph-104) and
   :Facenook_Site, the service:WebsiteService her app minted for the site (graph-105), claimed by
-  Alice. It carries two tools: the form tool podcat:Companies' template declares, holding Alice's
+  Alice. It carries one tool, the form tool podcat:Companies' template declares, holding Alice's
   Facenook account (graph-106), the same sa:ServiceAccount pattern the Google, ATT and Arca pods
-  use; and a pod:Browser tool, which no template declared here and the app added during the
-  presenting flow.
+  use; and Alice's copy carries a pod:Browser connector, which no template declared here and the
+  app added during the presenting flow.
 tpod:
   categoryTag:
     - "podcat:Companies"
@@ -41,7 +41,8 @@ tpod:
         - id: "http://www.example.org/tpod/graphs/graph-106"
           claimant: ":Self"
           shape: "sashapes:ServiceAccountShape"
-    - id: "http://www.example.org/tpod/tools/tool-05"
+  connector:
+    - id: "http://www.example.org/tpod/connectors/connector-01"
       type: "browser"
 ---
 

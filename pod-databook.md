@@ -291,6 +291,7 @@ member's own tags on it. Its non-graph keys map one-for-one onto properties defi
 | `tpod.categoryTag` | `pod:categoryTag` | 0..N | A category concept the member has tagged this pod with — a `skos:Concept` individual in `podcat:PodCategoryScheme` (e.g. `"podcat:Others"`) or in a [category extension](README.md#category-extensions)'s own scheme (e.g. `"bhscat:BostonHubSociety"`). Any number of values, every one falling under the root of the pod's space (`tpod.space.root`, or `podcat:Person` in the default space), and a pod with none is of the UserDefined (Custom) category. Only the concepts the member chose are written — implied broader concepts never are. The member's own, never shared; each offered as a suggestion when the pod is shared (see [Joining a Pod](app-behavior.md#joining-a-pod)) |
 | `tpod.space` | `pod:space` | 0..1 (absent = default space) | The pod space this pod sits in — whose life it belongs to (see [Pod Spaces](README.md#pod-spaces)). Absent for a pod in the default space, whose IRI `http://www.example.org/tpod/spaces/space-0` is synthesized and never written. Otherwise a mapping of three required keys and one optional one: `id`, the space's own IRI (`http://www.example.org/tpod/spaces/space-<N>`); `name`, the space's name (`pod:spaceName`); `root`, `"podcat:Person"` or `"podcat:Organization"` (`pod:spaceRoot`); and optionally `subject`, the person or organization whose life the space holds, e.g. `":Paula_Walker"` (`pod:spaceSubject`). The default space's name (the user's own) and subject (`:Self`) are synthesized too, never written. Every pod in one space restates the same mapping, so each pod's synthesis is self-contained (integrity.md's YAML-11). The member's own, never shared; its name offered as a suggestion when the pod is shared |
 | `tpod.userTag` | `pod:userTag` | 0..N | A free-text tag the member minted (e.g. a pet's name, to gather every pod about that pet). The member's own private tag: never shared, never propagated, and never sent as a suggestion |
+| `tpod.connector` | `pod:connector` | 0..N | A connector linking the member's own copy of the pod to a capability on their own device — an address book, a web browser (see [Connectors](README.md#connectors)). Always written as a list; see [`tpod.connector` Entries](#tpodconnector-entries) below. The member's own, never shared |
 | `tpod.serviceTag` | `pod:serviceTag` | 0..N | A tag written by this member's own service module for its own bookkeeping. Each entry is a mapping of three sub-keys — `namespace`, `key`, `value` (`pod:tagNamespace`/`pod:tagKey`/`pod:tagValue`), e.g. `namespace: "foundation.mee.applecontacts"`, `key: "group"`, `value: "Christmas List"` — not a single string. Never displayed and never findable by the user — reachable only by the writing module, within its own namespace — and **local to this member's copy** — the one piece of pod content that does not propagate on a share |
 
 Values are written as quoted CURIEs (`"podcat:Pets"`) or bare local names (`":Self"`); both are
@@ -337,13 +338,23 @@ One entry per tool the pod carries; zero is the ordinary case. Always written as
 | Sub-key | Required | Value |
 |---------|----------|-------|
 | `id` | yes | The tool's full IRI — see [Tool Ids](#tool-ids) |
-| `type` | yes | Which tool class this is: `form`, `calendar`, `canvas`, `contacts`, `map` or `browser`, mapping to `pod:Form`/`pod:Calendar`/`pod:Canvas`/`pod:Contacts`/`pod:Map`/`pod:Browser`. Only `form` has a content model today. `form` and `browser` are the two that appear in the example pods, `browser` only in the PRIVO and Facenook pods |
+| `type` | yes | Which tool class this is: `form`, `calendar`, `canvas` or `map`, mapping to `pod:Form`/`pod:Calendar`/`pod:Canvas`/`pod:Map`. Only `form` has a content model today, and it is the only one that appears in the example pods. A connector (`contacts`, `browser`) is never a `tpod.tool` entry — see [`tpod.connector` Entries](#tpodconnector-entries) |
 | `formTopic` | yes on a form | What the tool's content is about (`pod:formTopic`) — any resource IRI, stated once by the tool rather than repeated on each graph beneath it |
 | `graph` | yes on a form | A list of that tool's own graph entries, at least one |
 
 Each entry in `graph:` carries `id`, `claimant`, and optionally `shape`, exactly as a `tpod.member`
 entry does — but **never `subject`**: a tool graph's about-ness lives one level up, on the tool's
 single `formTopic`.
+
+### `tpod.connector` Entries
+
+One entry per connector the member has on their own copy of the pod; zero is the ordinary case.
+Always written as a list. Sub-keys, and no others — a connector holds no pod content:
+
+| Sub-key | Required | Value |
+|---------|----------|-------|
+| `id` | yes | The connector's full IRI, minted and fixed exactly as a tool's is — see [Tool Ids](#tool-ids) |
+| `type` | yes | Which connector class this is: `contacts` or `browser`, mapping to `pod:Contacts`/`pod:Browser`. Both appear in the example pods — `browser` in the PRIVO and Facenook pods, `contacts` in the Bob Johnson and Fred Flintstone pods |
 
 <a id="graph-ids"></a>
 
@@ -404,6 +415,16 @@ http://www.example.org/tpod/tools/tool-<NN>
 padded the way graph ids are — two digits up to `tool-99`, three from `tool-100` — and numbered in
 one sequence across all the example pods (integrity.md's YAML-10). As with a pod or graph id, an existing
 tool id is never renumbered.
+
+A live connector (`pod:Connector`) is named the same way and for the same reason: the member's own
+note may link to it, a link that resolves only in that member's copy, since no other member holds
+the connector. Its ids follow a sequence of their own,
+
+```
+http://www.example.org/tpod/connectors/connector-<NN>
+```
+
+padded and checked exactly as tool ids are.
 
 ### `:Self` and Locally-Minted IRIs
 
@@ -618,7 +639,7 @@ No single tool checks the whole format. It is enforced in three places:
   keys are actually consumed. It reads exactly: top-level `id` and `type`;
   `tpod.categoryTag`, `tpod.space.{id,name,root,subject}`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.serviceTag[].{namespace,key,value}`;
   `tpod.member[].{id,claimant,subject,shape}`; and
-  `tpod.tool[].{id,type,formTopic,graph[].{id,claimant,shape}}`. No other key is consumed anywhere; an
+  `tpod.tool[].{id,type,formTopic,graph[].{id,claimant,shape}}`; and `tpod.connector[].{id,type}`. No other key is consumed anywhere; an
   unrecognized key is silently ignored.
 
 ## Open Questions
@@ -674,9 +695,10 @@ block-link syntax of its own, so that an example note can exercise one; nothing 
 
 Only `pod:Form` has a data format today. Its content is graphs, and a graph is Turtle, which is why
 every fence across this repo's example pods is a ```` ```turtle ```` one.
-`pod:Calendar`, `pod:Canvas`, `pod:Contacts` and `pod:Map` are declared with no content model at all, so this document has
+`pod:Calendar`, `pod:Canvas` and `pod:Map` are declared with no content model at all, so this document has
 nothing to say about what a calendar's entries or a canvas's drawing surface look like on disk.
-`pod:Browser` has none by design: the credentials it handles are pod attachments, not tool content.
+A connector (`pod:Contacts`, `pod:Browser`) has none by design: what it brings in becomes ordinary
+pod content, a graph or an attachment.
 
 Settling any of them lands in two places: a `tpod.tool` entry needs whatever keys that kind's data
 calls for alongside `type`, and the body needs somewhere to put the content.

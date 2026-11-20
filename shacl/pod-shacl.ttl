@@ -14,7 +14,7 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.5.0> ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.6.0> ;
     dc:date "2026-11-20"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — and the pod:PodSpace each pod sits in, in the Pod Ontology."@en .
@@ -32,6 +32,7 @@
 #  :SecretPodShape fire only on the SharedPod branch, never on
 #  template pods. The tool nodes
 #  themselves are constrained by :LiveToolShape and :DeclaredToolShape,
+#  and the connector nodes on :SecretPodShape by :LiveConnectorShape,
 #  which use sh:targetObjectsOf pod:tool / pod:declaresTool rather
 #  than a class, since the same tool classes serve both roles.
 #################################################################
@@ -115,15 +116,17 @@
         sh:message "pod:memberShape links a pod:TemplatePod to zero or more sh:NodeShape values."@en
     ] ;
 
-    # pod:declaresTool — zero or more pod:Tool nodes naming the tools a
-    # pod tagged with this category gains. Most templates declare none.
-    # There is no boolean flag saying whether such a pod holds structured
-    # content: declaring the tool already says it, and a second statement
-    # could only ever disagree with the first.
+    # pod:declaresTool — zero or more pod:Tool or pod:Connector nodes
+    # naming the tools and connectors a pod tagged with this category
+    # gains. Most templates declare none. There is no boolean flag saying
+    # whether such a pod holds structured content: declaring the tool
+    # already says it, and a second statement could only ever disagree
+    # with the first. Which kind each value is, and what it may carry, is
+    # :DeclaredToolShape's business below.
     sh:property [
         sh:path pod:declaresTool ;
-        sh:class pod:Tool ;
-        sh:message "pod:declaresTool links a pod:TemplatePod to zero or more pod:Tool nodes."@en
+        sh:nodeKind sh:BlankNodeOrIRI ;
+        sh:message "pod:declaresTool links a pod:TemplatePod to zero or more pod:Tool or pod:Connector nodes."@en
     ] .
 
 
@@ -246,6 +249,14 @@
         sh:message "A pod:SecretPod must sit in exactly one pod:space, a pod:PodSpace."@en
     ] ;
 
+    # pod:connector — zero or more, per member: each member connects what
+    # their own device offers. The nodes' own form is :LiveConnectorShape's.
+    sh:property [
+        sh:path pod:connector ;
+        sh:class pod:Connector ;
+        sh:message "A pod:SecretPod's pod:connector values must each be a pod:Connector."@en
+    ] ;
+
     # Every pod:categoryTag value must reach the pod's own space root,
     # following skos:broader transitively and an extension concept's
     # skos:broadMatch into the core taxonomy. This is what keeps a
@@ -364,9 +375,11 @@
 #  Tools
 #  A pod:Tool node appears in two roles, told apart by which property
 #  points at it rather than by its class, since both roles use the same
-#  tool classes (pod:Form, pod:Calendar, pod:Canvas, pod:Contacts,
-#  pod:Map, pod:Browser).
-#  So these two shapes target sh:targetObjectsOf, never sh:targetClass:
+#  tool classes (pod:Form, pod:Calendar, pod:Canvas, pod:Map). A
+#  pod:Connector (pod:Contacts, pod:Browser) appears in the same two
+#  roles, live via pod:connector on a member's own pod:SecretPod and
+#  declared via the same pod:declaresTool.
+#  So these shapes target sh:targetObjectsOf, never sh:targetClass:
 #
 #    :LiveToolShape     — a live tool, reached by pod:tool from a
 #                         pod:SharedPod. A live pod:Form
@@ -379,9 +392,15 @@
 #                         Every live tool, of any kind, is named by
 #                         its own IRI — its id, which a note's block
 #                         links resolve by.
-#    :DeclaredToolShape — a declaration, reached by pod:declaresTool
-#                         from a pod:TemplatePod. Carries
-#                         pod:formShape alone: a template cannot
+#    :LiveConnectorShape — a live connector, reached by
+#                         pod:connector from a pod:SecretPod. A
+#                         pod:Contacts or pod:Browser, named by its
+#                         own IRI, carrying none of the three
+#                         form properties.
+#    :DeclaredToolShape — a declaration of a tool or a connector,
+#                         reached by pod:declaresTool from a
+#                         pod:TemplatePod. Carries pod:formShape
+#                         alone, and only when it declares a pod:Form: a template cannot
 #                         know what a future pod's tool will be about.
 #                         Left anonymous: a declaration is never a
 #                         block-link target, so it needs no id.
@@ -394,7 +413,6 @@
 :LiveToolShape
     a sh:NodeShape ;
     sh:targetObjectsOf pod:tool ;
-    sh:message "Tool validation."@en ;
 
     # A live tool is named by its own IRI, never a blank node: that IRI is
     # the tool's id, minted when the tool is created and fixed for its
@@ -402,12 +420,21 @@
     # (pod-databook.md's Tool Ids). A declared tool, below, stays anonymous.
     sh:nodeKind sh:IRI ;
 
+    # A live tool is one of the four shared tool kinds, never a
+    # connector: pod:Contacts and pod:Browser are per-member and belong
+    # on pod:connector instead. Checked by name, so validation never
+    # depends on pod.ttl's subclass triples.
+    sh:or (
+        [ sh:class pod:Form ] [ sh:class pod:Calendar ] [ sh:class pod:Canvas ] [ sh:class pod:Map ]
+    ) ;
+    sh:message "A live pod:tool value must be a pod:Form, pod:Calendar, pod:Canvas or pod:Map; a pod:Contacts or pod:Browser is a connector, carried by pod:connector."@en ;
+
     # All three tool-content properties are scoped to pod:Form
     # (pod.ttl), the one tool class with a content model, so the
     # requirements below are conditioned on the tool's class rather than
     # asserted outright: this shape targets every live tool, and a
-    # pod:Calendar, pod:Canvas, pod:Contacts, pod:Map or pod:Browser legitimately
-    # carries none of them. A blanket sh:minCount here would fail those five.
+    # pod:Calendar, pod:Canvas or pod:Map legitimately carries none of
+    # them. A blanket sh:minCount here would fail those three.
     #
     # A live pod:Form carries pod:formTopic exactly once — what its
     # content is about, stated once on the tool rather than repeated on
@@ -446,10 +473,39 @@
         sh:message "A live pod:Tool (reached by pod:tool) must not carry pod:formShape — that belongs to a declared tool."@en
     ] .
 
+:LiveConnectorShape
+    a sh:NodeShape ;
+    sh:targetObjectsOf pod:connector ;
+
+    # Named by its own IRI, as a live tool is, so the owner's note can
+    # link to it; the link resolves only in the owner's own copy.
+    sh:nodeKind sh:IRI ;
+
+    sh:or ( [ sh:class pod:Contacts ] [ sh:class pod:Browser ] ) ;
+    sh:message "A pod:connector value must be a pod:Contacts or pod:Browser, named by its own IRI and carrying no form property."@en ;
+
+    # A connector holds no pod content, so none of the form properties.
+    sh:property [ sh:path pod:formTopic ; sh:maxCount 0 ] ;
+    sh:property [ sh:path pod:formGraph ; sh:maxCount 0 ] ;
+    sh:property [ sh:path pod:formShape ; sh:maxCount 0 ] .
+
 :DeclaredToolShape
     a sh:NodeShape ;
     sh:targetObjectsOf pod:declaresTool ;
-    sh:message "Declared Tool validation."@en ;
+
+    # A declaration names either a tool or a connector; Lazy
+    # Instantiation sorts it by this class (pod.ttl's pod:declaresTool).
+    sh:or (
+        [ sh:class pod:Form ] [ sh:class pod:Calendar ] [ sh:class pod:Canvas ] [ sh:class pod:Map ]
+        [ sh:class pod:Contacts ] [ sh:class pod:Browser ]
+    ) ;
+    sh:message "A pod:declaresTool value must be one of the four tool kinds or the two connector kinds, and only a declared pod:Form may carry pod:formShape."@en ;
+
+    # pod:formShape belongs to a declared pod:Form only.
+    sh:or (
+        [ sh:class pod:Form ]
+        [ sh:property [ sh:path pod:formShape ; sh:maxCount 0 ] ]
+    ) ;
 
     # pod:formShape — zero or more values. Not constrained to
     # sh:class sh:NodeShape here, for the same reason pod:memberShape

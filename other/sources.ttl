@@ -10,9 +10,9 @@
 @base <http://mee.foundation/ontologies/sources> .
 
 <http://mee.foundation/ontologies/sources> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.2> ;
-    dc:date "2026-10-28"^^xsd:date ;
-    owl:versionInfo "Version 1.1.2 - sources:extractedBy names the user, not their personal agent, for an extraction the personal agent performs"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.3> ;
+    dc:date "2026-11-20"^^xsd:date ;
+    owl:versionInfo "Version 1.1.3 - pod:Browser is described as a connector, not a tool"@en ;
     rdfs:label "Sources Ontology"@en ;
     rdfs:comment """A small other/ peer ontology (see other/pets.ttl's own rdfs:comment for the
                     general pattern) for content a person merely *has* in unstructured form — a
@@ -213,7 +213,7 @@ sources:contentHash rdf:type owl:DatatypeProperty ;
                     under (mia-docs' node-assembly and core specs). At most one value. Being a
                     hash of immutable content, it also lets two members, or two pods, tell that
                     they hold the very same file without comparing bytes — which is how the
-                    Browser tool's bit-for-bit copy of a credential (pod:Browser) can be seen to be
+                    Browser connector's bit-for-bit copy of a credential (pod:Browser) can be seen to be
                     unchanged."""@en .
 
 sources:addedAt rdf:type owl:DatatypeProperty ;

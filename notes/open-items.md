@@ -2,9 +2,9 @@
 
 *Tellipod pod ontology — design questions raised but not yet decided. Remove an item once it is settled; the dated concept notes record the decisions.*
 
-## Apple Contacts tool
+## Apple Contacts connector
 
-Raised 2026-11-20 while reviewing [apple-contacts-tool.md](apple-contacts-tool.md). Both open items affect `app-behavior.md`'s Apple Contacts section as well as the note.
+Raised 2026-11-20 while reviewing [apple-contacts-connector.md](apple-contacts-connector.md). Both open items affect `app-behavior.md`'s Apple Contacts section as well as the note.
 
 ### 1. Where an exported value's vCard label comes from
 
@@ -20,12 +20,12 @@ The same section should also say how "all of a person's graphs" are found. Those
 
 On import, the note says only that "each contact record becomes a graph". Under the current model, an imported contact is the user's own claim about someone who is usually not a pod member, which suggests:
 
-- a pod of its own for the contact, carrying a `pod:Contacts` tool, the user's `:Self` member entry, and the group service tags;
+- a pod of its own for the contact, carrying the user's `:Self` member entry, and, in the user's own copy, a `pod:Contacts` connector and the group service tags;
 - the contact's data as a `pod:FormGraph` (claimant `:Self`) under a form tool whose `pod:formTopic` is the contact, rather than as a `pod:MemberGraph`, since the contact is not a member.
 
 Still to decide:
 
-- whether the `pod:Contacts` tool itself should hold that graph once it has a content model, instead of a separate form tool;
+- whether the connector should create a shared form tool for that graph at all, or the graph should sit directly in the pod's member content;
 - what happens when the contact later becomes a real member of the pod, as Bob and Fred are in the example.
 
 ### 3. The `X-TPOD-PERSON-IRI` anchor

@@ -86,6 +86,13 @@ TOOL_TYPES = {
     "calendar": "Calendar",
     "canvas": "Canvas",
     "map": "Map",
+}
+
+# Which pod:Connector subclass a tpod.connector entry's own `type` key names
+# (pod.ttl's Pod Connectors section) — kept apart from TOOL_TYPES so that a
+# connector written into tpod.tool, or a tool into tpod.connector, is a
+# KeyError rather than a triple on the wrong side of the shared/secret line.
+CONNECTOR_TYPES = {
     "contacts": "Contacts",
     "browser": "Browser",
 }
@@ -230,6 +237,16 @@ def tool_node(pod_id, entry, index):
     return f"_:tool_{pod_id.rsplit('/', 1)[-1]}_{index}"
 
 
+def connector_node(pod_id, entry, index):
+    """The node for one pod:Connector value, named by the entry's own `id`
+    exactly as tool_node() names a tool, with the same blank-node fallback
+    for a malformed entry, so it fails :LiveConnectorShape's sh:nodeKind
+    sh:IRI rather than vanishing."""
+    if isinstance(entry, dict) and entry.get("id"):
+        return entry["id"]
+    return f"_:connector_{pod_id.rsplit('/', 1)[-1]}_{index}"
+
+
 def emit_type(triples, subj, type_iri):
     triples.append(f"{term(subj)} a <{type_iri}> .")
 
@@ -348,10 +365,10 @@ def process_pod_databook(fm, triples):
         process_embedded_graph(entry, triples, "member")
 
     # pod:tool — zero or more per pod, each a node named by the entry's own
-    # `id` for one object the pod carries: a form, a calendar, a drawing canvas, a map, an
-    # address-book sync or a connection to a web browser,
-    # each with its own data format. The node's rdf:type comes from the
-    # entry's own `type` key (form/calendar/canvas/map/contacts/browser); pod:formTopic, what the tool's
+    # `id` for one shared object the pod carries: a form, a calendar, a
+    # drawing canvas or a map, each with its own data format. The node's
+    # rdf:type comes from the entry's own `type` key (form/calendar/canvas/map);
+    # pod:formTopic, what the tool's
     # content is about, is carried once by the tool rather than repeated on
     # each graph beneath it, which is what makes its graphs unable to
     # disagree about what they are about.
@@ -364,6 +381,15 @@ def process_pod_databook(fm, triples):
         for graph in as_list(entry.get("graph")):
             emit_obj(triples, node, POD + "formGraph", graph["id"])
             process_embedded_graph(graph, triples, "tool")
+
+    # pod:connector — zero or more per pod, each linking this member's own
+    # copy to a capability on their own device (pod.ttl's Pod Connectors
+    # section), so emitted on the pod:SecretPod alongside its space and tags.
+    # Type only: a connector holds no pod content.
+    for i, entry in enumerate(as_list(tpod.get("connector"))):
+        node = connector_node(subj, entry, i)
+        emit_obj(triples, subj, POD + "connector", node)
+        emit_type(triples, node, POD + CONNECTOR_TYPES[entry.get("type")])
 
     # No pod-level subject synthesis: who/what a pod is about is
     # derivable directly from tools/members — the distinct

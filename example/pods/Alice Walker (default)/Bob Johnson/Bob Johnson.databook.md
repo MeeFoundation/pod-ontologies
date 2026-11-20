@@ -5,7 +5,7 @@ type: pod-databook
 version: 1.4.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "Bob Johnson" pod (category tag: podcat:Others). It is a two-member pod with four member entries (two about :Bob_Johnson and two about :Self), and a pod:Contacts tool that syncs Bob with Alice's Apple Contacts.
+  Pod DataBook for the "Bob Johnson" pod (category tag: podcat:Others). It is a two-member pod with four member entries (two about :Bob_Johnson and two about :Self), and a pod:Contacts connector that syncs Bob with Alice's Apple Contacts.
 tpod:
   categoryTag:
     - "podcat:Others"
@@ -32,8 +32,8 @@ tpod:
       claimant: ":Bob_Johnson"
       subject: ":Self"
       shape: "pshapes:ContactInfoShape"
-  tool:
-    - id: "http://www.example.org/tpod/tools/tool-40"
+  connector:
+    - id: "http://www.example.org/tpod/connectors/connector-03"
       type: "contacts"
 ---
 

@@ -5,7 +5,7 @@ type: pod-databook
 version: 1.4.0
 created: 2026-08-03
 description: >
-  Pod DataBook for the "Fred Flintstone" pod (category tag: podcat:Others). It is a two-member pod with two members about :Fred_Flintstone and :Self.
+  Pod DataBook for the "Fred Flintstone" pod (category tag: podcat:Others). It is a two-member pod with two members about :Fred_Flintstone and :Self, and a pod:Contacts tool that syncs Fred with Alice's Apple Contacts.
 tpod:
   categoryTag:
     - "podcat:Others"
@@ -24,6 +24,9 @@ tpod:
       claimant: ":Self"
       subject: ":Self"
       shape: "pshapes:ContactInfoShape"
+  tool:
+    - id: "http://www.example.org/tpod/tools/tool-41"
+      type: "contacts"
 ---
 
 ## Graphs

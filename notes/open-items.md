@@ -1,0 +1,37 @@
+# Open Items
+
+*Tellipod pod ontology — design questions raised but not yet decided. Remove an item once it is settled; the dated concept notes record the decisions.*
+
+## Apple Contacts tool
+
+Raised 2026-11-20 while reviewing [apple-contacts-tool.md](apple-contacts-tool.md). Both open items affect `app-behavior.md`'s Apple Contacts section as well as the note.
+
+### 1. Where an exported value's vCard label comes from
+
+On export, the note and app-behavior.md both say that each vCard field value "carries the label of the graph it came from" (`work`, `home`, …). But no graph carries such a label: a graph has a `pod:shape`, a `pod:claimant` and (for a member graph) a `pod:subject`, and nothing else. The label has to come from something the model actually holds. Candidates:
+
+- a category tag of the pod the graph sits in (`podcat:Work` → `work`), keeping in mind that category tags are per-member and a pod may carry several or none;
+- the pod's own name, written as a custom `X-` label;
+- a mix: the predefined vCard type where a tag maps to one, the pod name otherwise.
+
+The same section should also say how "all of a person's graphs" are found. Those are the `pod:MemberGraph`s whose `pod:subject` is the person, plus the `pod:FormGraph`s under any tool whose `pod:formTopic` is the person, across every pod the user holds. It should also say whether graphs claimed by someone other than the user are merged in or left out.
+
+### 2. What kind of graph an imported contact becomes, and in which pod
+
+On import, the note says only that "each contact record becomes a graph". Under the current model, an imported contact is the user's own claim about someone who is usually not a pod member, which suggests:
+
+- a pod of its own for the contact, carrying a `pod:Contacts` tool, the user's `:Self` member entry, and the group service tags;
+- the contact's data as a `pod:FormGraph` (claimant `:Self`) under a form tool whose `pod:formTopic` is the contact, rather than as a `pod:MemberGraph`, since the contact is not a member.
+
+Still to decide:
+
+- whether the `pod:Contacts` tool itself should hold that graph once it has a content model, instead of a separate form tool;
+- what happens when the contact later becomes a real member of the pod, as Bob and Fred are in the example.
+
+### 3. The `X-TPOD-PERSON-IRI` anchor
+
+The anchor stores a person's IRI, which means something only in the user's own copy of the app. `:Self` is never exposed, and other people's IRIs are minted locally. So:
+
+- the note should say that re-identification works only when re-importing into that same copy;
+- a card exported for the user themselves needs separate handling;
+- `TPOD` in the field name should be confirmed or replaced.

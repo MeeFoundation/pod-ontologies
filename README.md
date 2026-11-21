@@ -55,7 +55,7 @@ See [**other-ontologies.md**](other-ontologies.md) for the `other/` domain ontol
 
 ### Introduction to Pods
 
-A pod is a secure container of information that can remain secret to the user or be shared with other users and services (e.g. a pod backup service or an organization's service provider). It enables these members to share context, communicate, and collaborate toward a common goal.
+A pod is a secure container of information that can remain secret to the user or be shared with other users and services (e.g. a pod backup service or an organization's service provider). It is the atomic unit of information that the app manages for the user, held entirely inside the app, and a user's pods form a flat set. A pod enables these members to share context, communicate, and collaborate toward a common goal.
 
 <p align="center"><img src="images/pod-ontology/pod-dimensions.png" alt="Pod dimensions"></p>
 
@@ -94,8 +94,6 @@ Pods can be **linked**. Pods have globally unique identifiers (see [Pod Id](pod-
 ### Diving Deeper
 
 The Pod class splits into two disjoint kinds: `pod:TemplatePod`, a reusable, class-level *template* pod, and `pod:SharedPod`, an *actual* pod as every one of its members holds it alike. `pod:SharedPod` has one subclass, `pod:SecretPod`, which adds what one member holds of the pod that no other member ever sees. Every pod a user holds is typed `pod:SecretPod`, so the line between what a pod shares and what it keeps secret is the line between the two classes.
-
-A pod is an atomic unit of information that the app manages for the user. It is held entirely inside the app, and a user's pods form a flat set.
 
 `pod:Pod` (below) models the pod's shared content. Classification is each member's own: a pod's category tags and user tags are per-member state in that member's own copy rather than shared content (see [Tags](#tags) below, and [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md), so two members of a shared pod can each tag it however they like without touching what the other sees.
 

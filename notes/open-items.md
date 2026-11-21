@@ -20,7 +20,7 @@ The same section should also say how "all of a person's graphs" are found. Those
 
 On import, the note says only that "each contact record becomes a graph". Under the current model, an imported contact is the user's own claim about someone who is usually not a pod member, which suggests:
 
-- a pod of its own for the contact, carrying the user's `:Self` member entry, and, in the user's own copy, a `pod:Contacts` connector and the group service tags;
+- a pod of its own for the contact, carrying the user's `:Self` member entry, and, in the user's own copy, a `pod:Contacts` connector and the group module tags;
 - the contact's data as a `pod:FormGraph` (claimant `:Self`) under a form tool whose `pod:formTopic` is the contact, rather than as a `pod:MemberGraph`, since the contact is not a member.
 
 Still to decide:

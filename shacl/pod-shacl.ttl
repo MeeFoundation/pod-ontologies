@@ -14,7 +14,7 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.7.0> ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.8.0> ;
     dc:date "2026-11-21"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — and the pod:PodSpace each pod sits in, in the Pod Ontology."@en .
@@ -137,10 +137,10 @@
 #  pod a user holds is typed both. :SharedPodShape constrains the shared
 #  part — pod:creator/pod:owner/pod:member/pod:tool — and :SecretPodShape
 #  the secret part — pod:space and the three tag properties
-#  pod:categoryTag/pod:userTag/pod:serviceTag (see their own comments
+#  pod:categoryTag/pod:userTag/pod:moduleTag (see their own comments
 #  below; the
-#  pod:ServiceTag value nodes pod:serviceTag points at are
-#  constrained by :ServiceTagShape, further below) — pod:owner and pod:member are
+#  pod:ModuleTag value nodes pod:moduleTag points at are
+#  constrained by :ModuleTagShape, further below) — pod:owner and pod:member are
 #  each required, one or more values, no fixed upper bound (pod:creator
 #  stays exactly one); pod:tool is capped at one pod:Note and one
 #  pod:Chat here, with the shape of each tool node enforced by
@@ -295,7 +295,7 @@
         """
     ] ;
 
-    # pod:userTag/pod:serviceTag — each zero or more values, no
+    # pod:userTag/pod:moduleTag — each zero or more values, no
     # minCount and no maxCount: a pod need carry no tags at all, and nothing
     # caps how many it may carry. Neither has an sh:in list, since neither
     # belongs to any vocabulary (contrast vehicles:fuelType and
@@ -307,9 +307,9 @@
     # rules SHACL cannot see for it (leading/trailing whitespace, a YAML
     # value that isn't a string at all, and duplicates, RDF being a set so a
     # repeated literal collapses before validation ever runs) are
-    # integrity.md's YAML-9 instead. pod:serviceTag's value is a
-    # pod:ServiceTag node, and this block fixes only that: the node's
-    # own three required parts are :ServiceTagShape's business below.
+    # integrity.md's YAML-9 instead. pod:moduleTag's value is a
+    # pod:ModuleTag node, and this block fixes only that: the node's
+    # own three required parts are :ModuleTagShape's business below.
     sh:property [
         sh:path pod:userTag ;
         sh:datatype xsd:string ;
@@ -318,16 +318,16 @@
     ] ;
 
     sh:property [
-        sh:path pod:serviceTag ;
+        sh:path pod:moduleTag ;
         sh:nodeKind sh:BlankNodeOrIRI ;
-        sh:class pod:ServiceTag ;
-        sh:message "Each pod:serviceTag value must be a pod:ServiceTag node, not a literal."@en
+        sh:class pod:ModuleTag ;
+        sh:message "Each pod:moduleTag value must be a pod:ModuleTag node, not a literal."@en
     ] .
 
 
 #################################################################
-#  ServiceTag
-#  pod:ServiceTag is the value node pod:serviceTag points at —
+#  ModuleTag
+#  pod:ModuleTag is the value node pod:moduleTag points at —
 #  pod:tagNamespace (whose module wrote the tag), pod:tagKey (what kind
 #  of external fact it records) and pod:tagValue (the label itself), each
 #  required exactly once. A node missing any of the three records nothing
@@ -353,10 +353,10 @@
 #  spelling an app writing straight into a triplestore would reach for.
 #################################################################
 
-:ServiceTagShape
+:ModuleTagShape
     a sh:NodeShape ;
-    sh:targetClass pod:ServiceTag ;
-    sh:message "Service Tag validation: exactly one namespace, key and value are required."@en ;
+    sh:targetClass pod:ModuleTag ;
+    sh:message "Module Tag validation: exactly one namespace, key and value are required."@en ;
 
     sh:property [
         sh:path pod:tagNamespace ;

@@ -45,7 +45,7 @@ of *all* Tellipod data, with no carve-out for the unstructured parts.
 - **What a pod is.** A pod is a unit the app manages, identified by its own stable id. Nothing
   marks it in a filesystem, because it is not in one. The reserved `_pod-attachments` folder that
   marks a pod in this repo is a scaffolding convention only (see below).
-- **Per-member state.** What each member keeps for themselves is their tags — category tags, user tags, and the service tags their
+- **Per-member state.** What each member keeps for themselves is their tags — category tags, user tags, and the module tags their
   own modules write — and the pod space they place the pod in, all held in that member's own store
   and never shared content. This is what lets two members of a shared pod each classify it however
   they like without touching what the other sees; a sender's category tags and space name cross a

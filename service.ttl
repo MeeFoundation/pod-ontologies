@@ -11,9 +11,9 @@
 @base <http://mee.foundation/ontologies/service> .
 
 <http://mee.foundation/ontologies/service> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/service/3.0.3> ;
+    owl:versionIRI <http://mee.foundation/ontologies/service/3.0.4> ;
     dc:date "2026-11-21"^^xsd:date ;
-    owl:versionInfo "Version 3.0.3 - the personal agent's chat is called secret, not private"@en ;
+    owl:versionInfo "Version 3.0.4 - service:actsFor comment refers to pod:moduleTag"@en ;
     owl:imports <https://w3id.org/cco-domains/cco/AgentOntology> ,
                 <http://mee.foundation/ontologies/prov-upper-subset> ;
     rdfs:label "Service Ontology"@en ;
@@ -159,7 +159,7 @@ service:actsFor rdf:type owl:ObjectProperty ;
                     their own agent invites a separate service:AgentService individual of
                     their own, with its own service:actsFor value — and a
                     service:PersonalAgent belongs to exactly one user. That one-principal rule is
-                    also why a pod:serviceTag (pod.ttl) written by an agent service is
+                    also why a pod:moduleTag (pod.ttl) written by an agent service is
                     never propagated on a share: the tag means something only in the instance
                     of the member the service acts for. The range is p:Person alone, not the
                     wider member union: an agent's principal is always a human, mirroring

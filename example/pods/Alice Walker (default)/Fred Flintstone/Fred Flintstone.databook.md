@@ -11,7 +11,7 @@ tpod:
     - "podcat:Others"
   creator: ":Self"
   owner: ":Self"
-  serviceTag:
+  moduleTag:
     - namespace: "foundation.mee.applecontacts"
       key: "group"
       value: "Christmas List"

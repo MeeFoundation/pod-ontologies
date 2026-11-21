@@ -286,7 +286,7 @@ member's own tags on it. Its non-graph keys map one-for-one onto properties defi
 | `tpod.space` | `pod:space` | 0..1 (absent = default space) | The pod space this pod sits in — whose life it belongs to (see [Pod Spaces](README.md#pod-spaces)). Absent for a pod in the default space, whose IRI `http://www.example.org/tpod/spaces/space-0` is synthesized and never written. Otherwise a mapping of three required keys and one optional one: `id`, the space's own IRI (`http://www.example.org/tpod/spaces/space-<N>`); `name`, the space's name (`pod:spaceName`); `root`, `"podcat:Person"` or `"podcat:Organization"` (`pod:spaceRoot`); and optionally `subject`, the person or organization whose life the space holds, e.g. `":Paula_Walker"` (`pod:spaceSubject`). The default space's name (the user's own) and subject (`:Self`) are synthesized too, never written. Every pod in one space restates the same mapping, so each pod's synthesis is self-contained (integrity.md's YAML-11). The member's own, never shared; its name offered as a suggestion when the pod is shared |
 | `tpod.userTag` | `pod:userTag` | 0..N | A free-text tag the member minted (e.g. a pet's name, to gather every pod about that pet). The member's own secret tag: never shared, never propagated, and never sent as a suggestion |
 | `tpod.connector` | `pod:connector` | 0..N | A connector linking the member's own copy of the pod to a capability on their own device — an address book, a web browser (see [Connectors](README.md#connectors)). Always written as a list; see [`tpod.connector` Entries](#tpodconnector-entries) below. The member's own, never shared |
-| `tpod.serviceTag` | `pod:serviceTag` | 0..N | A tag written by this member's own service module for its own bookkeeping. Each entry is a mapping of three sub-keys — `namespace`, `key`, `value` (`pod:tagNamespace`/`pod:tagKey`/`pod:tagValue`), e.g. `namespace: "foundation.mee.applecontacts"`, `key: "group"`, `value: "Christmas List"` — not a single string. Never displayed and never findable by the user — reachable only by the writing module, within its own namespace — and **local to this member's copy** — the one piece of pod content that does not propagate on a share |
+| `tpod.moduleTag` | `pod:moduleTag` | 0..N | A tag written by this member's own service module for its own bookkeeping. Each entry is a mapping of three sub-keys — `namespace`, `key`, `value` (`pod:tagNamespace`/`pod:tagKey`/`pod:tagValue`), e.g. `namespace: "foundation.mee.applecontacts"`, `key: "group"`, `value: "Christmas List"` — not a single string. Never displayed and never findable by the user — reachable only by the writing module, within its own namespace — and **local to this member's copy** — the one piece of pod content that does not propagate on a share |
 
 Values are written as quoted CURIEs (`"podcat:Pets"`) or bare local names (`":Self"`); both are
 resolved to full IRIs by `helpers/databook_graphs.py`. **Any key whose cardinality allows more than
@@ -623,7 +623,7 @@ No single tool checks the whole format. It is enforced in three places:
   entry carries), YAML-3 (`pod-<NN>` id pattern), FS-5 (folder ↔ pod-databook structure),
   YAML-5 (`title:` matches the folder's OS name), TTL-3/TTL-4 (a `shape:` value against the
   graph's own content, and against the templates of the pod's category tags), YAML-9
-  (`tpod.categoryTag`/`tpod.userTag`/`tpod.serviceTag` well-formedness), YAML-10 (`tool-<NN>` id pattern and
+  (`tpod.categoryTag`/`tpod.userTag`/`tpod.moduleTag` well-formedness), YAML-10 (`tool-<NN>` id pattern and
   uniqueness), YAML-11 (`tpod.space` well-formedness), and TTL-9 (pod spaces across every pod,
   and each pod's tags against its space's root).
 - **`helpers/validate.py`** — synthesizes `pod:` triples from the frontmatter and runs SHACL
@@ -631,7 +631,7 @@ No single tool checks the whole format. It is enforced in three places:
   entry's `shape:` value. See [Validation](example.md#validation) in example.md for the commands.
 - **`helpers/databook_graphs.py`** — the parser, and the de facto machine-readable spec for which
   keys are actually consumed. It reads exactly: top-level `id` and `type`;
-  `tpod.categoryTag`, `tpod.space.{id,name,root,subject}`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.serviceTag[].{namespace,key,value}`;
+  `tpod.categoryTag`, `tpod.space.{id,name,root,subject}`, `tpod.creator`, `tpod.owner`, `tpod.userTag`, `tpod.moduleTag[].{namespace,key,value}`;
   `tpod.member[].{id,claimant,subject,shape}`; and
   `tpod.tool[].{id,type,formTopic,graph[].{id,claimant,shape}}`; and `tpod.connector[].{id,type}`. No other key is consumed anywhere; an
   unrecognized key is silently ignored.
@@ -659,7 +659,7 @@ in full. And a pod's chat area holds more than its group stream (see
 seen by those two alone, and a direct message between a user and their own personal agent (@Telli)
 by that user alone, so neither can live in shared, synced pod content the way the group stream can —
 whatever holds a pod's chat has to hold messages with different propagation rules. A pod already has
-two pieces of content that do not propagate on a share, `pod:serviceTag` and a member's own meta
+two pieces of content that do not propagate on a share, `pod:moduleTag` and a member's own meta
 note, so the precedent exists; what is particular here is that the split runs *within* one feature
 rather than between two properties.
 

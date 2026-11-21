@@ -67,8 +67,8 @@ PREFIXES = {
     "bhsshapes": "http://mee.foundation/ontologies/pod-category-ext/boston-hub-society/shapes#",
 }
 
-# The three sub-keys of one tpod.serviceTag entry, mapped to the
-# pod:ServiceTag datatype property each becomes (pod.ttl's Service
+# The three sub-keys of one tpod.moduleTag entry, mapped to the
+# pod:ModuleTag datatype property each becomes (pod.ttl's Module
 # Tag section). Spelled out rather than derived from the key name, so a grep
 # for pod:tagNamespace finds this line.
 TAG_SUBKEYS = {
@@ -205,16 +205,16 @@ def find_graph_entry(entries, graph_arg):
 def term(node):
     """Format a node as a Turtle term: a blank-node label (`_:x`) is written
     as-is, anything else is an IRI and gets angle brackets. Blank nodes enter
-    the picture only as pod:serviceTag's pod:ServiceTag value nodes
-    (pod.ttl's Service Tag section), and as tool_node()'s fallback for a
+    the picture only as pod:moduleTag's pod:ModuleTag value nodes
+    (pod.ttl's Module Tag section), and as tool_node()'s fallback for a
     malformed tool entry with no `id`."""
     return node if node.startswith("_:") else f"<{node}>"
 
 
 def tag_node(pod_id, index):
-    """A stable blank-node label for one pod:ServiceTag value node,
+    """A stable blank-node label for one pod:ModuleTag value node,
     derived from the pod's own id local-name plus the value's position in
-    tpod.serviceTag. Turtle scopes a blank-node label to one document and
+    tpod.moduleTag. Turtle scopes a blank-node label to one document and
     yaml-to-rdf.py emits every pod in the tree into a single document, so a
     label unique only within one process_pod_databook() call would silently
     merge two pods' tag nodes into one. A pod id is already globally unique
@@ -227,7 +227,7 @@ def tool_node(pod_id, entry, index):
     """The node for one pod:Tool value. A live tool is named by its own IRI,
     the entry's `id` — what a note's block links resolve by (pod-databook.md's
     Tool Ids). An entry with no `id` is malformed, and falls back to a blank-node
-    label derived the way tag_node() derives a pod:ServiceTag's, from the pod's
+    label derived the way tag_node() derives a pod:ModuleTag's, from the pod's
     own id local-name plus the tool's position in tpod.tool, so that it still
     synthesizes and then fails :LiveToolShape's sh:nodeKind sh:IRI instead of
     vanishing; integrity.md's YAML-2 and YAML-10 catch the same thing at YAML
@@ -257,7 +257,7 @@ def emit_obj(triples, subj, prop, obj_iri):
 
 def emit_lit(triples, subj, prop, lit):
     """Emit an xsd:string-typed literal triple — pod:userTag and the three
-    pod:ServiceTag parts are the only `tpod.` values that are literals
+    pod:ModuleTag parts are the only `tpod.` values that are literals
     rather than IRIs, so they can't go through emit_obj()/resolve(): a tag is
     a plain string, never a CURIE or a local name."""
     escaped = str(lit).replace("\\", "\\\\").replace('"', '\\"')
@@ -338,7 +338,7 @@ def process_pod_databook(fm, triples):
     for tag in as_list(tpod.get("userTag")):
         emit_lit(triples, subj, POD + "userTag", tag)
 
-    # pod:serviceTag — 0..N, each value a pod:ServiceTag node
+    # pod:moduleTag — 0..N, each value a pod:ModuleTag node
     # rather than a literal (an owl:ObjectProperty), carrying exactly one
     # pod:tagNamespace/pod:tagKey/pod:tagValue. as_list() applies to the
     # outer sequence only — a lone mapping may stand in for a one-element
@@ -346,14 +346,14 @@ def process_pod_databook(fm, triples):
     # sub-values, each of which is exactly one scalar; coercing there would
     # turn a YAML error into a confusing sh:maxCount violation. The node and
     # its type are emitted even when the entry is malformed, so a missing
-    # sub-key surfaces as an :ServiceTagShape sh:minCount violation
+    # sub-key surfaces as an :ModuleTagShape sh:minCount violation
     # rather than the tag vanishing from the synthesized graph unremarked;
     # integrity.md's YAML-9 catches the same thing at YAML level, where it
     # can name the file and the sub-key.
-    for i, tag in enumerate(as_list(tpod.get("serviceTag"))):
+    for i, tag in enumerate(as_list(tpod.get("moduleTag"))):
         node = tag_node(subj, i)
-        emit_obj(triples, subj, POD + "serviceTag", node)
-        emit_type(triples, node, POD + "ServiceTag")
+        emit_obj(triples, subj, POD + "moduleTag", node)
+        emit_type(triples, node, POD + "ModuleTag")
         if not isinstance(tag, dict):
             continue
         for sub_key, prop in TAG_SUBKEYS.items():

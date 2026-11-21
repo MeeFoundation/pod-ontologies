@@ -14,8 +14,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.6.0> ;
-    dc:date "2026-11-20"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.7.0> ;
+    dc:date "2026-11-21"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — and the pod:PodSpace each pod sits in, in the Pod Ontology."@en .
 
@@ -142,8 +142,9 @@
 #  pod:ServiceTag value nodes pod:serviceTag points at are
 #  constrained by :ServiceTagShape, further below) — pod:owner and pod:member are
 #  each required, one or more values, no fixed upper bound (pod:creator
-#  stays exactly one); pod:tool is zero or more here, with the shape of
-#  each tool node enforced by :LiveToolShape, not here. Every pod:owner value must also be one of
+#  stays exactly one); pod:tool is capped at one pod:Note and one
+#  pod:Chat here, with the shape of each tool node enforced by
+#  :LiveToolShape, not here. Every pod:owner value must also be one of
 #  the pod's active pod:member pod:subject values — an invariant
 #  not itself SHACL-expressible (it requires dereferencing each linked
 #  graph's own pod:subject), so it is checked only by CLAUDE.md's
@@ -201,16 +202,31 @@
         sh:message "A pod:SharedPod's pod:member is required, at least one value, and each must be a pod:MemberGraph."@en
     ] ;
 
-    # pod:tool — zero or more values, no minCount and no maxCount. A pod
-    # carrying no tool is the ordinary case, not a lesser kind of pod, and
-    # nothing caps how many it may carry: a pod gets one per tool the
-    # template of each of its category tags declares (including any tag
-    # added later), and the user may add more at any time.
+    # pod:tool — no minCount and no overall maxCount. Every pod carries
+    # exactly one pod:Note (pod.ttl), but the example DataBooks write no
+    # tool node for it — the note's scaffolding stand-in is the Markdown
+    # file named after the pod's folder — so only its upper bound is
+    # checked here, as is the chat's: at most one of each. Nothing caps
+    # the rest: a pod gets one per tool the template of each of its
+    # category tags declares (including any tag added later), and the
+    # user may add more at any time.
     # The tool nodes' own contents are constrained by :LiveToolShape below.
     sh:property [
         sh:path pod:tool ;
         sh:class pod:Tool ;
         sh:message "A pod:SharedPod's pod:tool values must each be a pod:Tool."@en
+    ] ;
+    sh:property [
+        sh:path pod:tool ;
+        sh:qualifiedValueShape [ sh:class pod:Note ] ;
+        sh:qualifiedMaxCount 1 ;
+        sh:message "A pod:SharedPod carries at most one pod:Note — its one note."@en
+    ] ;
+    sh:property [
+        sh:path pod:tool ;
+        sh:qualifiedValueShape [ sh:class pod:Chat ] ;
+        sh:qualifiedMaxCount 1 ;
+        sh:message "A pod:SharedPod carries at most one pod:Chat."@en
     ] .
 
 :SecretPodShape
@@ -375,7 +391,8 @@
 #  Tools
 #  A pod:Tool node appears in two roles, told apart by which property
 #  points at it rather than by its class, since both roles use the same
-#  tool classes (pod:Form, pod:Calendar, pod:Canvas, pod:Map). A
+#  tool classes (pod:Note, pod:Chat, pod:Form, pod:Calendar,
+#  pod:Canvas, pod:Map). A
 #  pod:Connector (pod:Contacts, pod:Browser) appears in the same two
 #  roles, live via pod:connector on a member's own pod:SecretPod and
 #  declared via the same pod:declaresTool.
@@ -402,6 +419,8 @@
 #                         pod:TemplatePod. Carries pod:formShape
 #                         alone, and only when it declares a pod:Form: a template cannot
 #                         know what a future pod's tool will be about.
+#                         Never a pod:Note, which every pod
+#                         already carries.
 #                         Left anonymous: a declaration is never a
 #                         block-link target, so it needs no id.
 #
@@ -420,21 +439,22 @@
     # (pod-databook.md's Tool Ids). A declared tool, below, stays anonymous.
     sh:nodeKind sh:IRI ;
 
-    # A live tool is one of the four shared tool kinds, never a
+    # A live tool is one of the six shared tool kinds, never a
     # connector: pod:Contacts and pod:Browser are per-member and belong
     # on pod:connector instead. Checked by name, so validation never
     # depends on pod.ttl's subclass triples.
     sh:or (
-        [ sh:class pod:Form ] [ sh:class pod:Calendar ] [ sh:class pod:Canvas ] [ sh:class pod:Map ]
+        [ sh:class pod:Note ] [ sh:class pod:Chat ] [ sh:class pod:Form ] [ sh:class pod:Calendar ] [ sh:class pod:Canvas ] [ sh:class pod:Map ]
     ) ;
-    sh:message "A live pod:tool value must be a pod:Form, pod:Calendar, pod:Canvas or pod:Map; a pod:Contacts or pod:Browser is a connector, carried by pod:connector."@en ;
+    sh:message "A live pod:tool value must be a pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas or pod:Map; a pod:Contacts or pod:Browser is a connector, carried by pod:connector."@en ;
 
     # All three tool-content properties are scoped to pod:Form
     # (pod.ttl), the one tool class with a content model, so the
     # requirements below are conditioned on the tool's class rather than
     # asserted outright: this shape targets every live tool, and a
-    # pod:Calendar, pod:Canvas or pod:Map legitimately carries none of
-    # them. A blanket sh:minCount here would fail those three.
+    # pod:Note, pod:Chat, pod:Calendar, pod:Canvas or pod:Map
+    # legitimately carries none of them. A blanket sh:minCount here
+    # would fail those five.
     #
     # A live pod:Form carries pod:formTopic exactly once — what its
     # content is about, stated once on the tool rather than repeated on
@@ -495,11 +515,12 @@
 
     # A declaration names either a tool or a connector; Lazy
     # Instantiation sorts it by this class (pod.ttl's pod:declaresTool).
+    # Never a pod:Note: every pod already carries its one note.
     sh:or (
-        [ sh:class pod:Form ] [ sh:class pod:Calendar ] [ sh:class pod:Canvas ] [ sh:class pod:Map ]
+        [ sh:class pod:Chat ] [ sh:class pod:Form ] [ sh:class pod:Calendar ] [ sh:class pod:Canvas ] [ sh:class pod:Map ]
         [ sh:class pod:Contacts ] [ sh:class pod:Browser ]
     ) ;
-    sh:message "A pod:declaresTool value must be one of the four tool kinds or the two connector kinds, and only a declared pod:Form may carry pod:formShape."@en ;
+    sh:message "A pod:declaresTool value must be one of the five optional tool kinds (never a pod:Note) or the two connector kinds, and only a declared pod:Form may carry pod:formShape."@en ;
 
     # pod:formShape belongs to a declared pod:Form only.
     sh:or (

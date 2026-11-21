@@ -82,7 +82,7 @@ that structurally impossible rather than merely forbidden.
 **The rest of a pod's content is not in this file.** The DataBook holds the structured content and
 the metadata about the pod itself; a pod's unstructured content sits beside it:
 
-- **the note** — one Markdown file named after the folder (`X.md` inside the folder `X`), shown in
+- **the note** — the pod's one `pod:Note` tool, carried here as one Markdown file named after the folder (`X.md` inside the folder `X`) rather than as a `tpod.tool` entry, shown in
   the app's Note area, and absent when the note is empty. Naming it after its folder is the folder-note convention PKM tools such as
   Obsidian use, which is what lets this repo's example pods be browsed in one. It is Markdown because that
   is what the app's export of a note writes, not because the note is Markdown: a link to another
@@ -95,8 +95,8 @@ the metadata about the pod itself; a pod's unstructured content sits beside it:
   like email attachments. Every pod has that subfolder, empty or not, and its contents are the part
   of a pod's folder that travels when the pod is shared. No other subfolder is ever another pod
   (integrity.md's FS-5);
-- **the chat** — a stream shared by the pod's members, not a file in the folder at all; like this
-  file's own content, it lives inside the app.
+- **the chat** — the pod's optional `pod:Chat` tool, a stream shared by the pod's members, neither a
+  `tpod.tool` entry nor a file in the folder; like this file's own content, it lives inside the app.
 
 None of these is named or listed anywhere in the DataBook. There is no attachment manifest and
 no note-filename field: here the note is found by its name and the attachments by reading one
@@ -104,10 +104,9 @@ reserved folder, so adding a file to a pod is just putting a file in that pod's 
 attaching it, so that every member gets it, is just putting it in `_pod-attachments` instead. At
 runtime the same two acts are ordinary app operations. `pod:attachment` is a real `pod.ttl`
 property, its values `sources:SourceItem`s, but the example DataBooks carry none of its triples: in
-this scaffolding the `_pod-attachments` folder stands for it. `pod:note` and `pod:chat` are
-documentation-only properties — described in README.md's
-[Documentation-only Properties](README.md#documentation-only-properties), declared in no ontology,
-and never written as a triple by anything (integrity.md's PNG-3).
+this scaffolding the `_pod-attachments` folder stands for it. `pod:Note` and `pod:Chat` are real
+`pod.ttl` tool classes, but no DataBook writes a tool node for either, and nothing writes a triple
+recording the note's or the chat's content (README.md's [Tools](README.md#tools)).
 
 This document specifies the DataBook file and the folder this repo wraps it in; for what a pod
 holds in the app, see [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md, and for the
@@ -645,7 +644,7 @@ omission.
 
 ### Where chat content goes
 
-Every pod has one chat stream, always — `pod:chat`, 1..1, present even when empty — and it lives
+A pod has at most one chat stream — its optional `pod:Chat` tool — and where it has one it lives
 inside the app, alongside the content this document specifies. That answers the question this section
 used to leave open. It was open because chat had no place in the folder, unlike the note and the
 attachments, and no place in the DataBook either, leaving it the one piece of a pod's content with

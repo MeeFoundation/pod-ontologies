@@ -13,10 +13,10 @@
 @base <http://mee.foundation/ontologies/pod> .
 
 <http://mee.foundation/ontologies/pod> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/10.6.1> ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/10.7.0> ;
     dc:date "2026-11-21"^^xsd:date ;
     rdfs:label "Pod Ontology"@en ;
-    rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Each pod also sits in exactly one pod:PodSpace (pod:space), the life it belongs to — the user's own, or that of a person, organization or pet the user keeps pods about — rooted at podcat:Person, podcat:Organization or podcat:Pet (pod:spaceRoot), carrying a name (pod:spaceName) and optionally the party it is for (pod:spaceSubject); spaces form a flat set and never nest. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:SharedPod (an actual pod, carrying what every one of its members holds alike) — a pod is always exactly one of the two, never both. pod:SharedPod has one subclass, pod:SecretPod, adding what one member holds of the pod that no other member ever sees; every pod a user holds is typed pod:SecretPod. There are no further kinds of pod: shared structured content an actual pod carries beyond its pod:member baseline is a pod:Tool — a form, a calendar, a drawing canvas or a map, each with its own data format and its own contribution to the app's UI (pod:Form, pod:Calendar, pod:Canvas, pod:Map), zero or more per pod on pod:SharedPod, rather than in a subclass of its own. A link from one member's copy of a pod to a capability on that member's own device — an address-book sync or a connection to a standalone web browser — is not a tool but a pod:Connector (pod:Contacts, pod:Browser), zero or more on pod:SecretPod. pod:SecretPod carries pod:space, pod:connector and the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:serviceTag, whose values are pod:ServiceTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
+    rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Each pod also sits in exactly one pod:PodSpace (pod:space), the life it belongs to — the user's own, or that of a person, organization or pet the user keeps pods about — rooted at podcat:Person, podcat:Organization or podcat:Pet (pod:spaceRoot), carrying a name (pod:spaceName) and optionally the party it is for (pod:spaceSubject); spaces form a flat set and never nest. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:SharedPod (an actual pod, carrying what every one of its members holds alike) — a pod is always exactly one of the two, never both. pod:SharedPod has one subclass, pod:SecretPod, adding what one member holds of the pod that no other member ever sees; every pod a user holds is typed pod:SecretPod. There are no further kinds of pod: shared content an actual pod carries beyond its pod:member baseline is a pod:Tool — its note, a chat, a form, a calendar, a drawing canvas or a map, each with its own data format and its own contribution to the app's UI (pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas, pod:Map), one or more per pod on pod:SharedPod, rather than in a subclass of its own. The note is the one tool every pod carries, exactly once; every other tool, the chat included, is optional. A link from one member's copy of a pod to a capability on that member's own device — an address-book sync or a connection to a standalone web browser — is not a tool but a pod:Connector (pod:Contacts, pod:Browser), zero or more on pod:SecretPod. pod:SecretPod carries pod:space, pod:connector and the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:serviceTag, whose values are pod:ServiceTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
 
 
 #################################################################
@@ -105,11 +105,11 @@ pod:Pod rdf:type owl:Class ;
 #    the pod's members holding the owner role — see pod:owner's own
 #    comment), pod:member, its required baseline of linked
 #    pod:MemberGraph containers, one per member in the relationship
-#    (no fixed upper bound), and pod:tool, zero or more pod:Tool
-#    nodes — a form, a calendar, a drawing canvas or a map — carried
+#    (no fixed upper bound), and pod:tool, one or more pod:Tool
+#    nodes — the pod's note, which every pod carries, and optionally
+#    a chat, a form, a calendar, a drawing canvas or a map — carried
 #    beyond that baseline, each with its own data format. All of it,
-#    together with pod:Pod's own attachments, note and chat, reaches
-#    every member.
+#    together with pod:Pod's own attachments, reaches every member.
 #
 #    pod:SecretPod — a pod:SharedPod as one member holds it, adding
 #    what that member alone holds and no other member ever sees:
@@ -182,7 +182,7 @@ pod:declaresTool rdf:type owl:ObjectProperty ;
 pod:SharedPod rdf:type owl:Class ;
     rdfs:subClassOf pod:Pod ;
     rdfs:label "Shared Pod"@en ;
-    rdfs:comment """An actual pod, as every one of its members holds it alike — real, member-classified content, as opposed to a reusable class-level template (pod:TemplatePod). Carries what is shared with every member: pod:creator (required, exactly one value), pod:owner (required, one or more values — the members holding the owner role, as opposed to the regular member role every other member defaults to; pod:creator's own value is always included, as the pod's initial owner — see pod:owner's own comment for the full owner/regular-member role semantics), pod:member (required, one or more pod:MemberGraph containers backing the pod's content — one per member in the relationship, no fixed upper bound) and pod:tool (zero or more pod:Tool nodes — a form, a calendar, a drawing canvas or a map — carried beyond that baseline, each with its own data format and shared with every member; see the Pod Tools section below), alongside the attachments, note and chat it inherits from pod:Pod. What one member alone holds of the pod — its space, its connectors, its tags and their secret note — is not here but on the subclass pod:SecretPod. A pod stores no shape of its own: each of its graphs records its own pod:shape, set when the graph was created from the template that supplied it — the pod:TemplatePod whose pod:category matched one of the creating member's category tags at the time (pod-category-templates.ttl), read for its pod:memberShape (a pod:member graph) or the pod:formShape of the matching declared tool (a tool's pod:formGraph graph). There is no subclass for a pod that carries a tool: such a pod simply carries one or more pod:tool values, and a pod with none is not a lesser kind of pod — it is the ordinary case. Who or what the pod's relationship is about is not a stored fact either — it is derivable directly from pod:tool/pod:member: the full set of distinct pod:formTopic values among its form tools if any are present, else the full set of distinct pod:subject values among pod:member (see pod:tool's own comment). Its member count is never itself stored, simply counted from pod:member when needed. Every pod a user holds is typed pod:SecretPod, and so pod:SharedPod by subclassing; a pod:SharedPod not also typed pod:SecretPod is the shared part alone, what a joining member receives before choosing a space or tags of their own. Disjoint with pod:TemplatePod (see pod:TemplatePod's own comment), which is reserved for the reusable templates in pod-category-templates.ttl. Even a pod with nothing substantive to say yet carries a minimal stub pod:member entry (claimed by and about pod:creator's own :Self, who is then also that pod's sole pod:owner value) rather than omitting member content altogether."""@en .
+    rdfs:comment """An actual pod, as every one of its members holds it alike — real, member-classified content, as opposed to a reusable class-level template (pod:TemplatePod). Carries what is shared with every member: pod:creator (required, exactly one value), pod:owner (required, one or more values — the members holding the owner role, as opposed to the regular member role every other member defaults to; pod:creator's own value is always included, as the pod's initial owner — see pod:owner's own comment for the full owner/regular-member role semantics), pod:member (required, one or more pod:MemberGraph containers backing the pod's content — one per member in the relationship, no fixed upper bound) and pod:tool (one or more pod:Tool nodes — exactly one pod:Note, the pod's note, and optionally a pod:Chat, forms, calendars, drawing canvases or maps — carried beyond that baseline, each with its own data format and shared with every member; see the Pod Tools section below), alongside the attachments it inherits from pod:Pod. What one member alone holds of the pod — its space, its connectors, its tags and their secret note — is not here but on the subclass pod:SecretPod. A pod stores no shape of its own: each of its graphs records its own pod:shape, set when the graph was created from the template that supplied it — the pod:TemplatePod whose pod:category matched one of the creating member's category tags at the time (pod-category-templates.ttl), read for its pod:memberShape (a pod:member graph) or the pod:formShape of the matching declared tool (a tool's pod:formGraph graph). There is no subclass for a pod that carries an optional tool: such a pod simply carries more pod:tool values, and a pod with nothing but its note is not a lesser kind of pod — it is the ordinary case. Who or what the pod's relationship is about is not a stored fact either — it is derivable directly from pod:tool/pod:member: the full set of distinct pod:formTopic values among its form tools if any are present, else the full set of distinct pod:subject values among pod:member (see pod:tool's own comment). Its member count is never itself stored, simply counted from pod:member when needed. Every pod a user holds is typed pod:SecretPod, and so pod:SharedPod by subclassing; a pod:SharedPod not also typed pod:SecretPod is the shared part alone, what a joining member receives before choosing a space or tags of their own. Disjoint with pod:TemplatePod (see pod:TemplatePod's own comment), which is reserved for the reusable templates in pod-category-templates.ttl. Even a pod with nothing substantive to say yet carries a minimal stub pod:member entry (claimed by and about pod:creator's own :Self, who is then also that pod's sole pod:owner value) rather than omitting member content altogether."""@en .
 
 pod:SecretPod rdf:type owl:Class ;
     rdfs:subClassOf pod:SharedPod ;
@@ -419,11 +419,14 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #    Pod Tools
 #
 #    A pod:Tool is an object a pod carries for every one of its
-#    members — a form, a calendar, a drawing canvas, a map — each with
-#    its own data format inside the pod and its own contribution to
-#    the app's UI. A pod carries zero or more, via pod:tool, on
-#    pod:SharedPod: a tool is shared content, and a tool gained by
-#    any one member's category tag reaches all of them. A link from
+#    members — its note, a chat, a form, a calendar, a drawing
+#    canvas, a map — each with its own data format inside the pod and
+#    its own contribution to the app's UI. A pod carries one or more,
+#    via pod:tool, on pod:SharedPod: a tool is shared content, and a
+#    tool gained by any one member's category tag reaches all of
+#    them. The note (pod:Note) is the one tool every pod carries,
+#    exactly once, created with the pod and never removed; every
+#    other tool, the chat (pod:Chat) included, is optional. A link from
 #    one member's copy to something on their own device is not a tool
 #    but a pod:Connector (see the Pod Connectors section below). Only the data format is modelled here; what a tool
 #    contributes to the interface is app-level, and app-behavior.md
@@ -434,21 +437,24 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #    note is about taking care of a pet is about taking care of that
 #    pet, and a two-member pod with an empty note is about the
 #    relationship between its two members. What actually varies from
-#    pod to pod is which tools it carries, if any, alongside its
-#    unstructured note and its attachments. So that variation is
-#    recorded as a count of tools, from zero upwards, rather than as a
-#    subclass of pod.
+#    pod to pod is which tools it carries beyond its note, if any,
+#    alongside its attachments. So that variation is recorded as the
+#    set of tools it carries, rather than as a subclass of pod.
 #
 #    That each kind has its *own* data format is why pod:Tool carries
 #    no property: there is nothing common to hoist onto it. A form's
-#    format is graph DataBooks conforming to a shape; a calendar's
-#    would be dated entries and a canvas's a drawing surface, neither
-#    of which is a graph and neither of which is worked out. The
+#    format is graph DataBooks conforming to a shape; a note's is one
+#    rich-text document and a chat's a stream of messages, held in
+#    the app's own internal formats; a calendar's would be dated
+#    entries and a canvas's a drawing surface, neither of which is a
+#    graph and neither of which is worked out. The
 #    properties therefore sit on the one subclass whose format is
 #    settled (see below).
 #
-#    Four concrete tools are defined. pod:Form is the one whose
-#    format is settled: it holds one or more pod:FormGraph DataBooks via
+#    Six concrete tools are defined. pod:Note and pod:Chat are the
+#    pod's note and chat, whose content is app-internal and modelled
+#    by no property here. pod:Form is the one whose format is modelled
+#    in RDF: it holds one or more pod:FormGraph DataBooks via
 #    pod:formGraph, whose fields the app renders from the
 #    pod:formShape that governs it. pod:Calendar, pod:Canvas and
 #    pod:Map are defined with no properties of their own yet —
@@ -456,7 +462,7 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #    that adding a tool later is a new subclass rather than a new
 #    property on pod:SharedPod.
 #
-#    Every tool carries pod:formTopic: what its content is about,
+#    Every live form tool carries pod:formTopic: what its content is about,
 #    stated once on the tool itself rather than repeated on each graph
 #    beneath it. That placement is deliberate. A form tool holds one
 #    graph per claiming member — several members may each state their
@@ -471,19 +477,21 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #      - reached by pod:tool, from a pod:SharedPod: a live tool.
 #        A live pod:Form carries pod:formTopic and
 #        pod:formGraph, never pod:formShape; a live tool of any
-#        other kind carries nothing at all yet.
+#        other kind carries nothing at all.
 #    A pod:Connector node appears in the same two roles, reached by
 #    pod:connector or pod:declaresTool respectively.
 #      - reached by pod:declaresTool, from a pod:TemplatePod: a
 #        declaration of a tool a tagged pod should get, carrying
-#        pod:formShape alone.
+#        pod:formShape alone. A pod:Note is never declared: every
+#        pod already carries one.
 #    shacl/pod-shacl.ttl enforces the two with sh:targetObjectsOf on
 #    those properties rather than sh:targetClass, since both roles use
 #    the same tool classes.
 #
 #    A live tool is named by its own IRI, and that IRI is its id: minted
-#    when the tool is created — added by the person, or instantiated
-#    from a declaration by Lazy Instantiation — opaque, globally unique, never
+#    when the tool is created — with the pod, for its note; added by
+#    the person, or instantiated from a declaration by Lazy
+#    Instantiation, for any other tool — opaque, globally unique, never
 #    derived from the tool's kind, topic, position or pod, and fixed for
 #    the tool's lifetime. It is what a block link in the pod's note
 #    resolves by, so reordering or removing a sibling tool never
@@ -492,12 +500,28 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #    A declaration, reached by pod:declaresTool, is a blank node: it is
 #    never a block-link target and needs no id. Neither kind is typed
 #    owl:NamedIndividual.
+#
+#    The example DataBooks write no tool node for a pod's note or
+#    chat: the note's scaffolding stand-in is the Markdown file named
+#    after the pod's folder, and a chat has no scaffolding at all
+#    (pod-databook.md's Development Scaffolding). shacl/pod-shacl.ttl
+#    therefore caps each at one per pod without requiring the note.
 #################################################################
 
 pod:Tool rdf:type owl:Class ;
     pod:abstract true ;
     rdfs:label "Tool"@en ;
-    rdfs:comment """An object a pod carries for every one of its members that adds a new capability to it — a form, a calendar, a drawing canvas, a map. Each kind brings two things at once: its own data format inside the pod, and its own contribution to the app's UI. Tools are shared content: a pod carries zero or more, via pod:tool on pod:SharedPod, and every member holds the same ones. A link from one member's copy to a capability on their own device — an address book, a web browser — is not a tool but a pod:Connector, disjoint from this class; a pod with none is the ordinary case, not a lesser kind of pod. A tool is not a member of the pod, and it is not one of the pod's built-in areas either — every pod has a Note area, a Chat area, an Attachments area and Member Info whether or not it carries a tool. Four kinds are defined — pod:Form, pod:Calendar, pod:Canvas and pod:Map — and only pod:Form has a settled data format today; the other three are deliberate extension points, awaiting one. A pod gains whatever tools the templates of its category tags declare, and the person may add more at any time. Only the data format is modelled here; the UI contribution is app-level (app-behavior.md). Abstract: no tool is ever typed pod:Tool directly, only one of its concrete subclasses (pod:Form, pod:Calendar, pod:Canvas, pod:Map). Carries no property of its own, and that follows from the definition rather than being a gap in it: each kind has its own data format, so there is nothing common to hoist here. Everything a tool records today — what its content is about (pod:formTopic), the graphs carrying it (pod:formGraph) and the shape governing them (pod:formShape) — is scoped to pod:Form, the one subclass whose format is settled. A property that proves common once pod:Calendar, pod:Canvas and pod:Map have formats of their own can be hoisted up then, which is cheap; retracting one asserted too early is not. A live pod:Tool is named by its own IRI, its id — minted when the tool is created, opaque, globally unique and fixed for the tool's lifetime — which is what a block link in the pod's note resolves by. It is never shared between pods and never reused: removing the tool removes the node with it, and its id is retired rather than given to another tool. A declared tool (reached by pod:declaresTool) is anonymous, since it is never a block-link target."""@en .
+    rdfs:comment """An object a pod carries for every one of its members that adds a capability to it — its note, a chat, a form, a calendar, a drawing canvas, a map. Each kind brings two things at once: its own data format inside the pod, and its own contribution to the app's UI (the note's is the Note area, the chat's the Chat area). Tools are shared content: a pod carries one or more, via pod:tool on pod:SharedPod, and every member holds the same ones. The note (pod:Note) is the one tool every pod carries, exactly once; every other tool, the chat (pod:Chat) included, is optional, and a pod with nothing but its note is the ordinary case, not a lesser kind of pod. A link from one member's copy to a capability on their own device — an address book, a web browser — is not a tool but a pod:Connector, disjoint from this class. A tool is not a member of the pod, and the pod's Attachments area and Member Info are not tools: every pod has both, and neither is a tool's contribution. Six kinds are defined — pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas and pod:Map. The note's and the chat's content is app-internal and modelled by no property; pod:Form's is modelled in RDF; the other three are deliberate extension points, awaiting a data format. A pod gains whatever tools the templates of its category tags declare, and the person may add more at any time. Only the data format is modelled here; the UI contribution is app-level (app-behavior.md). Abstract: no tool is ever typed pod:Tool directly, only one of its concrete subclasses (pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas, pod:Map). Carries no property of its own, and that follows from the definition rather than being a gap in it: each kind has its own data format, so there is nothing common to hoist here. Everything a tool records today — what its content is about (pod:formTopic), the graphs carrying it (pod:formGraph) and the shape governing them (pod:formShape) — is scoped to pod:Form, the one subclass whose format is settled. A property that proves common once pod:Calendar, pod:Canvas and pod:Map have formats of their own can be hoisted up then, which is cheap; retracting one asserted too early is not. A live pod:Tool is named by its own IRI, its id — minted when the tool is created, opaque, globally unique and fixed for the tool's lifetime — which is what a block link in the pod's note resolves by. It is never shared between pods and never reused: removing the tool removes the node with it, and its id is retired rather than given to another tool. A declared tool (reached by pod:declaresTool) is anonymous, since it is never a block-link target."""@en .
+
+pod:Note rdf:type owl:Class ;
+    rdfs:subClassOf pod:Tool ;
+    rdfs:label "Note"@en ;
+    rdfs:comment """The pod's note: a rich-text document with Markdown-like formatting that every member may edit concurrently, contributing the Note area to the app's UI. The one required tool — every pod:SharedPod carries exactly one, created with the pod and never removed, so no pod:TemplatePod declares one and the Add Tool action never offers one. Its content is held in the app's own internal format, suited to its links and to merging concurrent edits, and can be exported as Markdown. It carries two kinds of link: pod links to other pods, resolved by the target pod's id, and block links to the pod's own tools, graphs and attachments, resolved by their own IRIs. Defined with no properties: the note's content is app-internal, and no triple records it. Beside it, each member has a meta note of their own, secret to them and shown in the same Note area (README.md's Documentation-only Properties); a meta note is not a tool, since it is not shared. The example DataBooks write no tool node for the note: its scaffolding stand-in is the Markdown file named after the pod's folder."""@en .
+
+pod:Chat rdf:type owl:Class ;
+    rdfs:subClassOf pod:Tool ;
+    rdfs:label "Chat"@en ;
+    rdfs:comment """The pod's chat: a group stream visible to every member, plus direct messages between two members that only those two see, contributing the Chat area to the app's UI. Optional, like every tool but pod:Note — a pod carries at most one, added by a member through Add Tool or gained from a category template's pod:declaresTool. Its messages are app-internal, and no triple records them. Unlike every other tool, not all of its content reaches every member: a direct message reaches only its two participants (app-behavior.md's Chat Area). Defined with no properties. The example DataBooks write no tool node for a chat, which has no scaffolding."""@en .
 
 pod:Form rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;
@@ -523,7 +547,7 @@ pod:tool rdf:type owl:ObjectProperty ;
     rdfs:domain pod:SharedPod ;
     rdfs:range pod:Tool ;
     rdfs:label "tool"@en ;
-    rdfs:comment """Links an actual (instantiated) pod to the pod:Tool node(s) it carries beyond its pod:member baseline — a form, a calendar, a drawing canvas or a map, each with its own data format and its own contribution to the app's UI. Zero or more values, no fixed upper bound — a pod with none is the ordinary case, not a lesser kind of pod, and no subclass marks the difference either way. A pod receives one tool per pod:declaresTool on the pod:TemplatePod of each category tag it is given, whenever the tag is added, by Lazy Instantiation, and may gain further tools at any time, chosen by the user from the app's full list of tools and shapes: nothing caps how many a pod may hold, nor requires one of its category tags' templates to have declared them. A tool reached this way is a live tool — it carries pod:formTopic and, for a pod:Form, pod:formGraph, and never pod:formShape, which belongs to the declared-tool role instead (see pod:declaresTool). Together with pod:member this is also how a consumer derives who or what the pod's relationship is about, now that there is no separate stored fact for it: if the pod has any form tools, the full set of distinct pod:formTopic values among them is the answer; otherwise the answer is the full set of distinct pod:subject values found among pod:member (for a single-member pod this is trivially :Self; for a pod with more members and none of its tools carrying a topic, it is every one of that pod's active members — e.g. a two-member pod with no tool is understood as being about the connection between its two members). Only pod:Form carries pod:formTopic today, so a pod holding only a calendar or a canvas falls to the pod:member branch."""@en .
+    rdfs:comment """Links an actual (instantiated) pod to the pod:Tool node(s) it carries beyond its pod:member baseline — its note, and optionally a chat, a form, a calendar, a drawing canvas or a map, each with its own data format and its own contribution to the app's UI. One or more values, no fixed upper bound: exactly one pod:Note, at most one pod:Chat, and any number of the rest — a pod with nothing but its note is the ordinary case, not a lesser kind of pod, and no subclass marks the difference either way. A pod receives one tool per pod:declaresTool on the pod:TemplatePod of each category tag it is given, whenever the tag is added, by Lazy Instantiation, and may gain further tools at any time, chosen by the user from the app's full list of tools and shapes: nothing caps how many a pod may hold, nor requires one of its category tags' templates to have declared them. A tool reached this way is a live tool — it carries pod:formTopic and, for a pod:Form, pod:formGraph, and never pod:formShape, which belongs to the declared-tool role instead (see pod:declaresTool). Together with pod:member this is also how a consumer derives who or what the pod's relationship is about, now that there is no separate stored fact for it: if the pod has any form tools, the full set of distinct pod:formTopic values among them is the answer; otherwise the answer is the full set of distinct pod:subject values found among pod:member (for a single-member pod this is trivially :Self; for a pod with more members and none of its tools carrying a topic, it is every one of that pod's active members — e.g. a two-member pod with no tool but its note is understood as being about the connection between its two members). Only pod:Form carries pod:formTopic, so a pod holding no form — only its note, say, or a chat or a calendar beside it — falls to the pod:member branch."""@en .
 
 pod:formTopic rdf:type owl:AnnotationProperty ;
     rdfs:domain pod:Form ;
@@ -818,8 +842,8 @@ pod:member rdf:type owl:ObjectProperty ;
 #    the files every member of the pod receives. They are the part
 #    of a pod's content that travels with it when it is shared, and
 #    they are flat, like email attachments.
-#    The pod's note keeps its own separate role and its own Note
-#    area, and is not an attachment.
+#    The pod's note is not an attachment: it is a tool, pod:Note,
+#    with its own Note area (see the Pod Tools section above).
 #    Beside it, each member has a meta note (pod:metaNote, drawn
 #    off SecretPod): their own personal note about the pod, in the
 #    same format as the note, shown in the same Note area but
@@ -830,14 +854,14 @@ pod:member rdf:type owl:ObjectProperty ;
 #    pod:attachment, below, links a pod to each of its attachments,
 #    every one described as a sources:SourceItem (other/sources.ttl).
 #    The diagram
-#    (images/pod-ontology/pod.png) additionally sketches pod:note and
-#    pod:chat as arrows off Pod, and pod:metaNote and pod:toolData
-#    as arrows off SecretPod, for documentation purposes only — none
-#    of the four is an actual property declared here, and none is ever
-#    reified as a triple in any real graph (see integrity.md's PNG-3
-#    and README.md's Documentation-only Properties section).
+#    (images/pod-ontology/pod.png) additionally sketches pod:metaNote
+#    and pod:toolData as arrows off SecretPod, for documentation
+#    purposes only — neither is an actual property declared here, and
+#    neither is ever reified as a triple in any real graph (see
+#    integrity.md's PNG-3 and README.md's Documentation-only
+#    Properties section).
 #
-#    The note is a rich-text document with Markdown-like formatting,
+#    The note (pod:Note) is a rich-text document with Markdown-like formatting,
 #    held in the app's own internal format (suited to its links and to
 #    merging concurrent edits by several members) and exportable as
 #    Markdown. Its content may link to any other pod the user holds,
@@ -853,8 +877,8 @@ pod:member rdf:type owl:ObjectProperty ;
 #    so the link simply won't resolve on their side. This is an accepted
 #    limitation of cross-pod linking, not a defect — nothing in this
 #    ontology tracks link targets or attempts to keep them resolvable
-#    across a share, consistent with the "no ontology property"
-#    treatment of the note itself above.
+#    across a share, consistent with pod:Note carrying no property
+#    for the note's content.
 #
 #    This repo carries all of the above on disk as development
 #    scaffolding — one folder per pod, grouped by pod space, holding a pod-databook file,

@@ -10,9 +10,9 @@
 @base <http://mee.foundation/ontologies/sources> .
 
 <http://mee.foundation/ontologies/sources> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.4> ;
-    dc:date "2026-11-20"^^xsd:date ;
-    owl:versionInfo "Version 1.1.4 - dropped the mention of members' private files"@en ;
+    owl:versionIRI <http://mee.foundation/ontologies/sources/1.1.5> ;
+    dc:date "2026-11-21"^^xsd:date ;
+    owl:versionInfo "Version 1.1.5 - whether a file is attached is stated as a fact about the pod"@en ;
     rdfs:label "Sources Ontology"@en ;
     rdfs:comment """A small other/ peer ontology (see other/pets.ttl's own rdfs:comment for the
                     general pattern) for content a person merely *has* in unstructured form — a
@@ -102,8 +102,8 @@ sources:SourceItem rdf:type owl:Class ;
                     never updated in place, so its sources:contentHash never changes, and a
                     corrected file is a new source item (app-behavior.md's Attachment Permissions;
                     mia-docs' cells immutable-document record kind). Whether the file it describes
-                    is attached (shared with every member) or private to one member is a fact about
-                    the pod, not about the item, and is not recorded here.
+                    is attached to a pod is a fact about the pod, not about the item, and is not
+                    recorded here.
 
                     The one subclass this version deliberately does not define is
                     sources:WebLink — a URL or saved web page brought as a source. See this

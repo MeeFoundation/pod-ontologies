@@ -54,7 +54,7 @@ Once decided, fix the wording in `app-behavior.md`.
 
 `pod.png` draws a `toolData → TBD 0..1` arrow off `SecretPod`, documented for now as a documentation-only placeholder, like `pod:metaNote`. To decide:
 
-- what it holds: a member's own data about the pod's shared tools (such as private settings, or a draft not yet claimed), connector state, or both;
+- what it holds: a member's own data about the pod's shared tools (such as their own settings, or a draft not yet claimed), connector state, or both;
 - its target type, and whether 0..1 means one node for all of the pod's tools or should be one per tool;
 - whether it then becomes a real property in `pod.ttl`.
 

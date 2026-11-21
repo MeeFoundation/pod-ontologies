@@ -62,7 +62,7 @@ of *all* Tellipod data, with no carve-out for the unstructured parts.
   formatting, held in the app's own internal format — one suited to those links and to merging
   concurrent edits by several members. A member can export it as a Markdown file.
 - **The meta note.** One per member per pod, the member's own personal note about it, in the same
-  format as the note. It is private to that member: it stays in their own copy of the pod, syncs
+  format as the note. It is secret to that member: it stays in their own copy of the pod, syncs
   across their own devices, and never propagates on a share.
 - **PKM tools.** Tellipod's store is not a PKM vault, and no Obsidian-style tool reads it directly.
   The note's wikilink-style links and its Markdown export are the bridge to such tools.

@@ -238,7 +238,7 @@ Alice is planning a trip with her spouse Dave, with help from her own personal a
 
 The trip itself is backed by one form tool whose topic is `:Kyoto_Trip_2027`, holding two graphs, one per member, each claimed from a different side: Alice's own draft itinerary ([graph 69](<example/pods/Alice Walker (default)/Kyoto Trip 2027/Kyoto Trip 2027.databook.md#graph-69>)) and Dave's own contribution ([graph 91](<example/pods/Alice Walker (default)/Kyoto Trip 2027/Kyoto Trip 2027.databook.md#graph-91>)) — reaching `pod:formGraph`'s cap of one graph per member (see README.md's [Tools](README.md#tools) section). It is one of the example's two tools holding graphs from more than one claimant — one topic, two claims about it; the other is the *Citibank* pod's, whose graphs 75 and 76 are claimed by Alice and by Citibank.
 
-Alice works out her itinerary with her personal agent in her private agent chat, and the agent writes the result into graph 69 as her, revising it in place turn by turn (see app-behavior.md's [Personal Agent](app-behavior.md#personal-agent) and [The Iterative Prompt/Response Loop](app-behavior.md#the-iterative-promptresponse-loop)). The agent is not a member of the pod and appears in none of its graphs: what it writes is Alice's claim, so no `s:PersonalAgent` individual occurs anywhere in the example.
+Alice works out her itinerary with her personal agent in her secret agent chat, and the agent writes the result into graph 69 as her, revising it in place turn by turn (see app-behavior.md's [Personal Agent](app-behavior.md#personal-agent) and [The Iterative Prompt/Response Loop](app-behavior.md#the-iterative-promptresponse-loop)). The agent is not a member of the pod and appears in none of its graphs: what it writes is Alice's claim, so no `s:PersonalAgent` individual occurs anywhere in the example.
 
 <p align="center"><img src="example/images/travel.png" alt="Travel pods"></p>
 
@@ -250,7 +250,7 @@ The pod carries no user tag, and needs none: `sa:loyaltyProgramID` in its own to
 
 ## Pods Mentioned
 
-A summary of all thirty-three pods under `example/pods/`, grouped by the subsection that describes each. User tags and pod spaces are Alice's own and private to her instance; a pod with no space noted sits in her default space.
+A summary of all thirty-three pods under `example/pods/`, grouped by the subsection that describes each. User tags and pod spaces are Alice's own and secret to her; a pod with no space noted sits in her default space.
 
 | Subsection | Name | Pod DataBook | Subject(s) | Category Tag | Space | User Tags | Graphs |
 |---|---|---|---|---|---|---|---|

@@ -7,7 +7,7 @@
 Every pod a user holds mixes two kinds of state:
 
 - **Shared content**, which every member of the pod holds alike: who created it, who owns it, its members' graphs, its tools, its attachments, its note and its chat.
-- **Secret state**, which each member holds for themselves and which never reaches another member, owner included: the pod space they keep it in, their category tags, their user tags, the service tags their own modules write, and their private meta note.
+- **Secret state**, which each member holds for themselves and which never reaches another member, owner included: the pod space they keep it in, their category tags, their user tags, the service tags their own modules write, and their secret meta note.
 
 The ontology already said, property by property, which side each one fell on. A tag's comment said "per-member state, never shared pod content", and so did the space's. But every one of these properties had the same domain, `pod:InstancePod`, so the class structure carried none of the distinction. You had to read the comments to learn it, and nothing kept a new property from landing on the wrong side.
 
@@ -37,15 +37,15 @@ Pod  (abstract: attachment, note*, chat*)
 
 ## The meta note
 
-`pod:metaNote` is each member's own private note about a pod. It has the same format as the note and is shown in the same Note area, but it is visible only to that member. Before this change the meta note existed in the app's behavior, but the ontology said that no property modeled it, not even a documentation-only one. It is now a documentation-only property, like `pod:note` and `pod:chat`, drawn off `SecretPod`. Being private is exactly why it sits there rather than on `pod:Pod` next to the shared note.
+`pod:metaNote` is each member's own secret note about a pod. It has the same format as the note and is shown in the same Note area, but it is visible only to that member. Before this change the meta note existed in the app's behavior, but the ontology said that no property modeled it, not even a documentation-only one. It is now a documentation-only property, like `pod:note` and `pod:chat`, drawn off `SecretPod`. Being secret is exactly why it sits there rather than on `pod:Pod` next to the shared note.
 
 ## Placement decisions
 
 The first sketch of the split put `tool` on the secret side and left `space` and `serviceTag` on the shared side. The final diagram corrects all three:
 
-- **`tool` is shared.** Every member gets a pod's tools. A form tool holds one graph per claiming member, all about the tool's single `pod:formTopic`, so a tool private to one member could not hold the other members' claims.
+- **`tool` is shared.** Every member gets a pod's tools. A form tool holds one graph per claiming member, all about the tool's single `pod:formTopic`, so a tool secret to one member could not hold the other members' claims.
 - **`space` is secret.** Each member keeps a shared pod in a space of their own. Nothing about the sender's space travels with an invitation.
-- **`serviceTag` is secret.** It is the most private of the three tags. It is never shown to the user, it is reachable only by the module that wrote it, within that module's own namespace, and it never leaves the copy of the app that wrote it.
+- **`serviceTag` is secret.** It is the most secret of the three tags. It is never shown to the user, it is reachable only by the module that wrote it, within that module's own namespace, and it never leaves the copy of the app that wrote it.
 
 ## What changed in the repo
 

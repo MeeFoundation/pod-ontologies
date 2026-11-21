@@ -95,7 +95,7 @@ Pods can be **linked**. Pods have globally unique identifiers (see [Pod Id](pod-
 
 The Pod class splits into two disjoint kinds: `pod:TemplatePod`, a reusable, class-level *template* pod, and `pod:SharedPod`, an *actual* pod as every one of its members holds it alike. `pod:SharedPod` has one subclass, `pod:SecretPod`, which adds what one member holds of the pod that no other member ever sees. Every pod a user holds is typed `pod:SecretPod`, so the line between what a pod shares and what it keeps secret is the line between the two classes.
 
-`pod:Pod` (below) models the pod's shared content. Classification is each member's own: a pod's category tags and user tags are per-member state in that member's own copy rather than shared content (see [Tags](#tags) below, and [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md), so two members of a shared pod can each tag it however they like without touching what the other sees.
+`pod:Pod` (below) and its subclasses model both kinds of content: what a pod's members share, on `pod:SharedPod`, and what each member keeps secret, on `pod:SecretPod`. Classification is each member's own: a pod's category tags and user tags are secret, held on that member's own `pod:SecretPod` copy rather than as shared content (see [Tags](#tags) below, and [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md), so two members of a shared pod can each tag it however they like without touching what the other sees.
 
 <p align="center"><img src="images/pod-ontology/pod.png" alt="Pod hierarchy"></p>
 

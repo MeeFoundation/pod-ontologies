@@ -59,7 +59,7 @@ Each of the four spaces Alice created names its subject, the person, organizatio
 Two of Alice's views show why spaces are needed: in each, a category tag says what kind of thing a pod is about, and only the space says whose.
 
 - **Vehicles.** Alice keeps a pod for her own car, [*RAV4*](<example/pods/Alice Walker (default)/RAV4/RAV4.databook.md>), in her default space, and one for her mother's car, [*Honda*](<example/pods/Paula Walker/Honda/Honda.databook.md>), in her space for Paula. Both are tagged `podcat:Vehicles` and hold the same Vehicle form, so nothing in the tag or the form says whose car each is. In her default space, a Vehicles search finds only her own; her all-spaces Vehicles view shows both cars, each in the panel of its own space.
-- **Primary care physicians.** Alice keeps a pod for her own doctor, [*Marcus Bell*](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md>), in her default space; one for her mother's, [*Ruth Alvarez*](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md>), in her space for Paula; and one for her daughter's, *Jane Starostina*, in her space for Sophia. All three are tagged `podcat:PrimaryCarePhysician`, and each holds the same Primary Care Physician form ([graph 110](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md#graph-110>), [graph 112](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>), [graph 25](<example/pods/Sophia Walker/Jane Starostina/Jane Starostina.databook.md#graph-25>)), so nothing in the tag or the form says whose doctor each one is. The space does. Her all-spaces Primary Care Physicians view gathers all three, each in the panel of the space it sits in, beneath that space's own `#Provider` group header. Before spaces, the only way to tell them apart was to fold the patient into the pod's name or a user tag.
+- **Primary care physicians.** Alice keeps a pod for her own doctor, [*Marcus Bell*](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md>), in her default space; one for her mother's, [*Ruth Alvarez*](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md>), in her space for Paula; and one for her daughter's, *Jane Starostina*, in her space for Sophia. All three are tagged `podcat:PrimaryCarePhysician`, and each holds the same Primary Care Physician form ([graph 110](<example/pods/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md#graph-110>), [graph 112](<example/pods/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>), [graph 25](<example/pods/Sophia Walker/Jane Starostina/Jane Starostina.databook.md#graph-25>)), so nothing in the tag or the form says whose doctor each one is. The space does. Her all-spaces Primary Care Physicians view gathers all three, each in the panel of the space it sits in, beneath that space's own `#Provider` group header.
 
 <p align="center"><img src="example/images/medical.png" alt="Primary care physicians across spaces — Marcus Bell in Alice's default space, Ruth Alvarez in her space for Paula, Jane Starostina in her space for Sophia"></p>
 
@@ -406,7 +406,7 @@ Each diagram shows the `p:Person` individual (yellow), supporting named individu
 
 ## Validation
 
-Validation requires [Apache Jena](https://jena.apache.org/) (`riot`, `shacl`), plus `pyyaml` and `rdflib` for the `helpers/` scripts (`pip install pyyaml rdflib`). All Turtle extraction happens in-repo, through one fence parser (`databook_graphs.iter_graph_blocks()`): `helpers/validate.py` uses it directly, `helpers/extract-graph.py` isolates a single embedded graph, and `helpers/extract-all.py` concatenates every graph in the example. The [DataBook CLI](https://github.com/kurtcagle/databook) (`databook`; install: `git clone https://github.com/kurtcagle/databook.git && cd databook && npm install && npm install -g .`) is optional — needed only for the Quick check below, never by validation. SHACL shapes remain plain Turtle (`.ttl`).
+Validation requires [Apache Jena](https://jena.apache.org/) (`riot`, `shacl`), plus `pyyaml` and `rdflib` for the `helpers/` scripts (`pip install pyyaml rdflib`). All Turtle extraction happens in-repo, through one fence parser (`databook_graphs.iter_graph_blocks()`): `helpers/validate.py` uses it directly, `helpers/extract-graph.py` isolates a single embedded graph, and `helpers/extract-all.py` concatenates every graph in the example. The [DataBook CLI](https://github.com/kurtcagle/databook) (`databook`; install: `git clone https://github.com/kurtcagle/databook.git && cd databook && npm install && npm install -g .`) is optional — needed only for the Quick check below, never by validation. SHACL shapes are plain Turtle (`.ttl`).
 
 ### Quick check — DataBook syntax (optional, requires the DataBook CLI)
 
@@ -454,9 +454,8 @@ in the graph Turtle.
 
 **2 — the template pass.** Each graph carrying a `shape:` value, checked on its own against the
 shape that value names. Driven entirely by data already in each pod-databook's own
-`tpod.member[]`/`tpod.tool[].graph[]` entries — there is no hand-maintained per-graph command list to keep in
-sync. Since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the value already *names the shape
-itself* (e.g. `idocshapes:PassportShape`), with no label-to-shape resolution; the only work left is
+`tpod.member[]`/`tpod.tool[].graph[]` entries. Since `pod:shape`'s range is `sh:NodeShape` (`pod.ttl`), the value
+*names the shape itself* (e.g. `idocshapes:PassportShape`); the only work left is
 locating which physical `*-shacl.ttl` file defines a shape of that name — `pshapes:` shapes are
 split across `shacl/persona-shacl.ttl` and `shacl/contactinfo-shacl.ttl` — done via the
 `SHAPE_TO_FILE` table in the script. A graph with no `shape:` value needs no per-template

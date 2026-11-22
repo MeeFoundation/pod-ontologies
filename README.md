@@ -167,6 +167,8 @@ Placement is per-member, exactly as tags are: each member puts a shared pod in a
 - **`pod:spaceName`** — the space's name, chosen and freely renamed by the user; the default space's is the user's own, which the app marks "(default)". An `owl:DatatypeProperty`, domain `pod:PodSpace`, range `xsd:string`, exactly one non-empty value. Need not be unique, a space being resolved by its IRI.
 - **`pod:spaceSubject`** — the party whose life the space holds: a `p:Person` for a Person-rooted space, an `o:Organization` for an Organization-rooted one. An `owl:AnnotationProperty`, domain `pod:PodSpace`, range `xsd:anyURI`, at most one value. The default space's is the user themselves.
 
+In this repo's development scaffolding, a pod in any space but the default records that space in its pod DataBook's `tpod.space` mapping — the space's id, name, root and subject; see [The `tpod` Block](pod-databook.md#the-tpod-block) in pod-databook.md.
+
 For the worked example — a space for the user's daughter, one for their mother, and an Organization-rooted one for their employer — see [example.md](example.md#pod-spaces).
 
 ### TemplatePod
@@ -752,6 +754,9 @@ The SSN designator class `cco:ent00000008` has no template label class of its ow
   - **Required**: exactly one `GivenName` designator.
   - **Optional**: `OrganizationName`, all other name components, `OrganizationUnit`, `JobTitle`, contact channels (`Email`/`TelephoneNumber`), addresses, online services, anniversaries, personal info, photo.
   - **Max 1** on all single-valued name and organization components.
+
+  Its `sh:targetClass` is the broad `p:Person` rather than a narrow reified document class, since it validates a member's own individual in place rather than a separate document. integrity.md's TTL-3, which otherwise requires a graph to assert its shape's target class via `rdf:type`, therefore exempts it — together with a category extension's member shape, such as `bhsshapes:MemberShape`, for the same reason — since a `pod:member` stub graph need carry no `p:Person` individual at all (e.g. an organization's own self-claimed member stub).
+
   See the [JSContact field coverage table](#contact-related-classes-and-properties) above for the complete mapping.
 
 ### Persona Ontology Files
@@ -875,7 +880,7 @@ The Organization ontology models organizations — companies, government agencie
 
 ### Organization Ontology Validation
 
-`shacl/organization-shacl.ttl`'s `:OrganizationShape` targets `o:Organization` instances and constrains both of the class's properties, each optional and at most one value: `o:hasWebsite` must be an `xsd:anyURI`, and `o:numMembers` a non-negative `xsd:integer`. Both are optional because most organizations in the example data are named only as a `pod:claimant` or a `pod:formTopic`, with no profile of their own — an organization is never a `pod:member` subject, since it participates in a pod through the `s:ServiceProvider` it provides (see [Service Ontology](#service-ontology)). `:OrganizationShape` doubles as a per-graph template shape (`pod:shape oshapes:OrganizationShape`) for a graph that does carry such a profile — the same dual role `pshapes:SSNShape` and `pshapes:HealthWellnessShape` already play from within `shacl/persona-shacl.ttl`. See example.md's [Boston Hub Society](example.md#boston-hub-society) for the worked case, and [Chestnut Hill Village Association](example.md#chestnut-hill-village-association) for the same shape claimed by `:Self` instead, where the organization runs no PDN node of its own.
+`shacl/organization-shacl.ttl`'s `:OrganizationShape` targets `o:Organization` instances and constrains both of the class's properties, each optional and at most one value: `o:hasWebsite` must be an `xsd:anyURI`, and `o:numMembers` a non-negative `xsd:integer`. Both are optional because an organization is often named only as a `pod:claimant` or a `pod:formTopic`, with no profile of its own — an organization is never a `pod:member` subject, since it participates in a pod through the `s:ServiceProvider` it provides (see [Service Ontology](#service-ontology)). `:OrganizationShape` doubles as a per-graph template shape (`pod:shape oshapes:OrganizationShape`) for a graph that does carry such a profile — the same dual role `pshapes:SSNShape` and `pshapes:HealthWellnessShape` already play from within `shacl/persona-shacl.ttl`. See example.md's [Boston Hub Society](example.md#boston-hub-society) for the worked case, and [Chestnut Hill Village Association](example.md#chestnut-hill-village-association) for the same shape claimed by `:Self` instead, where the organization runs no PDN node of its own.
 
 ## Service Ontology
 
@@ -893,7 +898,7 @@ A user's AI agent is not a service at all. A **personal agent** (`s:PersonalAgen
 
 - `s:Service` — the member-capable class for every pod participant that is not a person. Every service the app offers is one of the classes below. No class here is declared disjoint from any other, so one real service can be more than one kind at once.
 - `s:AgentService` — a service that acts on behalf of exactly one `p:Person` member of the pod, named by its required `s:actsFor` value. That mandate is what defines the class, not what the service does with it. Directly instantiable: an agent service with no vendor class of its own is typed `s:AgentService` and nothing more.
-- `s:ArcaBackup` — the pod backup service Arca provides, joining a pod as a real member; a leaf under `s:AgentService`. It carries both `s:actsFor` (the member who invited it, whose copy of the pod it preserves) and `s:providedBy` (Arca, genuinely a party to the arrangement).
+- `s:ArcaBackup` — the pod backup service Arca provides, joining a pod as a real member; a leaf under `s:AgentService`. It carries both `s:actsFor` (the member who invited it, whose copy of the pod it preserves) and `s:providedBy` (Arca, genuinely a party to the arrangement). A backup service is modeled as a member rather than as an external service the app merely talks to because membership is what scopes it: a pod is backed up exactly when the service is one of its members, so whether a pod is backed up is a fact the pod carries in its own member list.
 - `s:PersonalAgent` — a user's own AI agent, acting for that one user alone (`s:actsFor`) under the rules the user sets. It runs in the user's own app, talks with the user in a secret chat that belongs to no pod, and is never a pod member: what it writes into a pod it writes as the user, the app marking its chat messages with an asterisk after the user's name. Not an `s:Service`.
 - `s:LLMService` — the language model a personal agent uses. Directly instantiable, so a self-hosted model needs no vendor class. Not an `s:Service`.
 - `s:ChatGPT` — OpenAI's model, a leaf under `s:LLMService`. Carries no `s:providedBy`, since the class already names the vendor.

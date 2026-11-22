@@ -1,0 +1,24 @@
+flowchart TD
+    classDef person fill:#fffacd,stroke:#aaa,color:#333
+    classDef org    fill:#cce5ff,stroke:#aaa,color:#333
+    classDef service fill:#e6e6e6,stroke:#aaa,color:#333
+    classDef lit    fill:none,stroke:none,font-style:italic,color:#2a7a2a
+    classDef meta   fill:#f5f5ff,stroke:#9999cc,color:#333
+
+    subgraph ctx["Graph"]
+        direction LR
+        ctx_meta["claimant: :Self\nformTopic: :Alice_PGE_Account\nshape: sashapes:ServiceAccountShape"]:::meta
+    end
+
+    n3543933eadd9[":Alice_PGE_Account\n(ServiceAccount)"]
+    n767f3eb95783("PG&E"):::lit
+    nc79edbd78a5c("alice.walker.paradise"):::lit
+    nc998fda6d28f("https://www.pge.com/myaccount/"):::lit
+    nef0b098e5cc4("Sl33py#Hollow2025"):::lit
+    n61a8e87382f0[":Self\n(Person)"]:::person
+
+    n3543933eadd9 -->|"serviceName"| n767f3eb95783
+    n3543933eadd9 -->|"userHandle"| nc79edbd78a5c
+    n3543933eadd9 -->|"serviceURI"| nc998fda6d28f
+    n3543933eadd9 -->|"hasPassword"| nef0b098e5cc4
+    n61a8e87382f0 -->|"holdsUserAccount"| n3543933eadd9

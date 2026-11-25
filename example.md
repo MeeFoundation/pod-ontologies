@@ -4,7 +4,7 @@ This file continues [README.md](README.md), which describes the Category, Pod, G
 
 ## How Alice uses Tellipod
 
-Alice has been using the app for some time and has created a number of pods and been invited into others — thirty-three in all. The Tellipod UI lets her find any of them by category tag, user tag or pod name, and open it to see its contents. Depending on her role in a pod, she may be able to edit its contents — including inserting links to other pods — and delete it for every member (see app-behavior.md's [Permissions](app-behavior.md#permissions)). She can also create new pods of her own, and keep the searches she returns to as persistent views (see README's [Tags](README.md#tags) and app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)). Every one of her pods carries one category tag, and each sits in one of her four pod spaces (see [Pod Spaces](#pod-spaces) below).
+Alice has been using the app for some time, creating pods of her own and being invited into others. The Tellipod UI lets her find any of them by category tag, user tag or pod name, and open it to see its contents. Depending on her role in a pod, she may be able to edit its contents — including inserting links to other pods — and delete it for every member (see app-behavior.md's [Permissions](app-behavior.md#permissions)). She can also create new pods of her own, and keep the searches she returns to as persistent views (see README's [Tags](README.md#tags) and app-behavior.md's [Persistent Views](app-behavior.md#persistent-views)).
 
 This repo carries each pod as a folder inside a folder for its pod space, holding its pod DataBook at `example/pods/<Space>/<Name>/<Name>.databook.md` and a `_pod-attachments` folder — all of which is [development scaffolding](pod-databook.md#development-scaffolding) rather than anything a running Tellipod produces (see [storage.md](storage.md)). Every mention of "Self" in the following is a reference to the user, Alice.
 
@@ -65,7 +65,7 @@ Two of Alice's views show why spaces are needed: in each, a category tag says wh
 
 ## Alice's Pods and Spaces
 
-The sections below walk through Alice's pods one group at a time, each in the pod space it sits in; [Pods Mentioned](#pods-mentioned) lists all thirty-three.
+Alice holds thirty-three pods in all. Every one carries one category tag, and each sits in one of her pod spaces (see [Pod Spaces](#pod-spaces)). The sections below walk through them one group at a time; [Pods Mentioned](#pods-mentioned) lists them all.
 
 ### Bob and Fred
 

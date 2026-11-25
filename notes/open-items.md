@@ -58,3 +58,10 @@ Once decided, fix the wording in `app-behavior.md`.
 - its target type, and whether 0..1 means one node for all of the pod's tools or should be one per tool;
 - whether it then becomes a real property in `pod.ttl`.
 
+## Space placement
+
+Raised 2026-11-25 when the space-placement rule was written into README.md's [Pod Spaces](../README.md#pod-spaces): a pod sits in the space of the party whose life its category tag describes.
+
+### 1. Things belonging to two lives at once
+
+A joint bank account, or a family trip taken with a child, passes the "⟨space subject⟩'s ⟨category⟩" test in two spaces. Proposed tiebreak: the default space whenever the user is themselves a party to it (the example's Kyoto Trip, taken with Dave, stays in Alice's default space). Not yet decided, and not yet stated in README.md.

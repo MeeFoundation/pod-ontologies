@@ -63,6 +63,10 @@ Two of Alice's views show why spaces are needed: in each, a category tag says wh
 
 <p align="center"><img src="example/images/medical.png" alt="Primary care physicians across spaces — Marcus Bell in Alice's default space, Ruth Alvarez in her space for Paula, Jane Starostina in her space for Sophia"></p>
 
+## Alice's Pods and Spaces
+
+The sections below walk through Alice's pods one group at a time, each in the pod space it sits in; [Pods Mentioned](#pods-mentioned) lists all thirty-three.
+
 ### Bob and Fred
 
 Alice knows two people, Bob and Fred. She has created a two-member pod for each, tagged `podcat:Others`, sharing one with Bob and the other with Fred. Both turn up in her People view, since `podcat:Others` is narrower than `podcat:People`.

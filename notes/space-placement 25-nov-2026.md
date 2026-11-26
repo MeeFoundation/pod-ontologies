@@ -40,7 +40,7 @@ Two rows rule out the obvious alternative, "a pod goes in the space of whoever i
 
 - **The default space is the user's own life**, and the user's relationships to other parties are part of that life, which is why People, Pets and Work sit under `podcat:Person`. A space for another party works the same way: Sophia's relationship with her doctor is a relationship pod in *Sophia's* life.
 - **The pod that identifies a party lives in the user's space.** A pod tagged with the party's relation to the user records who the party is *to the user*: enough to designate them (name, relation, species and breed, company profile), with the party as its form topic. The hypothesis's "identity and wholeness" is right only in this narrower sense.
-- **A party's own identity documents go in their space.** A child's passport is the child's Records, not the parent's.
+- **A party's own identity documents go in their space.** A child's passport is the child's Government record, not the parent's.
 - **A space holds the party's whole life**: their possessions, their own relationships to third parties, and even the user, where the user figures in that life.
 - **A space is needed only once the user keeps something in another party's life.** Bob Johnson and Fred Flintstone have relationship pods and no space.
 - **Each member applies the test from their own vantage.** Nothing about a space travels with an invitation, so Dave places *Appointment* by the same rule, in a space of his own.

@@ -26,7 +26,7 @@ Alice keeps nine persistent views. A view is scoped to all spaces unless she nar
 
 The user-tag views gather what no category can. Sophia's four pods carry four different category tags — `podcat:ImmediateFamily`, `podcat:HealthWellness`, `podcat:PrimaryCarePhysician`, `podcat:MedicalAppointment` — whose nearest common ancestor is the top concept `podcat:Person`, which would gather nearly everything Alice has. The "Acme" view likewise picks out one employer's pods. Both are left at all spaces, because their pods sit in more than one: the Sophia view's in her default space and her space for Sophia, the Acme view's in her default space and her space for Acme.
 
-The Vehicles and Primary Care Physicians views are left at all spaces for the opposite reason: to put side by side pods a category tag alone cannot tell apart, which is the case for pod spaces made in the [section below](#pod-spaces).
+The Vehicles and Primary Care Physicians views are left at all spaces for the opposite reason: to put side by side pods a category tag alone cannot tell apart, which is the case for pod spaces that the [next section](#pod-spaces) makes.
 
 #### Three Ways to Tag
 
@@ -48,13 +48,15 @@ A category tag says what kind of thing a pod is about, never whose (see README's
 
 | Space | Root | Subject | Pods in it |
 |---|---|---|---|
-| Alice Walker (default) | `podcat:Person` | `:Self` | every pod not listed below, Sophia Walker, Paula Walker, Acme and Ginger included |
+| Alice Walker (default) | `podcat:Person` | `:Self` | the other 25 pods, Sophia Walker, Paula Walker, Acme and Ginger included |
 | Sophia Walker | `podcat:Person` | `:Sophia_Walker` | Sophia's Health, Jane Starostina, Appointment |
 | Paula Walker | `podcat:Person` | `:Paula_Walker` | Honda, Ruth Alvarez |
 | Acme | `podcat:Organization` | `:Acme` | Alice Walker |
 | Ginger | `podcat:Pet` | `:Ginger` | Medical, Untitled-1 |
 
-Each of the four spaces Alice created names its subject, the person, organization or pet whose life it holds: Sophia and Paula are people, so their spaces are rooted at `podcat:Person` and reuse the Person branch — Alice's space for her mother has its own Things just as hers does — and Acme is an organization, so its space is rooted at `podcat:Organization`, the only kind of space in which an Organization-rooted tag like `podcat:Employees` can be used. Ginger is Alice's cat, so the space for her is rooted at `podcat:Pet`, whose branch holds a pet's Health, Care & Feeding, Care Providers, Records, Things and Travel. The spaces are independent of the pods about those parties: the *Sophia Walker*, *Paula Walker*, *Acme* and *Ginger* pods all sit in Alice's default space, tagged as Alice relates to each (`podcat:ImmediateFamily`, `podcat:ImmediateFamily`, `podcat:Work`, `podcat:Pets`), and nothing links any of them to the space of the same name. If Alice kept a pod about Paula's sister in Paula's space, a space for the sister would simply be a sixth space; that the two are sisters would be recorded in a graph.
+Each space Alice created names its subject: the person, organization or pet whose life it holds. Sophia and Paula are people, so their spaces are rooted at `podcat:Person` and reuse the whole Person branch: Alice's space for her mother has its own Things, just as her default space does. Acme is an organization, so its space is rooted at `podcat:Organization`, the only kind of space where an Organization-branch tag such as `podcat:Employees` can be used. Ginger is Alice's cat, so the space for her is rooted at `podcat:Pet`, whose branch holds a pet's Health, Care & Feeding, Care Providers, Records, Things and Travel.
+
+The spaces link to nothing. The *Sophia Walker*, *Paula Walker*, *Acme* and *Ginger* pods sit in Alice's default space (see [Placing Pods in Spaces](#placing-pods-in-spaces) below), and nothing connects any of them to the space of the same name. Nor do spaces connect to one another: if Alice kept a pod about Paula's sister in her space for Paula and later created a space for the sister, it would simply be a sixth space, and that the two women are sisters would be recorded in a graph.
 
 Two of Alice's views show why spaces are needed: in each, a category tag says what kind of thing a pod is about, and only the space says whose.
 

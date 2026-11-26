@@ -75,7 +75,7 @@ Every one of Alice's pods is placed by README's [rule](README.md#placing-pods-in
 - **Spaces only for lives Alice helps run.** She has spaces for her daughter, her mother, her cat and her employer, the four parties whose own affairs she keeps pods about. Bob and Fred have relationship pods and no space, and need none.
 - **No untagged pods.** Every one of Alice's thirty-three pods carries a category tag, so the rule's case for an untagged pod never arises.
 
-One fact is placed by Alice's choice rather than by the rule: Paula is also one of Acme's employees. A pod recording that would belong in Acme's space, tagged `podcat:Employees`, but Alice keeps no such pod. She keeps the fact in her *Paula Walker* relationship pod instead, which holds whatever she chooses to keep about Paula, and gathers it with her #Acme user tag.
+The rule places pods, not claims, and Alice uses that latitude once: Paula is also one of Acme's employees. A pod recording that would belong in Acme's space, tagged `podcat:Employees`, but Alice keeps no such pod. She keeps that claim in her *Paula Walker* relationship pod instead, which holds whatever she chooses to keep about Paula, and gathers it with her #Acme user tag. A claim can also be made in more than one pod: the name of Sophia's doctor is in *Jane Starostina* and, copied, in *Appointment*.
 
 ## Alice's Pods and Spaces
 

@@ -319,6 +319,20 @@ The worked example is the one a tag would otherwise have handled: "show me every
 
 The two searches complement each other rather than competing. A property search needs no one to have remembered to tag anything and cannot drift out of date, since it reads the same fact the pod already stores for its own sake — but it only reaches what the data actually models. A tag reaches anything at all, including a grouping that exists only in the user's head (a pet's name, say), at the cost of someone having to apply it. So a fact with a property of its own is found by that property, and a tag is for what the data does not already model — which is why the app ships no built-in tag vocabulary.
 
+### Editing a Claim Made in Several Pods
+
+The same claim by the user often appears in more than one pod: their email address in the member entry of every pod they belong to, or a doctor's name in the doctor's own pod and in an appointment pod. The model keeps no link between the copies, since each is made separately, in its own graph (see README's [Placing Pods in Spaces](README.md#placing-pods-in-spaces)). The app finds them when needed instead, the same way a property search does: other graphs the user claims that state the same property of the same subject with the same old value.
+
+When the user edits such a claim, the app shows where else it appears and asks where the change should apply:
+
+- **Everywhere** — every other copy is updated too.
+- **Only some** — the user picks which pods, from the list of pods holding a copy.
+- **Only here** — the other copies are left as they are.
+
+Keeping a copy stale is a legitimate choice, not an error. Life is messy, and the user may have reasons to leave an old email address in a pod shared with someone, or to let one pod record a value the others don't. The app never updates a copy the user did not choose, never asks again about a copy the user left behind, and never treats differing copies as a conflict to resolve.
+
+Two limits follow from the [permission rules](#tool--member-info-permissions). Only the user's own claims are offered: a copy claimed by another member or an organization is theirs to change, not the user's. And in a shared pod, updating the user's copy is an ordinary edit of their own claim, which reaches every member of that pod like any other.
+
 ### Adding a Tool
 
 Every pod offers an **Add Tool** action, whether or not it already carries one — a pod none of whose category tags' templates declares a tool starts with its note alone (see [Lazy Instantiation](#lazy-instantiation) above). The user selects the pod, taps **Add Tool**, and a modal dialog asks them which tool to add, from the set of tool types the app supports — **Chat**, **Form**, **Calendar**, **Canvas** and **Map** (the `pod:Tool` kinds other than `pod:Note`). It never offers a **Note**, which every pod already has, and offers a **Chat** only while the pod has none. It also asks, for a **Form**, which template the new form's information should follow. The default selection is **Contact Info** (`pshapes:ContactInfoShape`) — the same contact-info shape every core category's `pod:member` graphs already use — since a form about a person who is not themselves a member of the pod is the commonest case by far. The dialog offers many other choices alongside it, one per SHACL shape a tool's graph can be validated against — **Passport**, **Debit Card**, **Vehicle**, **Trip Itinerary**, and the rest; README.md's [Form Shapes](README.md#form-shapes) lists all of them, and [Form Types](#form-types) below says what the dialog does with the pick.

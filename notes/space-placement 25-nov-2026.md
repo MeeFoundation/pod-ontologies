@@ -63,4 +63,4 @@ Things that belong to two lives at once, such as a joint account or a family tri
 ## Where it is documented
 
 - README.md, [Placing Pods in Spaces](../README.md#placing-pods-in-spaces): the rule and its consequences, theory only.
-- example.md, [Pod Spaces](../example.md#pod-spaces): the rule applied to the Sophia, Ginger and Acme pairs, and the Paula-at-Acme exception.
+- example.md, [Placing Pods in Spaces](../example.md#placing-pods-in-spaces): the rule applied to every space's pods, and the Paula-at-Acme exception.

@@ -187,7 +187,7 @@ From this:
 - **A space is for a life the user helps run, not for everyone the user knows.** A space for a party is worth creating once the user keeps pods about that party's own life — typically a child, an aging parent, a pet or an employer — and not before. Everything else the user knows about a party goes in the relationship pod, so most parties never need a space.
 - **A pod with no category tag has no tag to read.** It goes in the space of the party whose life its content is part of, and any space accepts it.
 
-The app enforces only part of this rule — that every tag falls under its space's root — and helps with the rest; see [Pod Spaces](app-behavior.md#pod-spaces) in app-behavior.md. For the rule applied to a worked example, see [example.md](example.md#pod-spaces).
+The app enforces only part of this rule — that every tag falls under its space's root — and helps with the rest; see [Pod Spaces](app-behavior.md#pod-spaces) in app-behavior.md. For the rule applied to a worked example, see [example.md](example.md#placing-pods-in-spaces).
 
 ### TemplatePod
 

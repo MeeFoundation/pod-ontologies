@@ -44,19 +44,17 @@ The diagrams embedded below show what the desktop app displays. A view's header 
 
 ### Pod Spaces
 
-A category tag says what kind of thing a pod is about, never whose (see README's [Pod Spaces](README.md#pod-spaces)). Alice keeps four pod spaces:
+A category tag says what kind of thing a pod is about, never whose (see README's [Pod Spaces](README.md#pod-spaces)). Alice keeps five pod spaces, her default space and four she created:
 
 | Space | Root | Subject | Pods in it |
 |---|---|---|---|
-| Alice Walker (default) | `podcat:Person` | `:Self` | every pod not listed below, Sophia Walker, Paula Walker and Acme included |
+| Alice Walker (default) | `podcat:Person` | `:Self` | every pod not listed below, Sophia Walker, Paula Walker, Acme and Ginger included |
 | Sophia Walker | `podcat:Person` | `:Sophia_Walker` | Sophia's Health, Jane Starostina, Appointment |
 | Paula Walker | `podcat:Person` | `:Paula_Walker` | Honda, Ruth Alvarez |
 | Acme | `podcat:Organization` | `:Acme` | Alice Walker |
 | Ginger | `podcat:Pet` | `:Ginger` | Medical, Untitled-1 |
 
-Each of the four spaces Alice created names its subject, the person, organization or pet whose life it holds: Sophia and Paula are people, so their spaces are rooted at `podcat:Person` and reuse the Person branch — Alice's space for her mother has its own Things just as hers does — and Acme is an organization, so its space is rooted at `podcat:Organization`, the only kind of space in which an Organization-rooted tag like `podcat:Employees` can be used. Ginger is Alice's cat, so her space is rooted at `podcat:Pet`, whose branch holds a pet's Health, Care & Feeding, Care Providers, Records, Things and Travel. The spaces are independent of the pods about those parties: the *Sophia Walker*, *Paula Walker*, *Acme* and *Ginger* pods all sit in Alice's default space, tagged as Alice relates to each (`podcat:ImmediateFamily`, `podcat:ImmediateFamily`, `podcat:Work`, `podcat:Pets`), and nothing links any of them to the space of the same name. If Alice kept a pod about Paula's sister in Paula's space, a space for the sister would simply be a sixth space; that the two are sisters would be recorded in a graph.
-
-Every placement follows README's [rule](README.md#placing-pods-in-spaces) that a pod sits in the space of the party whose life its category tag describes. *Sophia Walker* reads as Alice's immediate family and *Sophia's Health* as Sophia's health & wellness, though both forms are about Sophia; *Ginger* is Alice's pet and *Medical* Ginger's medical care; *Acme* is Alice's work, while her *Alice Walker* pod, about nobody but herself, is one of Acme's employees and so sits in Acme's space. That Paula is also Acme's employee would by the same rule belong in Acme's space; Alice keeps it instead inside her *Paula Walker* pod, which is about Paula as her mother, and gathers it with her #Acme user tag.
+Each of the four spaces Alice created names its subject, the person, organization or pet whose life it holds: Sophia and Paula are people, so their spaces are rooted at `podcat:Person` and reuse the Person branch — Alice's space for her mother has its own Things just as hers does — and Acme is an organization, so its space is rooted at `podcat:Organization`, the only kind of space in which an Organization-rooted tag like `podcat:Employees` can be used. Ginger is Alice's cat, so the space for her is rooted at `podcat:Pet`, whose branch holds a pet's Health, Care & Feeding, Care Providers, Records, Things and Travel. The spaces are independent of the pods about those parties: the *Sophia Walker*, *Paula Walker*, *Acme* and *Ginger* pods all sit in Alice's default space, tagged as Alice relates to each (`podcat:ImmediateFamily`, `podcat:ImmediateFamily`, `podcat:Work`, `podcat:Pets`), and nothing links any of them to the space of the same name. If Alice kept a pod about Paula's sister in Paula's space, a space for the sister would simply be a sixth space; that the two are sisters would be recorded in a graph.
 
 Two of Alice's views show why spaces are needed: in each, a category tag says what kind of thing a pod is about, and only the space says whose.
 
@@ -64,6 +62,18 @@ Two of Alice's views show why spaces are needed: in each, a category tag says wh
 - **Primary care physicians.** Alice keeps a pod for her own doctor, [*Marcus Bell*](<example/pod-spaces/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md>), in her default space; one for her mother's, [*Ruth Alvarez*](<example/pod-spaces/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md>), in her space for Paula; and one for her daughter's, *Jane Starostina*, in her space for Sophia. All three are tagged `podcat:PrimaryCarePhysician`, and each holds the same Primary Care Physician form ([graph 110](<example/pod-spaces/Alice Walker (default)/Marcus Bell/Marcus Bell.databook.md#graph-110>), [graph 112](<example/pod-spaces/Paula Walker/Ruth Alvarez/Ruth Alvarez.databook.md#graph-112>), [graph 25](<example/pod-spaces/Sophia Walker/Jane Starostina/Jane Starostina.databook.md#graph-25>)), so nothing in the tag or the form says whose doctor each one is. The space does. Her all-spaces Primary Care Physicians view gathers all three, each in the panel of the space it sits in, beneath that space's own `#Provider` group header.
 
 <p align="center"><img src="example/images/medical.png" alt="Primary care physicians across spaces — Marcus Bell in Alice's default space, Ruth Alvarez in her space for Paula, Jane Starostina in her space for Sophia"></p>
+
+### Placing Pods in Spaces
+
+Every one of Alice's pods is placed by README's [rule](README.md#placing-pods-in-spaces): a pod belongs in the space of the party whose life it is part of, and its category tag says whose. Reading each tag with a space's subject in front of it settles where the pod goes:
+
+- **Relationship pods stay in her default space.** *Sophia Walker* and *Paula Walker* are Alice's Immediate Family, *Ginger* her Pets and *Acme* her Work, so all four sit in her default space even though Alice also keeps a space for each of those parties. So do *Bob Johnson* and *Fred Flintstone*, tagged Others.
+- **Pods about another party's own life go in that party's space.** *Sophia's Health* is Sophia's Health & Wellness, *Jane Starostina* her Primary Care Physician and *Appointment* her Medical Appointment. *Honda* is Paula's Vehicles and *Ruth Alvarez* her Primary Care Physician. *Medical* and *Untitled-1* are Ginger's medical care and her care & feeding. Were Alice to record Sophia's Social Security number, it would join Sophia's pods, tagged `podcat:SSN` (see [Taking Care of Sophia](#taking-care-of-sophia)).
+- **Who a pod is about does not decide.** *Sophia Walker* and *Sophia's Health* both have Sophia as their form topic, yet sit in different spaces. *Marcus Bell* is about Marcus but is Alice's own Primary Care Physician, so it sits in her default space. And Alice's *Alice Walker* pod, about nobody but herself, is one of Acme's Employees, so it sits in Acme's space.
+- **Spaces only for lives Alice helps run.** She has spaces for her daughter, her mother, her cat and her employer, the four parties whose own affairs she keeps pods about. Bob and Fred have relationship pods and no space, and need none.
+- **No untagged pods.** Every one of Alice's thirty-three pods carries a category tag, so the rule's case for an untagged pod never arises.
+
+One fact is placed by Alice's choice rather than by the rule: Paula is also one of Acme's employees. A pod recording that would belong in Acme's space, tagged `podcat:Employees`, but Alice keeps no such pod. She keeps the fact in her *Paula Walker* relationship pod instead, which holds whatever she chooses to keep about Paula, and gathers it with her #Acme user tag.
 
 ## Alice's Pods and Spaces
 

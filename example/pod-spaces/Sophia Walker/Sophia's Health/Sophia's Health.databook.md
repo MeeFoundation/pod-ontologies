@@ -1,11 +1,11 @@
 ---
 id: http://www.example.org/tpod/pods/pod-13
-title: "About Sophia"
+title: "Sophia's Health"
 type: pod-databook
 version: 1.9.0
 created: 2026-07-10
 description: >
-  Pod DataBook for the "About Sophia" pod (category tag: podcat:HealthWellness; user tag: "Sophia"). It sits in Alice's pod space for Sophia, since what it records belongs to Sophia's life rather than Alice's; the space is what makes a plain "Health & Wellness" name unambiguous. It is a one-member pod with one member entry about :Self and one graph about :Sophia_Walker (the pod's subject).
+  Pod DataBook for the "Sophia's Health" pod (category tag: podcat:HealthWellness; user tag: "Sophia"). It sits in Alice's pod space for Sophia, since what it records belongs to Sophia's life rather than Alice's; its name reads as the placement rule does: Sophia's health, not Alice's. It is a one-member pod with one member entry about :Self and one graph about :Sophia_Walker (the pod's subject).
 tpod:
   categoryTag:
     - "podcat:HealthWellness"

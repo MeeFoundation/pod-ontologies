@@ -19,7 +19,7 @@ These are the tags on every example pod's `tpod:` block:
 | Tag pattern | Count | Pods |
 |---|---|---|
 | Category tag only | 25 | Arca, ATT, Birth Certificate, Bob Johnson, Boston Hub Society, Boston, CHVA, Citibank, Drivers License, Facenook, Fred Flintstone, Google, Hilton, Kyoto Trip 2027, Marcus Bell, Paradise, Passport, PRIVO, RAV4, SSN, Things, Honda, Ruth Alvarez |
-| Both | 9 | Ginger, Medical, Untitled-1 ("Ginger"); Sophia Walker, About Sophia, Jane Starostina, Appointment ("Sophia"); Acme, Alice Walker, Paula Walker ("Acme") |
+| Both | 9 | Ginger, Medical, Untitled-1 ("Ginger"); Sophia Walker, Sophia's Health, Jane Starostina, Appointment ("Sophia"); Acme, Alice Walker, Paula Walker ("Acme") |
 | User tag only | 0 | — |
 
 The deeper problem was not the mix itself. **Every tag in the example is Alice's.** The pod DataBooks record Alice's instance only, and one user can only show one tagging style. However Alice's own tags were added or deleted, the example could never show three *kinds of user*.

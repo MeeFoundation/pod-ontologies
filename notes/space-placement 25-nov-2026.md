@@ -19,7 +19,7 @@ Every category concept is implicitly possessive. Things, Health, Employees and I
 | Pod | Space | Category tag | Form topic | Reads as |
 |---|---|---|---|---|
 | Sophia Walker | default | `podcat:ImmediateFamily` | Sophia | **Alice's** immediate family |
-| About Sophia | Sophia | `podcat:HealthWellness` | Sophia | **Sophia's** health & wellness |
+| Sophia's Health | Sophia | `podcat:HealthWellness` | Sophia | **Sophia's** health & wellness |
 | Jane Starostina | Sophia | `podcat:PrimaryCarePhysician` | Jane | **Sophia's** doctor |
 | Appointment | Sophia | `podcat:MedicalAppointment` | Sophia's appointment | **Sophia's** appointment |
 | Paula Walker | default | `podcat:ImmediateFamily` | Paula | **Alice's** immediate family |
@@ -33,7 +33,7 @@ Every category concept is implicitly possessive. Things, Health, Employees and I
 
 Two rows rule out the obvious alternative, "a pod goes in the space of whoever it is about":
 
-- **About Sophia, Medical and Untitled-1 have the same form topic as the default-space pod** (Sophia, Ginger). What a pod is about does not decide its space.
+- **Sophia's Health, Medical and Untitled-1 have the same form topic as the default-space pod** (Sophia, Ginger). What a pod is about does not decide its space.
 - **The Alice Walker pod in Acme's space is about nobody but Alice.** A space for a party holds that party's *life*, not facts about them.
 
 ## What follows

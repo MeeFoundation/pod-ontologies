@@ -9,7 +9,7 @@ chat — lives in a protected, app-managed store, encrypted at
 rest. See [storage.md](storage.md) for that decision and the reasoning behind it. A running Tellipod
 produces no folders, no `.databook.md` file, and no files of any kind.
 
-The app does not exist yet, and `example/pods/` is how this project carries, validates and diagrams
+The app does not exist yet, and `example/pod-spaces/` is how this project carries, validates and diagrams
 real pod content in the meantime. So the DataBook lives on disk here, as **development
 scaffolding**: three helpers read those files (`helpers/validate.py`, `helpers/yaml-to-rdf.py` and
 `helpers/extract-all.py` discover them by globbing `*.databook.md`; `helpers/extract-graph.py` and
@@ -17,7 +17,7 @@ scaffolding**: three helpers read those files (`helpers/validate.py`, `helpers/y
 app ships, all of that has to move to whatever the app exposes instead.
 
 The scaffolding is not only the file. The folder around it is scaffolding too, and so is everything
-in that folder. Every pod is one folder, `example/pods/<Space>/<Name>/`, inside a folder for the
+in that folder. Every pod is one folder, `example/pod-spaces/<Space>/<Name>/`, inside a folder for the
 [pod space](README.md#pod-spaces) it sits in. The space folders mirror the user's flat set of
 spaces, and the pod folders inside each mirror that space's flat set of pods: a space folder is not
 a pod, and no pod folder sits inside another.
@@ -110,7 +110,7 @@ recording the note's or the chat's content (README.md's [Tools](README.md#tools)
 
 This document specifies the DataBook file and the folder this repo wraps it in; for what a pod
 holds in the app, see [Pod Contents](app-behavior.md#pod-contents) in app-behavior.md, and for the
-boundary between the two, [storage.md](storage.md). For real files, see `example/pods/` and
+boundary between the two, [storage.md](storage.md). For real files, see `example/pod-spaces/` and
 [example.md](example.md).
 
 ## Why This Format
@@ -143,7 +143,7 @@ between real instances. The largest known gap is tools: four of the six kinds ha
 at all yet. See [Open Questions](#open-questions) at the end for that and the rest of what is
 still unsettled. This document tracks the format as it stands rather than freezing it; what
 keeps a proposed change honest is that [integrity.md](integrity.md)'s checks and the pods under
-`example/pods/` make its blast radius visible before it is made.
+`example/pod-spaces/` make its blast radius visible before it is made.
 
 ## Filename Convention
 
@@ -155,13 +155,13 @@ Every pod is one folder inside the folder of its pod space, and its DataBook sit
 folder under the same name:
 
 ```
-example/pods/<Space>/<Name>/<Name>.databook.md
+example/pod-spaces/<Space>/<Name>/<Name>.databook.md
 ```
 
 `<Space>` is the space's `pod:spaceName` — its `tpod.space.name`, or for a pod with no `tpod.space`
 the default space's name, `Alice Walker`, followed by ` (default)` as the app shows it: the folder
-`example/pods/Alice Walker (default)/`. The five space folders are `Alice Walker (default)`,
-`Sophia Walker`, `Paula Walker`, `Acme` and `Ginger`. Nothing goes directly in `example/pods/`
+`example/pod-spaces/Alice Walker (default)/`. The five space folders are `Alice Walker (default)`,
+`Sophia Walker`, `Paula Walker`, `Acme` and `Ginger`. Nothing goes directly in `example/pod-spaces/`
 but space folders, and nothing directly in a space folder but pod folders.
 
 `<Name>` is the pod's own name, exactly as the DataBook's `title:` field gives it — verbatim, same
@@ -238,7 +238,7 @@ member's copy, and any member may rename the pod — see
 [Naming, Renaming, and Sharing](app-behavior.md#naming-renaming-and-sharing) in app-behavior.md for
 the one exception, a bare two-member pod, whose name is instead independent per member.
 `title:` is always present, because a pod always has a name: one its creator left unnamed carries
-the `Untitled-N` the app assigned it, so its folder here is `example/pods/Ginger/Untitled-1/`, and
+the `Untitled-N` the app assigned it, so its folder here is `example/pod-spaces/Ginger/Untitled-1/`, and
 YAML-5 applies to it unchanged.
 
 ### `type`
@@ -536,7 +536,7 @@ own type declaration. Every substantive fact lives in the graph it belongs to.
 ## Skeleton
 
 A complete, minimal pod DataBook — one member entry and one form tool with one graph — saved as
-`example/pods/Pod Name/Pod Name.databook.md`:
+`example/pod-spaces/Pod Name/Pod Name.databook.md`:
 
 ````markdown
 ---

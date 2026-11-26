@@ -157,7 +157,7 @@ A space may also name its **subject**: the party whose life it holds, as an IRI,
 
 Which space a given pod belongs in is set out in [Placing Pods in Spaces](#placing-pods-in-spaces) below.
 
-Spaces are independent of one another and of every pod. A space for the user's mother and one for her sister are two spaces side by side, related by nothing in either; that the two women are sisters is recorded in a graph, where every relationship is. Spaces form a flat set, and so do the pods in a space.
+Spaces are independent of one another and of every pod. A space for the user's mother and one for her sister are two spaces side by side, related by nothing in either; that the two women are sisters is recorded in a graph, where every relationship is. Spaces form a flat set, and so do the pods in a space. What connects a space to the pods about its party in other spaces is only a match, never a stored link: the space's `pod:spaceSubject` and a pod's `pod:formTopic` or member `pod:subject` naming the same IRI, which the app computes on demand (see [Pod Spaces](app-behavior.md#pod-spaces) in app-behavior.md).
 
 Placement is per-member, exactly as tags are: each member puts a shared pod in a space of their own, and moving it changes only their copy. When a pod is shared, nothing about the sender's space is sent: the joining member picks a space of their own for it, by the same [rule](#placing-pods-in-spaces) (see [Joining a Pod](app-behavior.md#joining-a-pod) in app-behavior.md). A tag search and a persistent view are scoped either to all spaces, where a new user starts, or to one space the user picks (see [Finding Pods by Tag](app-behavior.md#finding-pods-by-tag)).
 

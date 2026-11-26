@@ -39,11 +39,17 @@ Two rows rule out the obvious alternative, "a pod goes in the space of whoever i
 ## What follows
 
 - **The default space is the user's own life**, and the user's relationships to other parties are part of that life, which is why People, Pets and Work sit under `podcat:Person`. A space for another party works the same way: Sophia's relationship with her doctor is a relationship pod in *Sophia's* life.
-- **The pod that identifies a party lives in the user's space.** A pod tagged with the party's relation to the user records who the party is *to the user*: enough to designate them (name, relation, species and breed, company profile), with the party as its form topic. The hypothesis's "identity and wholeness" is right only in this narrower sense.
+- **The pod that identifies a party lives in the default space.** A pod tagged with the party's relation to the user holds what the user knows of the party as a party in their own life (name, contact details, birthday, preferences, notes; species and breed; company profile), with the party as its form topic or as one of its members. The hypothesis's "identity and wholeness" is right in this sense.
 - **A party's own identity documents go in their space.** A child's passport is the child's Government record, not the parent's.
-- **A space holds the party's whole life**: their possessions, their own relationships to third parties, and even the user, where the user figures in that life.
-- **A space is needed only once the user keeps something in another party's life.** Bob Johnson and Fred Flintstone have relationship pods and no space.
+- **A space holds the party's life as the user keeps it**: their possessions, their own relationships to third parties, and even the user, where the user figures in that life.
+- **A space is for a life the user helps run, not for everyone the user knows.** See below.
 - **Each member applies the test from their own vantage.** Nothing about a space travels with an invitation, so Dave places *Appointment* by the same rule, in a space of his own.
+
+## Spaces are for lives the user helps run
+
+If Alice knows 100 people and has a few facts about each, she does not need 100 spaces. The rule decides where a **pod** goes, not where a **fact** goes. Facts about a person go first into the relationship pod: everything Alice knows of them as a person in her life, such as their name, contact details, birthday, preferences and notes. That pod is tagged with their relation to Alice, so it is Alice's, and it sits in her default space. That makes one pod per person and no spaces. The example already works this way: the *Bob Johnson* pod, in Alice's default space, holds her notes about Bob, his favorite drink included (graph 04).
+
+The placement question arises only when the user splits an aspect of another party's life into a pod of its own, tagged from that party's branch: their health, their doctor, their car, their SSN. Those are pods the user keeps on the party's behalf, for a child, an aging parent, a pet or an employer. That is the threshold for a space. For most of the people Alice knows she runs nothing, so they never need one. Nothing pushes her toward more spaces, either: the app's placement hint fires only when a pod's form topic is already another space's subject, so without a space for Bob it stays silent.
 
 ## Where the example bends it
 

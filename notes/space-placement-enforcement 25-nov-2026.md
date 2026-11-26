@@ -32,7 +32,7 @@ The hint cannot see:
 
 - a pod with no form topic, such as one with only member graphs;
 - a pod with no category tag;
-- a form topic that is not yet any space's subject, where the right answer may be "create a space for this party".
+- a form topic that is not yet any space's subject, where the right answer may be "create a space for this party" — suggested only when the user already keeps several pods about that party's own life.
 
 These need judgment, so they go to the user's personal agent. As the user creates, tags and moves pods, Telli notices a pod that by the rule belongs elsewhere, and suggests the change in the Telli chat, giving its reason in the rule's own terms. It never moves a pod itself.
 

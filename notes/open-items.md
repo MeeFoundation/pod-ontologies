@@ -65,3 +65,7 @@ Raised 2026-11-25 when the space-placement rule was written into README.md's [Po
 ### 1. Things belonging to two lives at once
 
 A joint bank account, or a family trip taken with a child, passes the "⟨space subject⟩'s ⟨category⟩" test in two spaces. Proposed tiebreak: the default space whenever the user is themselves a party to it (the example's Kyoto Trip, taken with Dave, stays in Alice's default space). Not yet decided, and not yet stated in README.md.
+
+### 2. Telli's access to the user's spaces
+
+The placement-coach use case (app-behavior.md's [Use Cases](../app-behavior.md#use-cases)) needs the personal agent to read the user's list of spaces and their subjects. In the initial implementation the PACRs confine the agent to the current pod. Spaces are not pod content and belong to the user alone, so read-only access to them may be safe enough to grant from the start. Undecided: whether to grant it in the initial implementation, and whether the proactive mode (reacting to pod actions, not only to messages) needs a PACR of its own.

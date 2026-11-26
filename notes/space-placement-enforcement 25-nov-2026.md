@@ -24,7 +24,7 @@ A pod is probably in the wrong space when both of these are true:
 
 The app then offers "Move to ⟨space name⟩?" when the tag is added or the form is created. The hint reads only the pod's own form topics and tags and the user's own spaces. If the user declines, it is not offered again for that pod.
 
-The relation exception is what keeps the hint quiet on the pod that identifies a party. In the example, the *Sophia Walker* pod has Sophia as its form topic and she is the subject of Alice's space for Sophia, but its tag, Immediate Family, sits under People, so no hint appears. The same holds for *Paula Walker* (Immediate Family), *Ginger* (Pets) and *Acme* (Work). *Sophia's Health*, whose form topic is the subject of the space it already sits in, triggers nothing either. Had Alice filed *Sophia's Health* in her default space, the hint would have offered to move it.
+The relation exception is what keeps the hint quiet on the relationship pod. In the example, the *Sophia Walker* pod has Sophia as its form topic and she is the subject of Alice's space for Sophia, but its tag, Immediate Family, sits under People, so no hint appears. The same holds for *Paula Walker* (Immediate Family), *Ginger* (Pets) and *Acme* (Work). *Sophia's Health*, whose form topic is the subject of the space it already sits in, triggers nothing either. Had Alice filed *Sophia's Health* in her default space, the hint would have offered to move it.
 
 ## 2. Telli as placement coach (future)
 

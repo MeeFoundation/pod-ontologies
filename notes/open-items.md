@@ -60,7 +60,7 @@ Once decided, fix the wording in `app-behavior.md`.
 
 ## Space placement
 
-Raised 2026-11-25 when the space-placement rule was written into README.md's [Pod Spaces](../README.md#pod-spaces): a pod sits in the space of the party whose life its category tag describes.
+Raised 2026-11-25 when the space-placement rule was written into README.md's [Placing Pods in Spaces](../README.md#placing-pods-in-spaces): a pod sits in the space of the party whose life its category tag describes.
 
 ### 1. Things belonging to two lives at once
 

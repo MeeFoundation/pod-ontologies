@@ -38,9 +38,10 @@ Two rows rule out the obvious alternative, "a pod goes in the space of whoever i
 
 ## What follows
 
-- **The default space is the user's own life**, and the user's relationships to other parties are part of that life, which is why People, Pets and Work sit under `podcat:Person`. A space for another party works the same way: Sophia's relationship with her doctor is a relationship pod in *Sophia's* life.
-- **The pod that identifies a party lives in the default space.** A pod tagged with the party's relation to the user holds what the user knows of the party as a party in their own life (name, contact details, birthday, preferences, notes; species and breed; company profile), with the party as its form topic or as one of its members. The hypothesis's "identity and wholeness" is right in this sense.
-- **A party's own identity documents go in their space.** A child's passport is the child's Government record, not the parent's.
+- **The default space is the user's own life**, and the user's relationships to other parties are part of that life, kept under the People, Pets and Work branches of `podcat:Person`. A space for another party works the same way: Sophia's relationship with her doctor is a relationship pod in *Sophia's* life.
+- **The relationship pod lives in the default space.** A pod tagged with the party's relation to the user is the user's relationship with that party, with the party as its form topic or as one of its members, and holds whatever the user chooses to keep about them (name, contact details, birthday, preferences, notes; species and breed; company profile; anything else). The hypothesis's "identity and wholeness" is right in this sense.
+- **What belongs to the party's own life goes in their space, whatever kind of information it is**: their health and providers, possessions, finances and accounts, schooling, travel and identity documents. A child's passport is the child's Government record, not the parent's, and a parent's car is the parent's Things. A pet's medical care and feeding go in the pet's space, and an organization's employees and customers in the organization's.
+- **Who a pod is about does not decide; whose life it is part of does.** A pod planning a friend's birthday party is the user's Events, and Alice's *Marcus Bell* pod is about Marcus but is her own Primary Care Physician, so both go in the default space.
 - **A space holds the party's life as the user keeps it**: their possessions, their own relationships to third parties, and even the user, where the user figures in that life.
 - **A space is for a life the user helps run, not for everyone the user knows.** See below.
 - **Each member applies the test from their own vantage.** Nothing about a space travels with an invitation, so Dave places *Appointment* by the same rule, in a space of his own.
@@ -61,5 +62,5 @@ Things that belong to two lives at once, such as a joint account or a family tri
 
 ## Where it is documented
 
-- README.md, [Pod Spaces](../README.md#pod-spaces): the rule and its consequences, theory only.
+- README.md, [Placing Pods in Spaces](../README.md#placing-pods-in-spaces): the rule and its consequences, theory only.
 - example.md, [Pod Spaces](../example.md#pod-spaces): the rule applied to the Sophia, Ginger and Acme pairs, and the Paula-at-Acme exception.

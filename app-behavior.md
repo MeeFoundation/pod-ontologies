@@ -230,7 +230,7 @@ Every pod sits in exactly one of the member's own **pod spaces** — the life it
 - **Moving a pod** into another space changes only the moving member's copy. A category tag that does not fall under the new space's root is dropped — the user is told which before confirming — so a pod tagged only from another branch arrives as Custom. Moving a pod never removes a tool, just as removing a tag never does.
 - **Renaming a space** changes only its name. The default space can be renamed too, though it stays the default.
 - **Deleting a space** moves its pods into the default space, dropping any category tag that does not fall under `podcat:Person`, as for any move. The default space cannot be deleted.
-- **From a pod to its party's space, and back.** When a pod's form topic, or the `pod:subject` of one of its member graphs, is the subject of one of the user's spaces, the pod shows a link to that space; and a space shows links to the pods in the user's other spaces whose form topic or member subject is its own subject. The links are computed on demand by matching the two IRIs, never stored, so they appear as soon as a space names its subject and disappear when it stops. A space without a subject gets none.
+- **From a pod to its party's space, and back.** When a party a pod is about (its form topics, or failing those its members other than the user) is the subject of another of the user's spaces, the pod carries a link to that space, and the space a link back to the pod. The links are computed on demand by matching the two IRIs, never stored, so they appear as soon as a space names its subject and disappear when it stops. A space without a subject gets none. See [Space Links](#space-links) below.
 
 **Placement is half enforced.** README's [placement rule](README.md#placing-pods-in-spaces) — a pod sits in the space of the party whose life its category tag describes — has two halves, and the app enforces only the first. *Which kind of life* is enforced: every category tag must fall under its space's root, so an Organization- or Pet-branch tag can never sit in a Person-rooted space, and a move or a space deletion drops any tag that would break this. *Whose life*, among spaces sharing a root, is not and cannot be: a child's height tagged Health & Wellness is as valid in the parent's default space as in the child's, since nothing in the data says whose health it is. That half is a recommendation, and the app helps with it in two ways:
 
@@ -310,6 +310,18 @@ On the desktop, the app groups the pods a view (or a category-tag search) return
 
 A view is the member's own: it lives in their own store, is never shared with another member, and never travels with any pod. It is purely app-level, with no counterpart in any ontology. Because each result links by the pod's stable id, renaming a pod never drops it from a view; only changing the member's tags on it can.
 
+
+### Space Links
+
+A pod in a list may be about a party the user also keeps a space for: a relationship pod about a family member, a pet or an employer, say, shown in a tag search or a persistent view. Beside such a pod the app shows a **space link**, a button that opens that party's whole space.
+
+- **Label.** "Open space: ⟨space name⟩", e.g. "Open space: Mom". It names the space it opens, since every pod already sits in a space and a generic "View Pod Space" would read as the pod's own. Where room is tight, as in a dense view, it shrinks to a chip, "↗ ⟨space name⟩", with the full label as its tooltip and accessibility label.
+- **When a pod gets one.** A pod gets a space link for each of the user's spaces, other than the one it sits in, whose subject is one of the parties the pod is about. That is the pod's derived subject: its form topics if it has a form tool, and otherwise the subjects of its member graphs (see integrity.md's YAML-4). The user themselves is ignored: they are a member of every pod and the subject of the default space, so matching on them would link every pod to the default space. A co-member who has a space of their own does not count either, when the pod has a form tool about something else. A space with no subject never matches. In practice, relationship pods in the default space link to their parties' spaces, and the pods inside a party's space get none.
+- **Where it appears.** Beside the pod's entry in every list of pods, whether the results of a search by tag, name or property or a persistent view, and in the pod's own header when it is open. A pod matching several spaces gets one link each, sorted by space name; more than two collapse into a "Spaces ▾" menu.
+- **What pressing it does.** Exactly what choosing that space in the space picker with an empty search does: the current pod space becomes that space, and the list shows all of its pods, under the same display-only group headers as any view. It counts as a switch, so the picker remembers it as the last choice. **Back** returns to the list the user came from, with its tags and scope as they were. Following a space link never changes a persistent view's stored query or scope.
+- **The reverse.** A space's header carries a link to each pod in the user's other spaces whose derived subject includes the space's subject, typically the party's relationship pod, labeled "Open pod: ⟨pod name⟩".
+
+Space links are computed each time a list is drawn, from each pod's derived subject and the user's own spaces. Nothing about them is stored, and nothing is shared: a space link reaches only the user's own spaces.
 
 ### Finding Pods by Property
 

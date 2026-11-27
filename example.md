@@ -26,6 +26,8 @@ Alice keeps nine persistent views. A view is scoped to all spaces unless she nar
 
 The user-tag views gather what no category can. Sophia's four pods carry four different category tags — `podcat:ImmediateFamily`, `podcat:HealthWellness`, `podcat:PrimaryCarePhysician`, `podcat:MedicalAppointment` — whose nearest common ancestor is the top concept `podcat:Person`, which would gather nearly everything Alice has. The "Acme" view likewise picks out one employer's pods. Both are left at all spaces, because their pods sit in more than one: the Sophia view's in her default space and her space for Sophia, the Acme view's in her default space and her space for Acme.
 
+In the People, Sophia, Ginger and Acme views, the *Sophia Walker*, *Paula Walker*, *Ginger* and *Acme* pods each carry a [space link](app-behavior.md#space-links) to the space Alice keeps for that party ("Open space: Sophia Walker" and so on), while the pods already inside those spaces carry none.
+
 The Vehicles and Primary Care Physicians views are left at all spaces for the opposite reason: to put side by side pods a category tag alone cannot tell apart, which is the case for pod spaces that the [next section](#pod-spaces) makes.
 
 #### Three Ways to Tag

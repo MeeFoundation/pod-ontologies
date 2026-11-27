@@ -13,8 +13,8 @@
 @base <http://mee.foundation/ontologies/pod> .
 
 <http://mee.foundation/ontologies/pod> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/10.9.0> ;
-    dc:date "2026-11-26"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/10.9.1> ;
+    dc:date "2026-11-27"^^xsd:date ;
     rdfs:label "Pod Ontology"@en ;
     rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Each pod also sits in exactly one pod:PodSpace (pod:space), the life it belongs to — the user's own, or that of a person, organization or pet the user keeps pods about — rooted at podcat:Person, podcat:Organization or podcat:Pet (pod:spaceRoot), carrying a name (pod:spaceName) and optionally the party it is for (pod:spaceSubject); spaces form a flat set and never nest. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:SharedPod (an actual pod, carrying what every one of its members holds alike) — a pod is always exactly one of the two, never both. pod:SharedPod has one subclass, pod:SecretPod, adding what one member holds of the pod that no other member ever sees; every pod a user holds is typed pod:SecretPod. There are no further kinds of pod: shared content an actual pod carries beyond its pod:member baseline is a pod:Tool — its note, a chat, a form, a calendar, a drawing canvas or a map, each with its own data format and its own contribution to the app's UI (pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas, pod:Map), one or more per pod on pod:SharedPod, rather than in a subclass of its own. The note is the one tool every pod carries, exactly once; every other tool, the chat included, is optional. A link from one member's copy of a pod to a capability on that member's own device — an address-book sync or a connection to a standalone web browser — is not a tool but a pod:Connector (pod:Contacts, pod:Browser), zero or more on pod:SecretPod. pod:SecretPod carries pod:space, pod:connector and the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:moduleTag, whose values are pod:ModuleTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
 
@@ -459,8 +459,8 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #    suggested for it. The same graph is what lets the user's personal
 #    agent understand a pod's content, and content across pods as its
 #    user's rules allow. Projected content keeps its own propagation
-#    rule: a direct message's triples reach only its two participants,
-#    and a member's meta note's stay in that member's own copy.
+#    rule: a member's meta note's triples stay in that member's own
+#    copy.
 #
 #    Six concrete tools are defined. pod:Note and pod:Chat are the
 #    pod's note and chat, which project into the pod graph like every
@@ -536,7 +536,7 @@ pod:Note rdf:type owl:Class ;
 pod:Chat rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;
     rdfs:label "Chat"@en ;
-    rdfs:comment """The pod's chat: a group stream visible to every member, plus direct messages between two members that only those two see, contributing the Chat area to the app's UI. Optional, like every tool but pod:Note — a pod carries at most one, added by a member through Add Tool or gained from a category template's pod:declaresTool. Like every tool, it projects its messages into the pod graph, which is what the UI renders from. Unlike every other tool, not all of its content reaches every member: a direct message reaches only its two participants (app-behavior.md's Chat Area), and its projected triples keep that rule. Defined with no properties yet: the vocabulary suggested for its projected content is not yet defined. The example DataBooks write no tool node for a chat and none of its projected triples, a gap in the scaffolding only."""@en .
+    rdfs:comment """The pod's chat: a single group stream visible to every member, contributing the Chat area to the app's UI. Optional, like every tool but pod:Note — a pod carries at most one, added by a member through Add Tool or gained from a category template's pod:declaresTool. Like every tool, it projects its messages into the pod graph, which is what the UI renders from, and every message reaches every member. Defined with no properties yet: the vocabulary suggested for its projected content is not yet defined. The example DataBooks write no tool node for a chat and none of its projected triples, a gap in the scaffolding only."""@en .
 
 pod:Form rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;

@@ -653,16 +653,11 @@ its messages into the pod graph (see [The Pod Graph](README.md#the-pod-graph) in
 format carries none of those triples: no example DataBook has a chat, and that is a gap in the
 scaffolding only, not in the model.
 
-Two constraints bound how the chat is held and projected. A chat is unlike the other content: a note
+Two facts shape how the chat is held and projected. A chat is unlike the other content: a note
 is one document that members edit in place, concurrently, while a chat is append-only, authored per
-message, potentially far larger, and read at its tail far more often than in full. And a pod's chat
-area holds more than its group stream (see [Chat Area](app-behavior.md#chat-area) in
-app-behavior.md): a direct message between two members is seen by those two alone, and a direct
-message between a user and their own personal agent (@Telli) by that user alone, so neither can live
-in shared, synced pod content the way the group stream can. Its projected triples keep each
-message's own reach. A pod already has two pieces of content that do not propagate on a share,
-`pod:moduleTag` and a member's own meta note, so the precedent exists; what is particular here is
-that the split runs *within* one feature rather than between two properties.
+message, potentially far larger, and read at its tail far more often than in full. And every
+message reaches every member (see [Chat Area](app-behavior.md#chat-area) in app-behavior.md), so the
+chat is shared, synced pod content like the note.
 
 What is still open is the vocabulary suggested for the projected messages, and whether this format
 should carry them so that an example pod can exercise a chat. Neither is a filesystem question: a

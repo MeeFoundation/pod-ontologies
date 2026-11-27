@@ -79,7 +79,7 @@ Raised 2026-11-26 when README.md's [The Pod Graph](../README.md#the-pod-graph) w
 To decide, for each of these, which classes and properties are suggested and whether they belong in `pod.ttl` or a peer ontology:
 
 - the note: blocks, formatting, pod links and block links;
-- the chat: group-stream messages, direct messages between two members, and direct messages to @Telli, with each message's reach;
+- the chat: its group-stream messages;
 - a member's meta note, which projects into that member's own copy alone;
 - `pod:Calendar`, `pod:Canvas` and `pod:Map`, once their data formats exist.
 

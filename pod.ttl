@@ -13,8 +13,8 @@
 @base <http://mee.foundation/ontologies/pod> .
 
 <http://mee.foundation/ontologies/pod> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/10.8.0> ;
-    dc:date "2026-11-21"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/10.9.0> ;
+    dc:date "2026-11-26"^^xsd:date ;
     rdfs:label "Pod Ontology"@en ;
     rdfs:comment """Pod Ontology for the Tellipod App. A pod is the atomic unit the app manages and holds entirely in its own store — Tellipod persists nothing in the user's filesystem (see storage.md). A user's pods form a flat set: pods do not nest, and no pod has a parent. They are gathered instead by tags and by persistent views (stored tag queries), the SKOS hierarchy of pod-categories.ttl supplying the one hierarchy there is. Each pod also sits in exactly one pod:PodSpace (pod:space), the life it belongs to — the user's own, or that of a person, organization or pet the user keeps pods about — rooted at podcat:Person, podcat:Organization or podcat:Pet (pod:spaceRoot), carrying a name (pod:spaceName) and optionally the party it is for (pod:spaceSubject); spaces form a flat set and never nest. Defines pod:Pod — the self-contained content facet of a pod. pod:Pod splits into two disjoint kinds: pod:TemplatePod (a reusable, class-level template) and pod:SharedPod (an actual pod, carrying what every one of its members holds alike) — a pod is always exactly one of the two, never both. pod:SharedPod has one subclass, pod:SecretPod, adding what one member holds of the pod that no other member ever sees; every pod a user holds is typed pod:SecretPod. There are no further kinds of pod: shared content an actual pod carries beyond its pod:member baseline is a pod:Tool — its note, a chat, a form, a calendar, a drawing canvas or a map, each with its own data format and its own contribution to the app's UI (pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas, pod:Map), one or more per pod on pod:SharedPod, rather than in a subclass of its own. The note is the one tool every pod carries, exactly once; every other tool, the chat included, is optional. A link from one member's copy of a pod to a capability on that member's own device — an address-book sync or a connection to a standalone web browser — is not a tool but a pod:Connector (pod:Contacts, pod:Browser), zero or more on pod:SecretPod. pod:SecretPod carries pod:space, pod:connector and the three tag properties — pod:categoryTag, whose values are category concepts (skos:Concept), pod:userTag, a plain xsd:string, and pod:moduleTag, whose values are pod:ModuleTag nodes (also defined here) carrying a namespace, a key and a label — each zero or more values, and each per-member state that is never shared as pod content. Also defines the graph-DataBook classes pod:member/pod:formGraph link to — pod:Graph, its abstract pod:CGraph subclass, and that class's two disjoint leaves pod:MemberGraph (pod:member's range) and pod:FormGraph (pod:formGraph's range) — along with their pod:shape/pod:claimant/pod:subject annotation properties, since a graph DataBook only ever exists to be linked from a pod. pod:MemberGraph and pod:FormGraph are split apart because a pod:subject value always maps to a PDN node subject identity while a pod:formTopic value — the tool-level statement of what the tool's content is about — need not."""@en .
 
@@ -444,17 +444,29 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #    That each kind has its *own* data format is why pod:Tool carries
 #    no property: there is nothing common to hoist onto it. A form's
 #    format is graph DataBooks conforming to a shape; a note's is one
-#    rich-text document and a chat's a stream of messages, held in
-#    the app's own internal formats; a calendar's would be dated
-#    entries and a canvas's a drawing surface, neither of which is a
-#    graph and neither of which is worked out. The
-#    properties therefore sit on the one subclass whose format is
-#    settled (see below).
+#    rich-text document and a chat's a stream of messages; a
+#    calendar's would be dated entries and a canvas's a drawing
+#    surface. The properties therefore sit on the one subclass whose
+#    suggested vocabulary is settled (see below).
+#
+#    Every tool, whatever its kind, projects its content into the pod
+#    graph, and the pod graph is the single interface through which the
+#    app reads a pod's content into its UI. A tool may keep a working
+#    format of its own — the note's is suited to its links and to
+#    merging concurrent edits — but what it holds also appears as
+#    triples. How it represents its content as triples is the tool's
+#    own decision, weighing an efficient layout against the ontology
+#    suggested for it. The same graph is what lets the user's personal
+#    agent understand a pod's content, and content across pods as its
+#    user's rules allow. Projected content keeps its own propagation
+#    rule: a direct message's triples reach only its two participants,
+#    and a member's meta note's stay in that member's own copy.
 #
 #    Six concrete tools are defined. pod:Note and pod:Chat are the
-#    pod's note and chat, whose content is app-internal and modelled
-#    by no property here. pod:Form is the one whose format is modelled
-#    in RDF: it holds one or more pod:FormGraph DataBooks via
+#    pod's note and chat, which project into the pod graph like every
+#    tool; the vocabulary suggested for their content is not yet
+#    defined here. pod:Form is the one whose suggested vocabulary is
+#    settled, and its graphs are its format: it holds one or more pod:FormGraph DataBooks via
 #    pod:formGraph, whose fields the app renders from the
 #    pod:formShape that governs it. pod:Calendar, pod:Canvas and
 #    pod:Map are defined with no properties of their own yet —
@@ -504,24 +516,27 @@ pod:tagValue rdf:type owl:DatatypeProperty ;
 #    The example DataBooks write no tool node for a pod's note or
 #    chat: the note's scaffolding stand-in is the Markdown file named
 #    after the pod's folder, and a chat has no scaffolding at all
-#    (pod-databook.md's Development Scaffolding). shacl/pod-shacl.ttl
-#    therefore caps each at one per pod without requiring the note.
+#    (pod-databook.md's Development Scaffolding). Nor do they carry
+#    any of the triples a note or a chat projects into the pod graph.
+#    Both are gaps in the scaffolding only: a real pod graph holds
+#    every tool's content. shacl/pod-shacl.ttl therefore caps each at
+#    one per pod without requiring the note.
 #################################################################
 
 pod:Tool rdf:type owl:Class ;
     pod:abstract true ;
     rdfs:label "Tool"@en ;
-    rdfs:comment """An object a pod carries for every one of its members that adds a capability to it — its note, a chat, a form, a calendar, a drawing canvas, a map. Each kind brings two things at once: its own data format inside the pod, and its own contribution to the app's UI (the note's is the Note area, the chat's the Chat area). Tools are shared content: a pod carries one or more, via pod:tool on pod:SharedPod, and every member holds the same ones. The note (pod:Note) is the one tool every pod carries, exactly once; every other tool, the chat (pod:Chat) included, is optional, and a pod with nothing but its note is the ordinary case, not a lesser kind of pod. A link from one member's copy to a capability on their own device — an address book, a web browser — is not a tool but a pod:Connector, disjoint from this class. A tool is not a member of the pod, and the pod's Attachments area and Member Info are not tools: every pod has both, and neither is a tool's contribution. Six kinds are defined — pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas and pod:Map. The note's and the chat's content is app-internal and modelled by no property; pod:Form's is modelled in RDF; the other three are deliberate extension points, awaiting a data format. A pod gains whatever tools the templates of its category tags declare, and the person may add more at any time. Only the data format is modelled here; the UI contribution is app-level (app-behavior.md). Abstract: no tool is ever typed pod:Tool directly, only one of its concrete subclasses (pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas, pod:Map). Carries no property of its own, and that follows from the definition rather than being a gap in it: each kind has its own data format, so there is nothing common to hoist here. Everything a tool records today — what its content is about (pod:formTopic), the graphs carrying it (pod:formGraph) and the shape governing them (pod:formShape) — is scoped to pod:Form, the one subclass whose format is settled. A property that proves common once pod:Calendar, pod:Canvas and pod:Map have formats of their own can be hoisted up then, which is cheap; retracting one asserted too early is not. A live pod:Tool is named by its own IRI, its id — minted when the tool is created, opaque, globally unique and fixed for the tool's lifetime — which is what a block link in the pod's note resolves by. It is never shared between pods and never reused: removing the tool removes the node with it, and its id is retired rather than given to another tool. A declared tool (reached by pod:declaresTool) is anonymous, since it is never a block-link target."""@en .
+    rdfs:comment """An object a pod carries for every one of its members that adds a capability to it — its note, a chat, a form, a calendar, a drawing canvas, a map. Each kind brings two things at once: its own data format inside the pod, and its own contribution to the app's UI (the note's is the Note area, the chat's the Chat area). Tools are shared content: a pod carries one or more, via pod:tool on pod:SharedPod, and every member holds the same ones. The note (pod:Note) is the one tool every pod carries, exactly once; every other tool, the chat (pod:Chat) included, is optional, and a pod with nothing but its note is the ordinary case, not a lesser kind of pod. A link from one member's copy to a capability on their own device — an address book, a web browser — is not a tool but a pod:Connector, disjoint from this class. A tool is not a member of the pod, and the pod's Attachments area and Member Info are not tools: every pod has both, and neither is a tool's contribution. Six kinds are defined — pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas and pod:Map. Every tool projects its content into the pod graph, which is the single interface through which the app reads a pod's content into its UI and through which the user's personal agent understands it; each tool decides how to represent its content as triples, weighing an efficient layout against the ontology suggested for it, and projected content keeps its own propagation rule. pod:Form's suggested vocabulary is settled here, its graphs being its format; the vocabulary suggested for the note's and the chat's content is not yet defined; the other three are deliberate extension points, awaiting a data format. A pod gains whatever tools the templates of its category tags declare, and the person may add more at any time. Only the data format is modelled here; the UI contribution is app-level (app-behavior.md). Abstract: no tool is ever typed pod:Tool directly, only one of its concrete subclasses (pod:Note, pod:Chat, pod:Form, pod:Calendar, pod:Canvas, pod:Map). Carries no property of its own, and that follows from the definition rather than being a gap in it: each kind has its own data format, so there is nothing common to hoist here. Everything a tool records today — what its content is about (pod:formTopic), the graphs carrying it (pod:formGraph) and the shape governing them (pod:formShape) — is scoped to pod:Form, the one subclass whose format is settled. A property that proves common once pod:Calendar, pod:Canvas and pod:Map have formats of their own can be hoisted up then, which is cheap; retracting one asserted too early is not. A live pod:Tool is named by its own IRI, its id — minted when the tool is created, opaque, globally unique and fixed for the tool's lifetime — which is what a block link in the pod's note resolves by. It is never shared between pods and never reused: removing the tool removes the node with it, and its id is retired rather than given to another tool. A declared tool (reached by pod:declaresTool) is anonymous, since it is never a block-link target."""@en .
 
 pod:Note rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;
     rdfs:label "Note"@en ;
-    rdfs:comment """The pod's note: a rich-text document with Markdown-like formatting that every member may edit concurrently, contributing the Note area to the app's UI. The one required tool — every pod:SharedPod carries exactly one, created with the pod and never removed, so no pod:TemplatePod declares one and the Add Tool action never offers one. Its content is held in the app's own internal format, suited to its links and to merging concurrent edits, and can be exported as Markdown. It carries two kinds of link: pod links to other pods, resolved by the target pod's id, and block links to the pod's own tools, graphs and attachments, resolved by their own IRIs. Defined with no properties: the note's content is app-internal, and no triple records it. Beside it, each member has a meta note of their own, secret to them and shown in the same Note area (README.md's Documentation-only Properties); a meta note is not a tool, since it is not shared. The example DataBooks write no tool node for the note: its scaffolding stand-in is the Markdown file named after the pod's folder."""@en .
+    rdfs:comment """The pod's note: a rich-text document with Markdown-like formatting that every member may edit concurrently, contributing the Note area to the app's UI. The one required tool — every pod:SharedPod carries exactly one, created with the pod and never removed, so no pod:TemplatePod declares one and the Add Tool action never offers one. Its working format is the app's own, suited to its links and to merging concurrent edits, and it can be exported as Markdown; like every tool, it projects its content into the pod graph, which is what the UI renders from. It carries two kinds of link: pod links to other pods, resolved by the target pod's id, and block links to the pod's own tools, graphs and attachments, resolved by their own IRIs. Defined with no properties yet: the vocabulary suggested for the note's projected content is not yet defined. Beside it, each member has a meta note of their own, secret to them and shown in the same Note area (README.md's Documentation-only Properties); a meta note is not a tool, since it is not shared. The example DataBooks write no tool node for the note and none of its projected triples, a gap in the scaffolding only: its scaffolding stand-in is the Markdown file named after the pod's folder."""@en .
 
 pod:Chat rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;
     rdfs:label "Chat"@en ;
-    rdfs:comment """The pod's chat: a group stream visible to every member, plus direct messages between two members that only those two see, contributing the Chat area to the app's UI. Optional, like every tool but pod:Note — a pod carries at most one, added by a member through Add Tool or gained from a category template's pod:declaresTool. Its messages are app-internal, and no triple records them. Unlike every other tool, not all of its content reaches every member: a direct message reaches only its two participants (app-behavior.md's Chat Area). Defined with no properties. The example DataBooks write no tool node for a chat, which has no scaffolding."""@en .
+    rdfs:comment """The pod's chat: a group stream visible to every member, plus direct messages between two members that only those two see, contributing the Chat area to the app's UI. Optional, like every tool but pod:Note — a pod carries at most one, added by a member through Add Tool or gained from a category template's pod:declaresTool. Like every tool, it projects its messages into the pod graph, which is what the UI renders from. Unlike every other tool, not all of its content reaches every member: a direct message reaches only its two participants (app-behavior.md's Chat Area), and its projected triples keep that rule. Defined with no properties yet: the vocabulary suggested for its projected content is not yet defined. The example DataBooks write no tool node for a chat and none of its projected triples, a gap in the scaffolding only."""@en .
 
 pod:Form rdf:type owl:Class ;
     rdfs:subClassOf pod:Tool ;
@@ -862,9 +877,10 @@ pod:member rdf:type owl:ObjectProperty ;
 #    Properties section).
 #
 #    The note (pod:Note) is a rich-text document with Markdown-like formatting,
-#    held in the app's own internal format (suited to its links and to
-#    merging concurrent edits by several members) and exportable as
-#    Markdown. Its content may link to any other pod the user holds,
+#    whose working format is the app's own (suited to its links and to
+#    merging concurrent edits by several members), projected into the
+#    pod graph like every tool's content, and exportable as Markdown.
+#    Its content may link to any other pod the user holds,
 #    not just within its own pod — the same cross-note linking a PKM
 #    tool supports — and may also carry block
 #    links to the pod's own tools, graphs and attachments, which
@@ -877,8 +893,8 @@ pod:member rdf:type owl:ObjectProperty ;
 #    so the link simply won't resolve on their side. This is an accepted
 #    limitation of cross-pod linking, not a defect — nothing in this
 #    ontology tracks link targets or attempts to keep them resolvable
-#    across a share, consistent with pod:Note carrying no property
-#    for the note's content.
+#    across a share, consistent with pod.ttl defining no property yet
+#    for the note's projected content.
 #
 #    This repo carries all of the above on disk as development
 #    scaffolding — one folder per pod, grouped by pod space, holding a pod-databook file,

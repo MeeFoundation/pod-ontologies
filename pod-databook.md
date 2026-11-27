@@ -31,12 +31,15 @@ a pod, and no pod folder sits inside another.
 - **A pod's note is a file named after its folder** (`X.md` inside the folder `X`), the folder-note
   convention PKM tools such as Obsidian use. An empty note has no file: a pod whose note has no
   content simply has no `X.md`. The file is plain Markdown, a stand-in approximating
-  what the app's Markdown export of the note would write. At runtime the note is app-internal, held
-  in the app's own format rather than as Markdown, and has no name of its own.
+  what the app's Markdown export of the note would write. At runtime the note is app-internal, kept
+  in the app's own working format rather than as Markdown and projected into the pod graph, and has
+  no name of its own. The scaffolding carries none of the note's projected triples, a gap in the
+  scaffolding only.
 - **The member's meta note is a file named `X.meta.md`** beside the note, absent when empty, and
   Markdown for the same reason the note's file is. Every example pod is the copy Alice holds, so a
   `X.meta.md` is always hers: other members' meta notes never reach her copy, and so never appear.
-  At runtime the meta note is app-internal, like the note.
+  At runtime the meta note is app-internal, like the note, and projects into the member's own copy
+  of the pod graph.
 - **A pod's attachments are the plain files inside its `_pod-attachments` folder.** At runtime
   they are app-internal, like the note.
 - **The [Filename Convention](#filename-convention) below is scaffolding-only.** At runtime there is
@@ -645,35 +648,33 @@ omission.
 ### Where chat content goes
 
 A pod has at most one chat stream — its optional `pod:Chat` tool — and where it has one it lives
-inside the app, alongside the content this document specifies. That answers the question this section
-used to leave open. It was open because chat had no place in the folder, unlike the note and the
-attachments, and no place in the DataBook either, leaving it the one piece of a pod's content with
-no specified storage at all. Once a pod's structured content is app-internal rather than a file,
-chat simply goes where that content goes, and the reasons it never fit the folder stop mattering.
+inside the app, alongside the content this document specifies. Like every tool, the chat projects
+its messages into the pod graph (see [The Pod Graph](README.md#the-pod-graph) in README.md). This
+format carries none of those triples: no example DataBook has a chat, and that is a gap in the
+scaffolding only, not in the model.
 
-Two constraints shaped that answer and still bound the app's own design. A chat is unlike the other
-content: a note is one document that members edit in place, concurrently, while a chat is
-append-only, authored per message, potentially far larger, and read at its tail far more often than
-in full. And a pod's chat area holds more than its group stream (see
-[Chat Area](app-behavior.md#chat-area) in app-behavior.md): a direct message between two members is
-seen by those two alone, and a direct message between a user and their own personal agent (@Telli)
-by that user alone, so neither can live in shared, synced pod content the way the group stream can —
-whatever holds a pod's chat has to hold messages with different propagation rules. A pod already has
-two pieces of content that do not propagate on a share, `pod:moduleTag` and a member's own meta
-note, so the precedent exists; what is particular here is that the split runs *within* one feature
-rather than between two properties.
+Two constraints bound how the chat is held and projected. A chat is unlike the other content: a note
+is one document that members edit in place, concurrently, while a chat is append-only, authored per
+message, potentially far larger, and read at its tail far more often than in full. And a pod's chat
+area holds more than its group stream (see [Chat Area](app-behavior.md#chat-area) in
+app-behavior.md): a direct message between two members is seen by those two alone, and a direct
+message between a user and their own personal agent (@Telli) by that user alone, so neither can live
+in shared, synced pod content the way the group stream can. Its projected triples keep each
+message's own reach. A pod already has two pieces of content that do not propagate on a share,
+`pod:moduleTag` and a member's own meta note, so the precedent exists; what is particular here is
+that the split runs *within* one feature rather than between two properties.
 
-What is genuinely still open is the storage format the app uses for it, which is an app-internal
-question this document does not reach. Nothing about it is a filesystem question any more: a
-transcript is not a file anywhere, so the only thing left to settle is how the app's own store holds
-an append-only, mostly-read-at-the-tail stream with several propagation rules inside it.
+What is still open is the vocabulary suggested for the projected messages, and whether this format
+should carry them so that an example pod can exercise a chat. Neither is a filesystem question: a
+transcript is not a file anywhere.
 
 ### Where the note's format and block links go
 
-A pod's note is a rich-text document held in the app's own internal format, not Markdown (see
-[Pod Contents](app-behavior.md#pod-contents) in app-behavior.md). Like chat's storage format, that
-format is an app-internal question this document does not reach; what reaches it is the
-scaffolding's stand-in. The `X.md` file beside a DataBook is plain Markdown approximating the
+A pod's note is a rich-text document whose working format is the app's own, not Markdown (see
+[Pod Contents](app-behavior.md#pod-contents) in app-behavior.md), and which projects its content into
+the pod graph like every tool. The vocabulary suggested for that projection is not yet defined, and
+this format carries none of its triples, a gap in the scaffolding only; what reaches this document is
+the scaffolding's stand-in. The `X.md` file beside a DataBook is plain Markdown approximating the
 app's Markdown export, and that export is lossy in exactly one place that matters here: a **block
 link** — a link from the note to one of the pod's own tools, graphs or attachments — has no
 Markdown equivalent and exports as its display text. So the scaffolding has no way to write one, and
@@ -687,9 +688,10 @@ block-link syntax of its own, so that an example note can exercise one; nothing 
 
 ### Where a non-form tool's content goes
 
-Only `pod:Form` has a data format today. Its content is graphs, and a graph is Turtle, which is why
+Every tool projects its content into the pod graph, but only `pod:Form` has a settled suggested
+vocabulary today. Its content is graphs, and a graph is Turtle, which is why
 every fence across this repo's example pods is a ```` ```turtle ```` one.
-`pod:Calendar`, `pod:Canvas` and `pod:Map` are declared with no content model at all, so this document has
+`pod:Calendar`, `pod:Canvas` and `pod:Map` are declared with no suggested vocabulary yet, so this document has
 nothing to say about what a calendar's entries or a canvas's drawing surface look like on disk.
 A connector (`pod:Contacts`, `pod:Browser`) has none by design: what it brings in becomes ordinary
 pod content, a graph or an attachment.

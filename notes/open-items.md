@@ -69,3 +69,20 @@ A joint bank account, or a family trip taken with a child, passes the "⟨space 
 ### 2. Telli's access to the user's spaces
 
 The placement-coach use case (app-behavior.md's [Use Cases](../app-behavior.md#use-cases)) needs the personal agent to read the user's list of spaces and their subjects. In the initial implementation the PACRs confine the agent to the current pod. Spaces are not pod content and belong to the user alone, so read-only access to them may be safe enough to grant from the start. Undecided: whether to grant it in the initial implementation, and whether the proactive mode (reacting to pod actions, not only to messages) needs a PACR of its own.
+
+## The pod graph
+
+Raised 2026-11-26 when README.md's [The Pod Graph](../README.md#the-pod-graph) was written: every tool projects its content into the pod graph, deciding its own triple representation against the ontology suggested for it. Only `pod:Form`'s suggested vocabulary exists.
+
+### 1. Suggested vocabulary for non-form tool content
+
+To decide, for each of these, which classes and properties are suggested and whether they belong in `pod.ttl` or a peer ontology:
+
+- the note: blocks, formatting, pod links and block links;
+- the chat: group-stream messages, direct messages between two members, and direct messages to @Telli, with each message's reach;
+- a member's meta note, which projects into that member's own copy alone;
+- `pod:Calendar`, `pod:Canvas` and `pod:Map`, once their data formats exist.
+
+### 2. Example triples in the scaffolding
+
+The example DataBooks carry no note or chat triples. To decide whether, once item 1 is settled, `pod-databook.md` should give them a place, either as a `tpod.tool` entry with a body section or by generating them from each pod's `X.md`, so that integrity checks and Telli use cases can exercise them.

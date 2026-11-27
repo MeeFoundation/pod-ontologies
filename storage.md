@@ -16,6 +16,10 @@ together with its note, each member's own meta note, its attachments and its cha
 written to the filesystem, in any form, at any point. There is no folder representing a pod, no
 file representing its note, and no directory holding its attachments.
 
+The store holds each pod's **pod graph**, into which every tool projects its content, and from
+which the app reads that content into its UI (see [The Pod Graph](README.md#the-pod-graph) in
+README.md). A tool's own working format, where it keeps one, is held in the same store.
+
 The store sits alongside the pod's membership store, the append-only event log whose first entry
 is the pod's founding event (see [Pod Id](pod-databook.md#id) in pod-databook.md). A pod is held on the user's own device(s), or, for an organization's own `s:ServiceProvider`, on
 Personal Data Network (PDN) nodes hosted by that organization. Apart from one exception a member
@@ -59,10 +63,11 @@ of *all* Tellipod data, with no carve-out for the unstructured parts.
 - **Attachments.** Every attachment is content every member receives.
 - **The note.** Exactly one per pod. It supports links to other pods, resolved by target pod id,
   and to the pod's own tools, graphs and attachments. It is a rich-text document with Markdown-like
-  formatting, held in the app's own internal format — one suited to those links and to merging
-  concurrent edits by several members. A member can export it as a Markdown file.
+  formatting, kept in a working format of the app's own — one suited to those links and to merging
+  concurrent edits by several members — and projected into the pod graph like every tool's content.
+  A member can export it as a Markdown file.
 - **The meta note.** One per member per pod, the member's own personal note about it, in the same
-  format as the note. It is secret to that member: it stays in their own copy of the pod, syncs
+  format as the note, projected into the member's own copy of the pod graph. It is secret to that member: it stays in their own copy of the pod, syncs
   across their own devices, and never propagates on a share.
 - **PKM tools.** Tellipod's store is not a PKM vault, and no Obsidian-style tool reads it directly.
   The note's wikilink-style links and its Markdown export are the bridge to such tools.

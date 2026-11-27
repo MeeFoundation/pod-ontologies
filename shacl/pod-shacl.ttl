@@ -14,8 +14,8 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://mee.foundation/ontologies/pod/shapes> rdf:type owl:Ontology ;
-    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.8.0> ;
-    dc:date "2026-11-21"^^xsd:date ;
+    owl:versionIRI <http://mee.foundation/ontologies/pod/shapes/10.9.0> ;
+    dc:date "2026-11-26"^^xsd:date ;
     rdfs:label "Pod Ontology SHACL Validation Shapes"@en ;
     rdfs:comment "SHACL validation shapes for pod:Pod DataBook instances (the content facet of a pod) the pod:Tool nodes a pod carries, and the graph DataBook instances a pod links to — pod:MemberGraph via pod:member, pod:FormGraph via a tool's own pod:formGraph — and the pod:PodSpace each pod sits in, in the Pod Ontology."@en .
 
@@ -205,7 +205,9 @@
     # pod:tool — no minCount and no overall maxCount. Every pod carries
     # exactly one pod:Note (pod.ttl), but the example DataBooks write no
     # tool node for it — the note's scaffolding stand-in is the Markdown
-    # file named after the pod's folder — so only its upper bound is
+    # file named after the pod's folder, and the triples the note
+    # projects into the pod graph are likewise absent, a gap in the
+    # scaffolding only — so only its upper bound is
     # checked here, as is the chat's: at most one of each. Nothing caps
     # the rest: a pod gets one per tool the template of each of its
     # category tags declares (including any tag added later), and the

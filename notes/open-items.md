@@ -38,7 +38,7 @@ The anchor stores a person's IRI, which means something only in the user's own c
 
 ## Connectors
 
-Raised 2026-11-20 with the connector split ([connectors 20-nov-2026.md](<connectors 20-nov-2026.md>)).
+Raised 2026-11-20 with the connector split ([2026-11-20-connectors.md](2026-11-20-connectors.md)).
 
 ### 4. How a member adds a connector by hand
 

@@ -4,7 +4,7 @@
 
 ## The question
 
-[Pod spaces](pod-spaces%2017-nov-2026.md) say whose life a pod belongs to, but nothing said how to choose a space. The example already looked like it followed a rule. Alice keeps a *Sophia Walker* pod in her default space *and* a space for Sophia holding three more pods about her. In the same way, she keeps a *Ginger* pod in her default space and two Ginger pods in her space for Ginger. The working hypothesis was that the party's identity and the relationship go in the default space, while specialized information about the party goes in that party's space. Working back from every placement in the example sharpened that hypothesis into a single rule.
+[Pod spaces](2026-11-17-pod-spaces.md) say whose life a pod belongs to, but nothing said how to choose a space. The example already looked like it followed a rule. Alice keeps a *Sophia Walker* pod in her default space *and* a space for Sophia holding three more pods about her. In the same way, she keeps a *Ginger* pod in her default space and two Ginger pods in her space for Ginger. The working hypothesis was that the party's identity and the relationship go in the default space, while specialized information about the party goes in that party's space. Working back from every placement in the example sharpened that hypothesis into a single rule.
 
 ## The rule
 

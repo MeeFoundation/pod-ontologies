@@ -4,7 +4,7 @@
 
 ## The question
 
-The [space-placement rule](space-placement%2025-nov-2026.md) says a pod sits in the space of the party whose life its category tag describes. Where is that rule enforced?
+The [space-placement rule](2026-11-25-space-placement.md) says a pod sits in the space of the party whose life its category tag describes. Where is that rule enforced?
 
 ## The answer: half of it
 

@@ -68,7 +68,7 @@ A joint bank account, or a family trip taken with a child, passes the "⟨space 
 
 ### 2. Telli's access to the user's spaces
 
-Placement coaching (personal-agent.md's [Coaching and Auto-Filing](../personal-agent.md#coaching-and-auto-filing)) needs the personal agent to read the user's list of spaces and their subjects. In the initial implementation the PACRs confine the agent to the current pod. Spaces are not pod content and belong to the user alone, so read-only access to them may be safe enough to grant from the start. Undecided: whether to grant it in the initial implementation, and whether the proactive mode (reacting to pod actions, not only to messages) needs a PACR of its own.
+Placement coaching (personal-agent.md's [Coaching and Auto-Filing](../personal-agent.md#coaching-and-auto-filing)) needs the personal agent to read the user's list of spaces and their subjects. In the first release the PACRs confine the agent to the current pod. Spaces are not pod content and belong to the user alone, so read-only access to them may be safe enough to grant from the start. Undecided: whether to grant it in the initial implementation, and whether the proactive mode (reacting to pod actions, not only to messages) needs a PACR of its own.
 
 ## The pod graph
 

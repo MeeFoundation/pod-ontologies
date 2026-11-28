@@ -279,7 +279,7 @@ It could then ask follow-up questions: "Do you know the name of the bank that is
 
 #### Tidy
 
-The app uses entity recognition to turn a message in the pod's chat into a form tool in the same pod. Suppose a neighbor in a neighborhood pod asks whether anyone knows a good plumber, and the user replies with the name and contact information of one they like to use. Tidy turns the reply into a form holding the plumber's name, phone number and email, parsed into fields and values. A [personal agent](personal-agent.md#future-experiences) could one day go further, creating a new pod about the user's relationship with the plumber — a use case that waits on PACR capabilities the initial implementation withholds (see [Future Experiences](personal-agent.md#future-experiences) in personal-agent.md).
+The app uses entity recognition to turn a message in the pod's chat into a form tool in the same pod. Suppose a neighbor in a neighborhood pod asks whether anyone knows a good plumber, and the user replies with the name and contact information of one they like to use. Tidy turns the reply into a form holding the plumber's name, phone number and email, parsed into fields and values. A [personal agent](personal-agent.md#future-experiences) could one day go further, creating a new pod about the user's relationship with the plumber — a use case that waits on PACR capabilities the first release withholds (see [Future Experiences](personal-agent.md#future-experiences) in personal-agent.md).
 
 
 ### Finding Pods by Name

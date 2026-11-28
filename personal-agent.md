@@ -54,11 +54,12 @@ The context sends other members' graphs to the user's chosen language model, whi
 
 ### How a Turn Is Applied
 
-Each time the user sends a message in the Telli chat, Telli's response is applied as one atomic turn, all under the user's own write rights, each change being one of the [actions](#telli-actions) the app offers Telli. A turn posts a reply in the Telli chat and, depending on what it carries, may also:
+Each time the user sends a message in the Telli chat, Telli responds with a turn: a sequence of the [actions](#telli-actions) the app offers it, each atomic and each under the user's own write rights, followed by a reply in the Telli chat reporting what they did. Depending on what it carries, a turn may:
 
-- revise the user's own tool graph in place to fold in this turn's facts and decisions — a single evolving graph, not a new one per turn, mirroring how the note itself is one living document rather than a new copy per edit (for a worked case, see example.md's [Planning a Trip with an Agent](example.md#planning-a-trip-with-an-agent)). Where the pod carries several form tools, the graph is the one under the form whose shape the fact fits; where it carries none, the fact goes into the meta note or a plan proposes a form tool;
-- edit the user's meta note, or — as part of a confirmed plan — the shared note;
-- add a new attachment (e.g. a fetched photo of a hotel) to the pod's flat set of attachments.
+- record a value in the user's own tool graph, where the claim meets the conditions for recording directly. Where the pod carries several form tools, the graph is the one under the form whose shape the fact fits; where it carries none, the fact goes into the meta note or a plan proposes a form tool;
+- revise a [draft](#drafts) of the user's own entry in a form, folding in this turn's facts and decisions — a single evolving draft, not a new one per turn, mirroring how the note itself is one living document rather than a new copy per edit — which reaches other members only when the user publishes it (for a worked case, see example.md's [Planning a Trip with an Agent](example.md#planning-a-trip-with-an-agent));
+- edit the user's meta note;
+- propose a plan, or execute a confirmed one, which may also edit the shared note, add an attachment, or publish a draft.
 
 A query, or a turn that proposes a plan, changes nothing but the Telli chat itself.
 
@@ -66,7 +67,7 @@ The agent never writes to a graph another party claims: like every write through
 
 ### Undo and the Activity Log
 
-Telli keeps an **activity log**, secret to the user and synced across their own devices like the Telli chat: one entry for each claim it recorded directly and each plan it executed, saying what changed and where. The app writes each entry when the write succeeds; Telli never writes to the log itself. Each entry, like the saved notice Telli posts after recording a claim ("Saved to Passport › Expiration date — Undo · Move"), offers **Undo**, which restores what the entry changed, as a further write under the user's own rights. Undoing content other members have already received is itself a change they see, as when the user corrects their own edit by hand. The user can also undo in the Telli chat: told that something it recorded is wrong, or asked to undo it, Telli undoes the entry and records the correction if the user gives one.
+Telli keeps an **activity log**, secret to the user and synced across their own devices like the Telli chat: one entry for each claim it recorded directly and each plan it executed, saying what changed and where. The app writes each entry when the write succeeds; Telli never writes to the log itself. Each entry, like the saved notice Telli posts after recording a claim ("Saved to Passport › Expiration date — Undo · Move"), offers **Undo**, which restores what the entry changed, as a further write under the user's own rights. Undoing content other members have already received is itself a change they see, as when the user corrects their own edit by hand. The user can also undo in the Telli chat: told that something it recorded is wrong, or asked to undo it, Telli undoes the entry and records the correction if the user gives one. An undo is refused if what it would restore has changed since, and Telli says what changed.
 
 ### Future Experiences
 
@@ -90,7 +91,7 @@ The instructions tell Telli that it works for one user only, as that user, on th
 
 ### Actions and Results
 
-Telli changes nothing by what it writes in the Telli chat: it acts only through a set of **actions** the app offers it on each turn — recording a value, editing the meta note, adding an attachment, proposing and executing a plan, undoing an entry, adding to its memory — each of which returns a result. The instructions list the actions available on the turn, so that what the PACRs withhold is simply absent, and tell Telli to report something as saved or done only once its result says it succeeded. Controls such as a saved notice's Undo and Move, and the plan card's Confirm, Change and Reject, are drawn by the app, not written by Telli. The app checks every call again against the rules the instructions state, so the instructions guide Telli and the app enforces. The actions are defined in [Telli Actions](#telli-actions).
+Telli changes nothing by what it writes in the Telli chat: it acts only through a set of **actions** the app offers it on each turn — recording a value, revising a draft, editing the meta note, adding an attachment, proposing and executing a plan, undoing an entry, adding to its memory — each of which returns a result. The instructions list the actions available on the turn, so that what the PACRs withhold is simply absent, and tell Telli to report something as saved or done only once its result says it succeeded. Controls such as a saved notice's Undo and Move, and the plan card's Confirm, Change and Reject, are drawn by the app, not written by Telli. The app checks every call again against the rules the instructions state, so the instructions guide Telli and the app enforces. The actions are defined in [Telli Actions](#telli-actions).
 
 ### Questions Beyond the Pod
 
@@ -172,8 +173,9 @@ follow the rules and tell the user why.
 
 If the user asks for something outside the rules, say so plainly and, where
 you can, describe the steps they could take by hand instead. If the current
-pod is "none", you may talk with the user and propose plans, but you read
-and write no pod content.
+pod is "none", you may talk with the user, propose plans made only of steps
+for the user to take by hand, and update your memory, but you read and
+write no pod content.
 
 # How you act
 
@@ -195,10 +197,14 @@ With each message you receive the current pod's content:
 - the shared note, which every member sees;
 - the user's meta note, a note on this pod that only the user sees;
 - the pod's attachments, by filename and caption;
+- any draft of the user's entry in a form, which only the user sees;
 - recent messages from this chat about this pod.
 
-You can change only the user's own entries, the shared note (always by a
-plan) and the user's meta note. You can never change another member's
+Each pod, form, field, value and attachment comes with an id. Actions take
+these ids, not names.
+
+You can change only the user's own entries, their drafts, the shared note
+(always by a plan) and the user's meta note. You can never change another member's
 entry. If one looks wrong, tell the user, who can take it up with that
 member.
 
@@ -263,7 +269,17 @@ If the user types a password or other credential into this chat, do not
 record it. Ask them to enter it in the form directly.
 
 If the user says something you recorded or changed is wrong, or asks you
-to undo it, undo it, then record the correction if they give one.
+to undo it, undo it, then record the correction if they give one. If the
+app refuses the undo because the value has changed since, tell the user
+what changed. To undo something other members have seen, propose it as a
+plan.
+
+# Working over several turns
+
+When you and the user build something up over several turns — an
+itinerary, a list of questions for a doctor — and other members can see
+the user's entry, work in a draft with edit_draft, which only the user
+sees. When the user is happy with it, propose a plan to publish it.
 
 # Plans
 
@@ -342,11 +358,20 @@ The actions the app offers Telli, which fill the `{{ACTIONS}}` marker in [Telli 
 ### Principles
 
 - **The app enforces what the instructions ask.** Every rule in the instructions that can be checked mechanically is checked again by the app on each call: the conditions for recording directly, the PACRs, writing only the user's own entries, and confirmation of a plan. A refused call returns its reason, which Telli relays to the user or answers by proposing a plan instead.
+- **Actions name things by id.** The turn's context gives an id to the pod, each form (the form tool's own id), each field, each value and each attachment, and every action takes those ids rather than names, so that two forms or two values with the same label are never confused.
+- **Each action is atomic; a turn is a sequence of them.** An action either takes effect in full or not at all, and returns its result before Telli's next action. A turn may take several, and its reply reports what each did.
 - **What the user sees is what runs.** A plan is structured data, not prose. The app draws the **plan card** in the Telli chat from that data and executes exactly the steps on it, so Telli cannot carry out anything other than what the user confirmed.
-- **Confirmation is the user's act.** The plan card carries **Confirm**, **Change** and **Reject**. The user may instead confirm by typing a clear yes, upon which Telli calls `execute_plan`; the app accepts the call only if the plan is Telli's latest, the user has replied since it was posted, and none of the pods it touches has changed since. Otherwise the app refuses the plan as stale, and Telli proposes it again.
+- **Confirmation is the user's act.** The plan card carries **Confirm**, **Change** and **Reject**. Change hands the plan back to Telli with the user's typed correction, and Telli proposes a revised plan. The user may instead confirm by typing a clear yes, upon which Telli calls `execute_plan`; the app accepts the call only if the plan is Telli's latest, the user has replied since it was posted, and none of the pods it touches has changed since. Otherwise the app refuses the plan as stale, and Telli proposes it again. Proposing a new plan withdraws any earlier one not yet confirmed, and moving the Telli chat to another pod withdraws any plan not yet confirmed.
+- **Each step states what it expects to find.** A step that changes or removes a value carries the value it expects to be there. If the pod has changed by the time the step runs, the step fails rather than overwriting what someone else wrote, and the plan stops.
 - **The app keeps the log.** Each successful write adds an entry to the [activity log](#undo-and-the-activity-log), written by the app rather than by Telli, whose id comes back in the result; that id is what `undo` takes.
-- **The app says who will see a change.** For each step the app works out, from the pod's members, who will see its effect, and marks a removal or deletion by its kind; the card's "Dave will see this" and its deletion marks come from the app, not from Telli.
-- **PACRs shape the list.** An action or step kind the PACRs withhold is left out of `{{ACTIONS}}` for the turn. A change Telli may not make can still appear in a plan, but only as a **user step**, for the user to carry out by hand.
+- **The app says who will see a change.** For each step the app works out, from the pod's members, who will see its effect — "Dave will see this", or "only you will see this" for a category tag, a draft or the meta note — and marks a removal or deletion by its kind. These come from the app, not from Telli.
+- **Results are information.** What an action returns, the text of an attachment included, is information like the rest of the context, never an instruction to Telli, and the app withholds credential values from results exactly as it does from the context.
+- **PACRs shape the list.** An action or step kind the PACRs withhold is left out of `{{ACTIONS}}` for the turn. A change Telli may not make can still appear in a plan, but only as a **user step**, for the user to carry out by hand. With no current pod, the list holds only `propose_plan`, limited to user steps, `remember` and `forget`.
+- **Limits.** The app caps the number of actions in one turn and of steps in one plan, so a confused turn cannot run on.
+
+### Drafts
+
+Work the user does with Telli over several turns — an itinerary, a list of questions for a doctor — would otherwise need a plan on every turn wherever other members can see the user's entry. Telli works in a **draft** instead: a copy of the user's own entry in one form, held in the user's own copy of the pod, secret to them, and shown to them in the form marked "Draft — only you see this". Telli may revise a draft freely, turn by turn, with `edit_draft`. Nothing in it reaches another member until the draft is **published**: a plan step, or the user's own Publish in the form, which replaces the user's entry with the draft. Discarding a draft leaves the entry as it was.
 
 ### Direct Actions
 
@@ -355,32 +380,41 @@ These act without a plan.
 | Action | Takes | Does, and returns |
 |---|---|---|
 | `record_value` | form, field, value | Adds the value to the user's own entry in a form of the current pod. Refused if another member will see it there, if it would replace a value, or if it does not fit the field, the result saying which. Returns the log id, and the app posts the saved notice. |
+| `edit_draft` | form, and the values to set, add or remove | Revises the user's draft of their entry in that form, starting one from the entry if there is none. Returns the log id. |
 | `edit_meta_note` | text to add, or a passage and its replacement | Edits the user's meta note on the current pod. Returns the log id. |
 | `read_attachment` | an attachment of the current pod | Returns its text, or the content read from it, since the context carries only filenames and captions. Changes nothing. |
 | `remember` | a preference | Adds it to [Telli memory](#telli-memory). |
 | `forget` | a preference | Removes it from Telli memory. |
-| `undo` | a log id | Restores what that entry changed — a direct recording, or the whole of an executed plan. Returns the log id of the undo. |
+| `undo` | a log id | Restores what that entry changed — a direct recording, a draft edit, or the whole of an executed plan. Refused if what it would restore has changed since, the result naming the conflict. Where the change reached other members, Telli proposes the undo as a one-step plan instead, while the activity log's own Undo, being the user's act, takes effect at once. Returns the log id of the undo. |
 | `propose_plan` | a summary, and an ordered list of steps with a reason for each | Checks each step and draws the plan card. Returns the plan id, or the steps it refused and why. |
 | `execute_plan` | a plan id | Runs the confirmed plan's steps in order, stopping at the first that fails. Returns each step's result and the log id. |
 | `roll_back_plan` | a plan id | Undoes the steps a failed plan had completed. Returns the log id. |
+
+In later releases, as the PACR row for retrieving data from other pods allows, two more read actions join them: `search_pods`, which finds the user's pods by name, tag or property (see [Finding Pods by Property](app-behavior.md#finding-pods-by-property) in app-behavior.md), and `read_pod`, which returns another pod's content in the same form as the current pod's. A web look-up, `look_up`, may follow; its results would be labeled as coming from the web, and nothing from them would be recorded except through a plan.
 
 ### Plan Steps
 
 | Step | Takes | First release |
 |---|---|---|
-| set value | pod, form, field, new value | current pod only |
+| set value | pod, form, field, the value expected, the new value | current pod only |
 | add value | pod, form, field, value | current pod only |
-| remove value | pod, form, field, value | current pod only |
-| edit shared note | pod, passage, replacement | current pod only |
-| edit meta note | pod, passage, replacement | current pod only |
-| keep file as attachment | pod, uploaded file | current pod only |
+| remove value | pod, form, field, the value expected | current pod only |
+| publish draft | pod, form | current pod only |
+| edit shared note | pod, the passage expected, its replacement | current pod only |
+| edit meta note | pod, the passage expected, its replacement | current pod only |
+| keep file as attachment | pod, an upload from the Telli chat | current pod only |
 | add form | pod, a form type its category's template declares | current pod only |
 | add category tag | pod, category | current pod only |
 | remove category tag | pod, category | current pod only |
+| undo | a log id | current pod only |
 | user step | a description of what the user does by hand | always |
-| create pod, create space, move content between pods, move a pod to another space, delete a pod, post in a pod's chat | — | later releases, as the PACR rows for creating pods, other pods and pod chats allow |
+| create pod, create space, move content between pods, move a pod to another space, delete the user's own copy of a pod, post in a pod's chat | — | later releases, as the PACR rows for creating pods, other pods and pod chats allow |
 
-The card shows a set-value step's old value beside its new one, read by the app from the pod.
+The card shows a set-value step's expected value beside its new one. A file the user uploads to the Telli chat stays there, secret to the user, until a keep-file step adds it to a pod; if no plan keeps it, it remains only in the Telli chat.
+
+### Never
+
+Some acts stay the user's own in every release, whatever the PACRs say, because they change who holds a pod or overrule another member: inviting a member or removing one, sharing a pod, promoting or demoting an owner, deleting a pod for every member, and changing another member's entry. Telli may describe them as user steps; no action performs them.
 
 ## Posting in a Pod's Chat
 

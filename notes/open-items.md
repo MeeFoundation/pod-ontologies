@@ -98,7 +98,3 @@ Each turn's context sends every member's graphs and the shared note to the user'
 ### 2. Which values besides credentials are withheld from the model
 
 Passwords and other credentials never reach the model. Undecided: whether government identity numbers (a Social Security number, a passport number) should be withheld the same way, at the cost of Telli being unable to answer a query for one.
-
-### 3. Telli's actions
-
-personal-agent.md's [Actions and Results](../personal-agent.md#actions-and-results) says Telli acts only through actions the app offers it, each returning a result, but does not define them. To decide: the set (record a value, edit the meta note, add an attachment, propose a plan, execute a plan, undo an entry, add to memory, and any others), what each takes and returns, how a plan is represented so the app can render, execute and roll it back, and how a PACR removes an action from the set.

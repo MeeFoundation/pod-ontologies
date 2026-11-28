@@ -1,6 +1,6 @@
 # Tellipod Ontologies — Illustrative Example
 
-This file continues [README.md](README.md), which describes the Category, Pod, Graph, Persona, Organization, and Service ontologies, and is continued by [app-behavior.md](app-behavior.md), which documents how the Tellipod app behaves on top of this data. It provides an illustrative example — a hypothetical user, Alice Walker — showing how those ontologies are used together, followed by diagram-generation instructions and the full validation pipeline for the example dataset.
+This file continues [README.md](README.md), which describes the Category, Pod, Graph, Persona, Organization, and Service ontologies, and is continued by [app-behavior.md](app-behavior.md), which documents how the Tellipod app behaves on top of this data, and [personal-agent.md](personal-agent.md), which documents the user's personal agent. It provides an illustrative example — a hypothetical user, Alice Walker — showing how those ontologies are used together, followed by diagram-generation instructions and the full validation pipeline for the example dataset.
 
 ## How Alice uses Tellipod
 
@@ -262,7 +262,7 @@ Alice is planning a trip with her spouse Dave, with help from her own personal a
 
 The trip itself is backed by one form tool whose topic is `:Kyoto_Trip_2027`, holding two graphs, one per member, each claimed from a different side: Alice's own draft itinerary ([graph 69](<example/pod-spaces/Alice Walker (default)/Kyoto Trip 2027/Kyoto Trip 2027.databook.md#graph-69>)) and Dave's own contribution ([graph 91](<example/pod-spaces/Alice Walker (default)/Kyoto Trip 2027/Kyoto Trip 2027.databook.md#graph-91>)) — reaching `pod:formGraph`'s cap of one graph per member (see README.md's [Tools](README.md#tools) section). It is one of the example's two tools holding graphs from more than one claimant — one topic, two claims about it; the other is the *Citibank* pod's, whose graphs 75 and 76 are claimed by Alice and by Citibank.
 
-Alice works out her itinerary with her personal agent in her secret agent chat, and the agent writes the result into graph 69 as her, revising it in place turn by turn (see app-behavior.md's [Personal Agent](app-behavior.md#personal-agent) and [The Iterative Prompt/Response Loop](app-behavior.md#the-iterative-promptresponse-loop)). The agent is not a member of the pod and appears in none of its graphs: what it writes is Alice's claim, so no `s:PersonalAgent` individual occurs anywhere in the example.
+Alice works out her itinerary with her personal agent in her secret agent chat, and the agent writes the result into graph 69 as her, revising it in place turn by turn (see personal-agent.md's [Overview](personal-agent.md#overview) and [How a Turn Is Applied](personal-agent.md#how-a-turn-is-applied)). The agent is not a member of the pod and appears in none of its graphs: what it writes is Alice's claim, so no `s:PersonalAgent` individual occurs anywhere in the example.
 
 <p align="center"><img src="example/images/travel.png" alt="Travel pods"></p>
 

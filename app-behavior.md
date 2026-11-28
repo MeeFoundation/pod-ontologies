@@ -1,6 +1,6 @@
 # App Behavior
 
-This file continues [README.md](README.md) and [example.md](example.md), which describe the Category, Pod, Graph, Persona, Organization, and Service ontologies and illustrate them with a worked example. This file documents how the app behaves *on top of* that data — pod lifecycle, storage, sharing, permissions, naming/renaming, what actions a user can take on a pod, what happens when a shared pod arrives somewhere new, and so on.
+This file continues [README.md](README.md) and [example.md](example.md), which describe the Category, Pod, Graph, Persona, Organization, and Service ontologies and illustrate them with a worked example. This file documents how the app behaves *on top of* that data — pod lifecycle, storage, sharing, permissions, naming/renaming, what actions a user can take on a pod, what happens when a shared pod arrives somewhere new, and so on. The user's personal agent, Telli, is documented separately, in [personal-agent.md](personal-agent.md).
 
 Nothing in this file changes any `.ttl` file or DataBook triple — every rule here is app-level behavior, not an ontology rule. This file is also written at the **user level** throughout: it describes what a member can do and sees in the app, not how the PDN layer beneath implements it. The two can legitimately differ, and where they do this file follows the user's view — see [Tool & Member Info Permissions](#tool--member-info-permissions) for the case where they diverge most visibly.
 
@@ -235,7 +235,7 @@ Every pod sits in exactly one of the member's own **pod spaces** — the life it
 **Placement is half enforced.** README's [placement rule](README.md#placing-pods-in-spaces) — a pod sits in the space of the party whose life its category tag describes — has two halves, and the app enforces only the first. *Which kind of life* is enforced: every category tag must fall under its space's root, so an Organization- or Pet-branch tag can never sit in a Person-rooted space, and a move or a space deletion drops any tag that would break this. *Whose life*, among spaces sharing a root, is not and cannot be: a child's height tagged Health & Wellness is as valid in the parent's default space as in the child's, since nothing in the data says whose health it is. That half is a recommendation, and the app helps with it in two ways:
 
 - **A placement hint.** When a pod's form topic is the subject of one of the user's *other* spaces, and none of its category tags names a party's relation to the space's subject — in the Person branch, a concept under People, Pets, Work or Groups — the pod is probably in the wrong space, and the app offers to move it there ("Move to ⟨space name⟩?") as the tag is added or the form created. The hint reads only the pod's own form topics and tags and the user's own spaces, and needs no agent. The user may decline it, and it is not offered again for that pod.
-- **The user's personal agent**, for what the hint cannot see: a pod with no form topic, a pod with no category tag, or a form topic that is no space's subject yet. See the placement coach in [Use Cases](#use-cases) below.
+- **The user's personal agent**, for what the hint cannot see: a pod with no form topic, a pod with no category tag, or a form topic that is no space's subject yet. See placement coaching under [Coaching and Auto-Filing](personal-agent.md#coaching-and-auto-filing) in personal-agent.md.
 
 Spaces form a flat set, and so do the pods in each. A space, its name, root and subject, and which space a pod sits in are all the member's own, never shared pod content.
 
@@ -279,7 +279,7 @@ It could then ask follow-up questions: "Do you know the name of the bank that is
 
 #### Tidy
 
-The app uses entity recognition to turn a message in the pod's chat into a form tool in the same pod. Suppose a neighbor in a neighborhood pod asks whether anyone knows a good plumber, and the user replies with the name and contact information of one they like to use. Tidy turns the reply into a form holding the plumber's name, phone number and email, parsed into fields and values. A [personal agent](#personal-agent) could one day go further, creating a new pod about the user's relationship with the plumber — a use case that waits on PACR capabilities the initial implementation withholds (see [Use Cases](#use-cases)).
+The app uses entity recognition to turn a message in the pod's chat into a form tool in the same pod. Suppose a neighbor in a neighborhood pod asks whether anyone knows a good plumber, and the user replies with the name and contact information of one they like to use. Tidy turns the reply into a form holding the plumber's name, phone number and email, parsed into fields and values. A [personal agent](personal-agent.md#future-experiences) could one day go further, creating a new pod about the user's relationship with the plumber — a use case that waits on PACR capabilities the initial implementation withholds (see [Future Experiences](personal-agent.md#future-experiences) in personal-agent.md).
 
 
 ### Finding Pods by Name
@@ -325,7 +325,7 @@ Space links are computed each time a list is drawn, from each pod's derived subj
 
 ### Finding Pods by Property
 
-Tags are not the only way to gather pods. The user — or their [personal agent](#personal-agent), working on their behalf — can also search for every pod whose tool graph carries a given **property**, and get back the same flat list of pod links a tag search returns.
+Tags are not the only way to gather pods. The user — or their [personal agent](personal-agent.md), working on their behalf — can also search for every pod whose tool graph carries a given **property**, and get back the same flat list of pod links a tag search returns.
 
 The worked example is the one a tag would otherwise have handled: "show me every pod where I hold a loyalty program." That is a search for `sa:loyaltyProgramID` (see [Service Accounts Ontology](other-ontologies.md#service-accounts-ontology) in other-ontologies.md), and it returns every pod whose tool graph records a loyalty program membership number, without anyone having had to label those pods. For a worked case, see example.md's [Travel Providers](example.md#travel-providers).
 
@@ -387,9 +387,7 @@ A pod that carries a chat tool (`pod:Chat`) shows a Chat area, the tool's contri
 
 The chat projects its messages into the pod graph, like every tool, and the Chat area renders from that graph (see [The Pod Graph](README.md#the-pod-graph) in README.md). Every message's triples reach every member, like the rest of the pod's shared content.
 
-A user's own [personal agent](#personal-agent) is not a member, and the user does not talk with it in a pod's chat area. Its home is the separate **Telli chat**, a secret conversation between the user and their agent alone that belongs to no pod; the pod the user is interacting with is the current pod the agent works on. The conversation itself stays secret: what surfaces in a pod is the changes the agent makes there (note edits, tool-graph revisions, new attachments), recorded as the user's own, and — only as PACRs allow — messages it posts in the group stream, which are marked as described next.
-
-When a personal agent posts in a pod's group stream, the message appears under the user's name followed by an asterisk (e.g. "Alice Walker\*"), so members can tell it from something the user typed. Other members address it the same way, as "@Alice Walker\*"; only its own user calls it @Telli (see [Characteristics](#characteristics)).
+A user's own personal agent is not a member, and the user does not talk with it in a pod's chat area; how it can appear in a pod's group stream is described in [personal-agent.md](personal-agent.md#posting-in-a-pods-chat).
 
 ### Inviting Services
 
@@ -429,7 +427,7 @@ One is documented here:
 |---|---|---|
 | Arca Backup | `s:ArcaBackup` (an `s:AgentService`) | Backs up the member's own copy of a pod, acting for that one member |
 
-A user's AI agent is not a service: it is a [personal agent](#personal-agent), which never joins a pod and is described in its own section below.
+A user's AI agent is not a service: it is a [personal agent](personal-agent.md), which never joins a pod and is described in personal-agent.md.
 
 An `s:ServiceProvider` — an organization's own service, such as a bank's — is equally a service by this definition; it simply acts for the organization that provides it rather than for a member, and the app does not ship its code. So is an `s:WebsiteService`, the website a credential is issued by or presented to, known by its `s:siteDomain`. The app runs no code for one: either the site takes no part in the pod and the app simply mints its member, or the site supports the Pod Interface natively and takes part as an `s:ServiceProvider` would — see [Browser Extension](#browser-extension) below.
 
@@ -442,7 +440,7 @@ This is why an invited service needs no special-case permission logic anywhere i
 - **Read access is unrestricted across the pod** — every member, human or service, can read the note, the group chat stream, every member's and every tool's claims, and attachment metadata.
 - **Write access is scoped to the caller's own claimant identity** — a service creates, updates and deletes only the claims it claims itself. It can edit the shared note and add attachments like any member, but it can never write to another party's `pod:member` graph or tool graph.
 - **A service is never an owner.** It cannot be promoted (`pod:owner`'s range is `p:Person`), so it permanently sits at the non-owner baseline: it cannot delete another member's claims or attachments, and it cannot delete the pod for everyone.
-- **Its access is its principal's access.** An `s:AgentService` operates with the access of the one member it `s:actsFor`, never more — inviting an agent service grants it nothing its principal did not already have. A [personal agent](#personal-agent) is not a member and has no access of its own: it reaches a pod through the Pod Interface as its user, with that user's access, further narrowed by the user's PACRs.
+- **Its access is its principal's access.** An `s:AgentService` operates with the access of the one member it `s:actsFor`, never more — inviting an agent service grants it nothing its principal did not already have. A personal agent is not a member and reaches a pod as its user (see [Access](personal-agent.md#access) in personal-agent.md).
 - **Hidden [module tags](README.md#tags) are namespace-scoped.** A module searches, reads, adds and deletes only the `pod:moduleTag` nodes carrying its own developer's `pod:tagNamespace`; another module's are neither readable nor writable, and none of them is exposed to the user's own UI at all.
 
 What a service does *beyond* the pod — call an LLM, read an address book, write a backup — is its own business and is not the Pod Interface's concern. The interface's job is that everything arriving back *in* the pod arrives through the same door, under the same rules, as a person's own edits.
@@ -454,67 +452,6 @@ A **module** is software running in one member's own instance on their behalf: t
 The interface scopes **every** module-tag operation — search, read, add, delete alike — to the namespace the calling module's developer controls. The Apple Contacts connector (`pod:Contacts`, a connector — see [Apple Contacts](#apple-contacts) below) therefore searches, reads, adds and removes `foundation.mee.applecontacts` tags and nothing else: another module's tags are not merely absent from its results, they are unreadable and unwritable. That isolation between modules is the namespace's whole job.
 
 Two practical consequences for a module. First, results are scoped to its own member's pods, so a tag is only ever reachable in the instance that wrote it — consistent with its never being shared. Second, two identical tags are two separate tags, not one: nothing deduplicates them, so a module adding a tag checks whether the pod already carries that exact namespace/key/value combination before writing another.
-
-## Personal Agent
-
-A user's **personal agent** (`s:PersonalAgent` — see README.md's [Service Ontology](README.md#service-ontology)) is an AI agent that works for that one user (`s:actsFor`) and no one else. To the user it is **Telli**; to everyone else it appears under the user's own name followed by an asterisk (e.g. "Alice Walker\*"). It is never invited into a pod and never becomes a member of one, so it adds nothing to any pod's member count and has no `pod:member` entry. Whatever it writes into a pod — a note edit, a revision of a tool graph, an attachment, a chat message — it writes *as its user*, through the [Pod Interface](#pod-interface) with that user's own access, and the user is that content's `pod:claimant`. The asterisk on its chat messages is how other members tell them from the user's own. It understands a pod's content by reading the pod's graph, into which every tool projects its content (see [The Pod Graph](README.md#the-pod-graph) in README.md), and so can read across pods wherever its PACRs allow.
-
-The user talks with their agent in the **Telli chat** (see [Chat Area](#chat-area) above), a chat widget holding a secret conversation between the user and their agent alone, which belongs to no pod. What the agent works on is the **current pod**: the pod the user is interacting with at the moment. The agent's replies come from a language model (`s:usesLLM`, an `s:LLMService` such as `s:ChatGPT`), which the user pays for and which a company or the user themselves may host (`s:hostedBy`). The app configures that model so that the user's interactions are never used to train it, and may constrain it further with system prompts. Everything else the agent may do is governed by the user's **Personal Agent Control Rules** (PACRs, see [below](#personal-agent-control-rules)).
-
-**Design note.** Tellipod has no shared agent that a pod's members address together: each member brings their own personal agent, which answers to them alone. One use case follows that this design does not serve. A member cannot use an agent another member pays for: the members of a trip-planning pod cannot all ask one agent questions and have it contribute ideas to the itinerary. Every other use case known so far is served by personal agents, including the ones below that need an agent able to reach across pods, which a shared agent confined to one pod never could.
-
-### Use Cases
-
-None of the four use cases below can be implemented yet. Each depends on PACR capabilities that the initial implementation withholds, and those capabilities need further design and deliberation before they can be made safe (see [Personal Agent Control Rules](#personal-agent-control-rules)). They belong to some future release of the app, once the PACRs have matured.
-
-- **A lifelong conversation.** An ongoing conversation between the user and Telli that helps organize the user's personal information, not only for its own sake but so that portions of it can be shared with others. The agent knows the app's whole taxonomy of categories and ontologies, so it can start a conversation about many areas of the user's life and, over time, capture and organize what it learns. It might ask whether the user owns a pet, then ask about that pet and put everything it learns in a new pod about it. Similarly: do they have a will? Any allergies? A mother? *Waits on:* creating new pods.
-- **Turning a recommendation into a relationship.** In a neighborhood association pod the user shares with their neighbors, a neighbor asks in the pod's chat whether anyone knows a good plumber, and the user replies with the name and contact information of one they like to use. The app's [Tidy](#tidy) function can turn the reply into a form in that pod. The user's personal agent can go further: it creates a new pod about the user's relationship with the plumber and puts a copy of the form there. *Waits on:* creating new pods.
-- **Answering on the user's behalf.** A member of a neighborhood association pod types "Does anyone have the phone number of Tom from Automation?" The user happens to have another pod about their relationship with Automation, a car repair shop: a two-member pod of the user and Tom. With the user's approval, given either explicitly for this reply or by a standing rule, their personal agent replies in the association pod's chat: "Tom's phone number is 617-555-1234", posted under the user's name plus an asterisk so that members know the agent said it, not the user. *Waits on:* responding to another pod member, retrieving data from another pod, and conveying PII to a member.
-- **Coaching pod placement.** As the user creates, tags and moves pods, Telli notices a pod that by README's [placement rule](README.md#placing-pods-in-spaces) belongs in another of the user's spaces — or in a space the user does not have yet, suggested only when the user already keeps several such pods about one party — and suggests the change in the Telli chat, giving its reason in the rule's own terms ("this reads as your daughter's health rather than yours"). It never moves a pod itself; the user accepts or ignores each suggestion. It complements the app's own [placement hint](#pod-spaces), covering the cases that hint cannot read from the data. *Waits on:* read-only access to the user's list of spaces and their subjects, and a proactive mode in which the agent reacts to the user's pod actions rather than only to the user's messages.
-
-### Characteristics
-
-| Characteristic | Personal agent |
-|---|---|
-| Read/write access to | the current pod; other pods only as PACRs allow |
-| Name in a pod's chat | the user's name plus an asterisk (e.g. "@Alice Walker\*") |
-| Works on behalf of | the user |
-| Paid for by | the user |
-| Independence | a delegate of the user, bounded by the user's PACRs |
-| Accountable to | the user |
-| Where it writes in the UI | the Telli chat; and, as PACRs allow, any pod's group stream under the user's name plus an asterisk |
-| Responds to | the user, in the Telli chat; and, as PACRs allow, any pod member who addresses it in a pod's chat (e.g. "@Alice Walker\*") |
-| How it responds to a pod member | as PACRs define — e.g. with a reply the user has configured, such as "I am not permitted to reply to you; please chat with Alice Walker directly" |
-| Configuration and policy | the user's PACRs, plus the model's no-training configuration |
-
-### Personal Agent Control Rules
-
-To keep the initial implementation simple, the PACRs allow no data to flow between pods. A "yes" under future implementations means the capability is possible in principle, but needs fine-grained controls to make it safe, and those will take time and experience to design and build.
-
-| Can a personal agent… | Initial implementation | Future implementations |
-|---|---|---|
-| respond to the user in the Telli chat? | yes | yes |
-| search and retrieve data from other pods while doing so? | no | yes, as the user's rules allow (e.g. pod A may retrieve from pod B but not C) |
-| respond to the user in a pod's group chat stream? | no | yes |
-| respond to another pod member? | no — it gives only the user's configured refusal (e.g. "I am not permitted to reply to you; please chat with Alice Walker directly") | yes |
-| convey credentials or PII to a member? | no | yes, with explicit one-time permission |
-| create new pods? | no | yes |
-
-In the initial implementation, then, the agent works on the current pod only, and its effect on that pod is what the user would have done by hand.
-
-### The Iterative Prompt/Response Loop
-
-Each turn of a user's conversation with their personal agent proceeds as follows:
-
-1. The user sends a message in the Telli chat.
-2. The app assembles context from the current pod: the note's current text, every member's and every tool's graphs, and attachment metadata (filenames/captions), plus recent turns of the Telli chat.
-3. This context plus the new message is sent to the agent's language model (`s:usesLLM`).
-4. The response is applied as one atomic turn, all under the user's own write rights:
-   - a reply posted in the Telli chat;
-   - the user's own tool graph revised in place to fold in this turn's facts and decisions — a single evolving graph, not a new one per turn, mirroring how the note itself is one living document rather than a new copy per edit (for a worked case, see example.md's [Planning a Trip with an Agent](example.md#planning-a-trip-with-an-agent));
-   - optionally, a direct edit to the shared note, and/or a new attachment (e.g. a fetched photo of a hotel) added to the pod's flat set of attachments.
-
-The agent never writes to a graph another party claims: like every write through the Pod Interface, its writes are scoped to its user's own claimant identity. Each revision is a delete-and-re-issue at the PDN layer, exactly as for the user's own edit (see [Tool & Member Info Permissions](#tool--member-info-permissions) above). Nothing records that a given revision came from the agent rather than from the user typing it — an accepted limitation, not a defect, since the claim is the user's either way.
 
 ## Connectors
 

@@ -44,5 +44,5 @@ This waits on two things the initial implementation does not have:
 ## Where it is documented
 
 - app-behavior.md, [Pod Spaces](../app-behavior.md#pod-spaces): "Placement is half enforced", and the placement hint.
-- app-behavior.md, [Use Cases](../app-behavior.md#use-cases): the fourth use case, Coaching pod placement.
+- app-behavior.md, [Use Cases](../personal-agent.md#coaching-and-auto-filing): the fourth use case, Coaching pod placement.
 - notes/open-items.md, Space placement item 2: Telli's access to the user's spaces.

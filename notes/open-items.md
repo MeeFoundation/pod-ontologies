@@ -86,3 +86,15 @@ To decide, for each of these, which classes and properties are suggested and whe
 ### 2. Example triples in the scaffolding
 
 The example DataBooks carry no note or chat triples. To decide whether, once item 1 is settled, `pod-databook.md` should give them a place, either as a `tpod.tool` entry with a body section or by generating them from each pod's `X.md`, so that integrity checks and Telli use cases can exercise them.
+
+## Personal agent
+
+Raised 2026-11-28 in a design review of [personal-agent.md](../personal-agent.md).
+
+### 1. Other members' content and the user's language model
+
+Each turn's context sends every member's graphs and the shared note to the user's chosen language model (personal-agent.md's [Each Turn's Context](../personal-agent.md#each-turns-context)), which a third party may host. A member who shared content within a pod did not thereby agree to that party seeing it. Candidates: a notice to every member that a member's agent may read the pod; a per-pod setting, set by an owner, that keeps agents out or limits them to the user's own content; a per-member choice to withhold one's own graphs from other members' agents. Undecided.
+
+### 2. Which values besides credentials are withheld from the model
+
+Passwords and other credentials never reach the model. Undecided: whether government identity numbers (a Social Security number, a passport number) should be withheld the same way, at the cost of Telli being unable to answer a query for one.
